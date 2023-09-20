@@ -31,6 +31,10 @@ public class Account {
     private String id;
 
     @NonNull
+    @Column(unique = true)
+    private String brideAndGroom;
+
+    @NonNull
     private String firstName;
 
     @NonNull
