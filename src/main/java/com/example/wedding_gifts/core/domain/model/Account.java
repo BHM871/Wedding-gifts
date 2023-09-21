@@ -51,8 +51,7 @@ public class Account {
     @Column(unique = true)
     private String pixKey;
 
-    @OneToMany(cascade = {CascadeType.REMOVE}, mappedBy = "gifts")
-    @JoinColumn(referencedColumnName = "id")
+    @OneToMany(cascade = {CascadeType.REMOVE})
     private List<Gifts> gifts;
     
 }
