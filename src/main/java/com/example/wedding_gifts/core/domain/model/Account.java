@@ -65,12 +65,23 @@ public class Account {
         this.pixKey = account.pixKey();
     }
 
-    public Account update(UpdateAccountDTO account) {
-        if(account.brideAndGroom() != null && account.brideAndGroom().length() > 3) this.brideAndGroom = account.brideAndGroom();
-        if(account.firstName() != null && account.firstName().length() > 3) this.firstName = account.firstName();
-        if(account.lastName() != null && account.lastName().length() > 3) this.lastName = account.lastName();
-        if(account.password() != null && account.password().length() > 8) this.password = account.password();
-        if(account.pixKey() != null && account.pixKey().length() > 10) this.pixKey = account.pixKey();
+    public Account update(UpdateAccountDTO account) throws Exception {
+        String message = "Some value is invalid";
+
+        if(account.brideAndGroom().length() > 3) this.brideAndGroom = account.brideAndGroom();
+        else if(account.brideAndGroom() != null) throw new Exception(message);
+
+        if(account.firstName().length() > 3) this.firstName = account.firstName();
+        else if (account.firstName() != null) throw new Exception(message);
+
+        if(account.lastName().length() > 3) this.lastName = account.lastName();
+        else if(account.lastName() != null) throw new Exception(message);
+
+        if(account.password().length() > 8) this.password = account.password();
+        else if(account.password() != null) throw new Exception(message);
+
+        if(account.pixKey().length() > 10) this.pixKey = account.pixKey();
+        else if(account.pixKey() != null) throw new Exception(message);
 
         return this;
     }
