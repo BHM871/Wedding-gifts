@@ -11,7 +11,7 @@ public interface AccountUseCase {
 
     public String login(LoginDTO login) throws Exception;
 
-    public void verificAccountForGifter(String brideAndGroom) throws Exception;
+    public String verificAccountForGifter(String brideAndGroom) throws Exception;
 
     public Account getAccountById(String id) throws Exception;
 
