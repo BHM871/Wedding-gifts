@@ -14,7 +14,7 @@ public interface AccountRepository {
 
     public Account getAccountById(String id) throws Exception;
 
-    public Account updateAccount(UpdateAccountDTO account) throws Exception;
+    public Account updateAccount(UpdateAccountDTO account, String id) throws Exception;
 
     public void deleteAccount(String id) throws Exception;
     

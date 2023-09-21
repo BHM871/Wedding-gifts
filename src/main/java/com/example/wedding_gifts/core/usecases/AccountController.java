@@ -17,7 +17,7 @@ public interface AccountController {
 
     public ResponseEntity<Account> getAccountById(String id) throws Exception;
 
-    public ResponseEntity<Account> updateAccount(UpdateAccountDTO account) throws Exception;
+    public ResponseEntity<Account> updateAccount(UpdateAccountDTO account, String id) throws Exception;
 
     public ResponseEntity<String> deleteAccount(String id) throws Exception;
 }
