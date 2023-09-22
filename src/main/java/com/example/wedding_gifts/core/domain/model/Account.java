@@ -71,19 +71,19 @@ public class Account {
     public Account update(UpdateAccountDTO account) throws Exception {
         String message = "Some value is invalid";
 
-        if(account.brideGroom().length() > 3) this.brideGroom = account.brideGroom();
+        if(account.brideGroom() != null && account.brideGroom().length() > 3) this.brideGroom = account.brideGroom();
         else if(account.brideGroom() != null) throw new Exception(message);
 
-        if(account.firstName().length() > 3) this.firstName = account.firstName();
+        if(account.firstName() != null && account.firstName().length() > 3) this.firstName = account.firstName();
         else if (account.firstName() != null) throw new Exception(message);
 
-        if(account.lastName().length() > 3) this.lastName = account.lastName();
+        if(account.lastName() != null && account.lastName().length() > 3) this.lastName = account.lastName();
         else if(account.lastName() != null) throw new Exception(message);
 
-        if(account.password().length() > 8) this.password = account.password();
+        if(account.password() != null && account.password().length() > 8) this.password = account.password();
         else if(account.password() != null) throw new Exception(message);
 
-        if(account.pixKey().length() > 10) this.pixKey = account.pixKey();
+        if(account.pixKey() != null && account.pixKey().length() > 10) this.pixKey = account.pixKey();
         else if(account.pixKey() != null) throw new Exception(message);
 
         return this;
