@@ -29,14 +29,14 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public String verificForGifter(String brindAndGifter) throws Exception {
-        Account account = thisJpaRespository.findByBrideAndGroom(brindAndGifter).orElseThrow(() -> new Exception());
+        Account account = thisJpaRespository.findByBrideAndGroom(brindAndGifter).orElseThrow(() -> new Exception("Bride and groom not found"));
         
         return account.getId();
     }
 
     @Override
     public Account getAccountById(String id) throws Exception {
-        return thisJpaRespository.findById(id).orElseThrow(() -> new Exception());
+        return thisJpaRespository.findById(id).orElseThrow(() -> new Exception("Account not found"));
     }
 
     @Override
@@ -50,7 +50,8 @@ public class AccountRepositoryImpl implements AccountRepository {
 
     @Override
     public void deleteAccount(String id) throws Exception {
-        thisJpaRespository.deleteById(id);
+        Account account = getAccountById(id);
+        thisJpaRespository.delete(account);
     }
     
 }
