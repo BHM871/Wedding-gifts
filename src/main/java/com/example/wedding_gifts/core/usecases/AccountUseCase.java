@@ -1,5 +1,7 @@
 package com.example.wedding_gifts.core.usecases;
 
+import java.util.UUID;
+
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
@@ -11,12 +13,12 @@ public interface AccountUseCase {
 
     public String login(LoginDTO login) throws Exception;
 
-    public String verificAccountForGifter(String brideAndGroom) throws Exception;
+    public UUID verificAccountForGifter(String brideGroom) throws Exception;
 
-    public Account getAccountById(String id) throws Exception;
+    public Account getAccountById(UUID id) throws Exception;
 
-    public Account updateAccount(UpdateAccountDTO account, String id) throws Exception;
+    public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception;
 
-    public void deleteAccount(String id) throws Exception;
+    public void deleteAccount(UUID id) throws Exception;
     
 }

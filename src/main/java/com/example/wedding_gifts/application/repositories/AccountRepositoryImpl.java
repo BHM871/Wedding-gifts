@@ -1,5 +1,7 @@
 package com.example.wedding_gifts.application.repositories;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -28,19 +30,19 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public String verificForGifter(String brindAndGifter) throws Exception {
-        Account account = thisJpaRespository.findByBrideAndGroom(brindAndGifter).orElseThrow(() -> new Exception("Bride and groom not found"));
+    public UUID verificForGifter(String brindAndGifter) throws Exception {
+        Account account = thisJpaRespository.findByBrideGroom(brindAndGifter).orElseThrow(() -> new Exception("Bride and groom not found"));
         
         return account.getId();
     }
 
     @Override
-    public Account getAccountById(String id) throws Exception {
+    public Account getAccountById(UUID id) throws Exception {
         return thisJpaRespository.findById(id).orElseThrow(() -> new Exception("Account not found"));
     }
 
     @Override
-    public Account updateAccount(UpdateAccountDTO account, String id) throws Exception {
+    public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
         Account upAccount = getAccountById(id);
         
         upAccount = upAccount.update(account);
@@ -49,7 +51,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void deleteAccount(String id) throws Exception {
+    public void deleteAccount(UUID id) throws Exception {
         Account account = getAccountById(id);
         thisJpaRespository.delete(account);
     }

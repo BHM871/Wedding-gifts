@@ -1,5 +1,7 @@
 package com.example.wedding_gifts.application.services;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,24 +31,24 @@ public class AccountServicesImpl implements AccountUseCase {
     }
 
     @Override
-    public String verificAccountForGifter(String brideAndGroom) throws Exception {
-        if(brideAndGroom.length() < 3) throw new Exception("Value is invalid");
+    public UUID verificAccountForGifter(String brideGroom) throws Exception {
+        if(brideGroom.length() < 3) throw new Exception("Value is invalid");
 
-        return repository.verificForGifter(brideAndGroom);
+        return repository.verificForGifter(brideGroom);
     }
 
     @Override
-    public Account getAccountById(String id) throws Exception {
+    public Account getAccountById(UUID id) throws Exception {
         return repository.getAccountById(id);
     }
 
     @Override
-    public Account updateAccount(UpdateAccountDTO account, String id) throws Exception {
+    public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
         return repository.updateAccount(account, id);
     }
 
     @Override
-    public void deleteAccount(String id) throws Exception {
+    public void deleteAccount(UUID id) throws Exception {
         repository.deleteAccount(id);
     }
 
@@ -54,7 +56,7 @@ public class AccountServicesImpl implements AccountUseCase {
         String invalid = "Some value is invalid";
         String isNull = "Some value is null";
         
-        if(data.brideAndGroom() == null || data.brideAndGroom().isEmpty()) throw new Exception(isNull);
+        if(data.brideGroom() == null || data.brideGroom().isEmpty()) throw new Exception(isNull);
         if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
         if(data.lastName() == null || data.lastName().isEmpty()) throw new Exception(isNull);
         if(data.email() == null || data.email().isEmpty()) throw new Exception(isNull);
@@ -62,7 +64,7 @@ public class AccountServicesImpl implements AccountUseCase {
         if(data.pixKey() == null || data.pixKey().isEmpty()) throw new Exception(isNull);
         if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
         
-        if(data.brideAndGroom().length() < 3) throw new Exception(invalid);
+        if(data.brideGroom().length() < 3) throw new Exception(invalid);
         if(data.firstName().length() < 3) throw new Exception(invalid);
         if(data.lastName().length() < 3) throw new Exception(invalid);
         if(data.email().length() < 13) throw new Exception(invalid);

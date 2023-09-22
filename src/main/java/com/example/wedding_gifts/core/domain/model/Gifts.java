@@ -29,7 +29,7 @@ public class Gifts {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private UUID id;
 
     @NonNull
     private String title;

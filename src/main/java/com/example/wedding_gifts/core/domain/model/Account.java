@@ -1,6 +1,8 @@
 package com.example.wedding_gifts.core.domain.model;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 
@@ -30,11 +32,11 @@ public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private UUID id;
 
     @NonNull
     @Column(unique = true)
-    private String brideAndGroom;
+    private String brideGroom;
 
     @NonNull
     private String firstName;
@@ -57,19 +59,20 @@ public class Account {
     private List<Gifts> gifts;
 
     public Account(CreateAccountDTO account){
-        this.brideAndGroom = account.brideAndGroom();
+        this.brideGroom = account.brideGroom();
         this.firstName = account.firstName();
         this.lastName = account.lastName();
         this.email = account.email();
         this.password = account.password();
         this.pixKey = account.pixKey();
+        this.gifts = new ArrayList<Gifts>();
     }
 
     public Account update(UpdateAccountDTO account) throws Exception {
         String message = "Some value is invalid";
 
-        if(account.brideAndGroom().length() > 3) this.brideAndGroom = account.brideAndGroom();
-        else if(account.brideAndGroom() != null) throw new Exception(message);
+        if(account.brideGroom().length() > 3) this.brideGroom = account.brideGroom();
+        else if(account.brideGroom() != null) throw new Exception(message);
 
         if(account.firstName().length() > 3) this.firstName = account.firstName();
         else if (account.firstName() != null) throw new Exception(message);
