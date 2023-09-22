@@ -42,8 +42,6 @@ public class AccountServicesImpl implements AccountUseCase {
 
     @Override
     public Account updateAccount(UpdateAccountDTO account, String id) throws Exception {
-        validData(account);
-        
         return repository.updateAccount(account, id);
     }
 
@@ -55,21 +53,11 @@ public class AccountServicesImpl implements AccountUseCase {
     private void validData(CreateAccountDTO data) throws Exception{
         String invalid = "Some value is invalid";
         String isNull = "Some value is null";
-
-        validData(new UpdateAccountDTO(data.brideAndGroom(), data.firstName(), data.lastName(), data.password(), data.pixKey()));
-        
-        if(data.email() == null || data.email().isEmpty()) throw new Exception(isNull);
-        if(data.email().length() < 13) throw new Exception(invalid);
-        
-    }
-
-    private void validData(UpdateAccountDTO data) throws Exception{
-        String invalid = "Some value is invalid";
-        String isNull = "Some value is null";
         
         if(data.brideAndGroom() == null || data.brideAndGroom().isEmpty()) throw new Exception(isNull);
         if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
         if(data.lastName() == null || data.lastName().isEmpty()) throw new Exception(isNull);
+        if(data.email() == null || data.email().isEmpty()) throw new Exception(isNull);
         if(data.password() == null || data.password().isEmpty()) throw new Exception(isNull);
         if(data.pixKey() == null || data.pixKey().isEmpty()) throw new Exception(isNull);
         if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
@@ -77,9 +65,10 @@ public class AccountServicesImpl implements AccountUseCase {
         if(data.brideAndGroom().length() < 3) throw new Exception(invalid);
         if(data.firstName().length() < 3) throw new Exception(invalid);
         if(data.lastName().length() < 3) throw new Exception(invalid);
+        if(data.email().length() < 13) throw new Exception(invalid);
         if(data.password().length() < 8) throw new Exception(invalid);
         if(data.pixKey().length() < 10) throw new Exception(invalid);
-
+   
     }
     
 }
