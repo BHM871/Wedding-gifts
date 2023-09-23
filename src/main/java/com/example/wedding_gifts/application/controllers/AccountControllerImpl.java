@@ -45,7 +45,7 @@ public class AccountControllerImpl implements AccountController {
     }
 
     @Override
-    @GetMapping("/begin")
+    @GetMapping("/begin{brideGroom}")
     public ResponseEntity<UUID> gifterBegin(
         @RequestParam(name = "brideGroom", required = true) String brideGroom
     ) throws Exception {
@@ -66,7 +66,7 @@ public class AccountControllerImpl implements AccountController {
         @RequestBody UpdateAccountDTO account,
         @RequestParam(name = "id", required = true) UUID id
     ) throws Exception {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(services.updateAccount(account, id));
+        return ResponseEntity.ok(services.updateAccount(account, id));
     }
 
     @Override
