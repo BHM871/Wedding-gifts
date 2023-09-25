@@ -18,8 +18,8 @@ import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
-import com.example.wedding_gifts.core.usecases.AccountController;
-import com.example.wedding_gifts.core.usecases.AccountUseCase;
+import com.example.wedding_gifts.core.usecases.account.AccountController;
+import com.example.wedding_gifts.core.usecases.account.AccountUseCase;
 
 @RestController
 @RequestMapping("/account")

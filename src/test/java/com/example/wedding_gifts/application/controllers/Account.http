@@ -9,6 +9,7 @@ Content-Type: application/json
     "firstName": "Adrian",
     "lastName": "Almeida",
     "brideGroom": "AdrianAdria",
+    "weddingDate": "2023-12-25",
     "email": "adrian123@gmail.com",
     "password": "123456789",
     "pixKey": "07131121231"

@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.core.usecases;
+package com.example.wedding_gifts.core.usecases.account;
 
 import java.util.UUID;
 

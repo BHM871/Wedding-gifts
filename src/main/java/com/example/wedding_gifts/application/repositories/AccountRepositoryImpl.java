@@ -3,12 +3,13 @@ package com.example.wedding_gifts.application.repositories;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
-import com.example.wedding_gifts.core.usecases.AccountRepository;
+import com.example.wedding_gifts.core.usecases.account.AccountRepository;
 import com.example.wedding_gifts.infra.jpa.JpaAccountRespository;
 
 @Repository
@@ -27,6 +28,11 @@ public class AccountRepositoryImpl implements AccountRepository {
         Account newAccount = new Account(account);
 
         return save(newAccount);
+    }
+
+    @Override
+    public UserDetails getByEmail(String email){
+        return thisJpaRespository.findByEmail(email);
     }
 
     @Override
