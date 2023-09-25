@@ -2,6 +2,7 @@ package com.example.wedding_gifts.core.domain.model;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 
