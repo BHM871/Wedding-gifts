@@ -4,6 +4,6 @@ CREATE TABLE tb_account(
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL,
     email TEXT NOT NULL UNIQUE,
-    passwordd TEXT NOT NULL,
+    password TEXT NOT NULL,
     pix_key TEXT NOT NULL UNIQUE
 );

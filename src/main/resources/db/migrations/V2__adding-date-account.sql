@@ -1,0 +1,1 @@
+ALTER TABLE tb_account ADD wedding_date DATE NOT NULL;

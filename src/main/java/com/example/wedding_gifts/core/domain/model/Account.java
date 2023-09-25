@@ -1,10 +1,14 @@
 package com.example.wedding_gifts.core.domain.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.lang.NonNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
@@ -39,6 +43,9 @@ public class Account {
     private String brideGroom;
 
     @NonNull
+    private Date weddingDate;
+
+    @NonNull
     private String firstName;
 
     @NonNull
@@ -60,6 +67,7 @@ public class Account {
 
     public Account(CreateAccountDTO account){
         this.brideGroom = account.brideGroom();
+        this.weddingDate = account.weddingDate();
         this.firstName = account.firstName();
         this.lastName = account.lastName();
         this.email = account.email();
@@ -73,6 +81,9 @@ public class Account {
 
         if(account.brideGroom() != null && account.brideGroom().length() > 3) this.brideGroom = account.brideGroom();
         else if(account.brideGroom() != null) throw new Exception(message);
+
+        if(account.weddingDate() != null && account.weddingDate().getTime() > new Date().getTime()) this.weddingDate = account.weddingDate();
+        else if(account.weddingDate() != null) throw new Exception(message);
 
         if(account.firstName() != null && account.firstName().length() > 3) this.firstName = account.firstName();
         else if (account.firstName() != null) throw new Exception(message);

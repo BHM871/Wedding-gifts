@@ -1,5 +1,6 @@
 package com.example.wedding_gifts.application.services;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +58,7 @@ public class AccountServicesImpl implements AccountUseCase {
         String isNull = "Some value is null";
         
         if(data.brideGroom() == null || data.brideGroom().isEmpty()) throw new Exception(isNull);
+        if(data.weddingDate() == null) throw new Exception(isNull);
         if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
         if(data.lastName() == null || data.lastName().isEmpty()) throw new Exception(isNull);
         if(data.email() == null || data.email().isEmpty()) throw new Exception(isNull);
@@ -65,6 +67,7 @@ public class AccountServicesImpl implements AccountUseCase {
         if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
         
         if(data.brideGroom().length() < 3) throw new Exception(invalid);
+        if(data.weddingDate().getTime() < new Date().getTime()) throw new Exception(invalid);
         if(data.firstName().length() < 3) throw new Exception(invalid);
         if(data.lastName().length() < 3) throw new Exception(invalid);
         if(data.email().length() < 13) throw new Exception(invalid);

@@ -1,0 +1,15 @@
+@accountUrl = http://localhost:8080/account
+@id = {{create_account.response.body.id}}
+
+# @name create_account
+POST {{accountUrl}}/create
+Content-Type: application/json
+
+{
+    "firstName": "Adrian",
+    "lastName": "Almeida",
+    "brideGroom": "AdrianAdria",
+    "email": "adrian123@gmail.com",
+    "password": "123456789",
+    "pixKey": "07131121231"
+}
