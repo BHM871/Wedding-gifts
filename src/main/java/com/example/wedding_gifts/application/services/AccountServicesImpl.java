@@ -1,6 +1,5 @@
 package com.example.wedding_gifts.application.services;
 
-import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;

@@ -65,7 +65,9 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(login.email(), login.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        return ResponseEntity.ok("OK");
+        if(auth.isAuthenticated()) return ResponseEntity.ok("OK");
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
     private void validData(CreateAccountDTO data) throws Exception{
