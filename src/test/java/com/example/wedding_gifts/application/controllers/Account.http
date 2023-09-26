@@ -18,6 +18,10 @@ Content-Type: application/json
 
 ###
 
+DELETE {{accountUrl}}/delete?id=59eaf488-13b8-4527-9aa7-3fa0bf6a44d5
+
+###
+
 POST {{authenticationUrl}}/login
 Content-Type: application/json
 
