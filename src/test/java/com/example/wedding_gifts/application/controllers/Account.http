@@ -1,8 +1,9 @@
 @accountUrl = http://localhost:8080/account
+@authenticationUrl = http://localhost:8080/auth
 @id = {{create_account.response.body.id}}
 
 # @name create_account
-POST {{accountUrl}}/create
+POST {{authenticationUrl}}/register
 Content-Type: application/json
 
 {
@@ -10,7 +11,17 @@ Content-Type: application/json
     "lastName": "Almeida",
     "brideGroom": "AdrianAdria",
     "weddingDate": "2023-12-25",
-    "email": "adrian123@gmail.com",
+    "email": "adrian1234@gmail.com",
     "password": "123456789",
-    "pixKey": "07131121231"
+    "pixKey": "071311121231"
+}
+
+###
+
+POST {{authenticationUrl}}/login
+Content-Type: application/json
+
+{
+    "email": "adrian1234@gmail.com",
+    "password": "123456789"
 }

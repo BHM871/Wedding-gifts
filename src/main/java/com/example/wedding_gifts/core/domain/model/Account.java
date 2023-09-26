@@ -65,7 +65,7 @@ public class Account implements UserDetails {
     private String pixKey;
 
     @OneToMany(cascade = {CascadeType.REMOVE})
-    private List<Gifts> gifts;
+    private List<Gift> gifts;
 
     public Account(CreateAccountDTO account){
         this.brideGroom = account.brideGroom();
@@ -75,7 +75,7 @@ public class Account implements UserDetails {
         this.email = account.email();
         this.password = account.password();
         this.pixKey = account.pixKey();
-        this.gifts = new ArrayList<Gifts>();
+        this.gifts = new ArrayList<Gift>();
     }
 
     public Account update(UpdateAccountDTO account) throws Exception {

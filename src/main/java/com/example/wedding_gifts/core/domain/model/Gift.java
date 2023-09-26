@@ -26,7 +26,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Gifts {
+public class Gift {
     
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

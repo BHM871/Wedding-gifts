@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.AccountRepository;
@@ -21,14 +20,7 @@ public class AccountServicesImpl implements AccountUseCase {
 
     @Override
     public Account createAccount(CreateAccountDTO account) throws Exception {
-        validData(account);
         return repository.createAccount(account);
-    }
-
-    @Override
-    public String login(LoginDTO login) throws Exception {
-        //TODO: Implements Spring Security
-        throw new UnsupportedOperationException("Uniplemented method 'login'");
     }
 
     @Override
@@ -51,29 +43,6 @@ public class AccountServicesImpl implements AccountUseCase {
     @Override
     public void deleteAccount(UUID id) throws Exception {
         repository.deleteAccount(id);
-    }
-
-    private void validData(CreateAccountDTO data) throws Exception{
-        String invalid = "Some value is invalid";
-        String isNull = "Some value is null";
-        
-        if(data.brideGroom() == null || data.brideGroom().isEmpty()) throw new Exception(isNull);
-        if(data.weddingDate() == null) throw new Exception(isNull);
-        if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
-        if(data.lastName() == null || data.lastName().isEmpty()) throw new Exception(isNull);
-        if(data.email() == null || data.email().isEmpty()) throw new Exception(isNull);
-        if(data.password() == null || data.password().isEmpty()) throw new Exception(isNull);
-        if(data.pixKey() == null || data.pixKey().isEmpty()) throw new Exception(isNull);
-        if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
-        
-        if(data.brideGroom().length() < 3) throw new Exception(invalid);
-        if(data.weddingDate().getTime() < new Date().getTime()) throw new Exception(invalid);
-        if(data.firstName().length() < 3) throw new Exception(invalid);
-        if(data.lastName().length() < 3) throw new Exception(invalid);
-        if(data.email().length() < 13) throw new Exception(invalid);
-        if(data.password().length() < 8) throw new Exception(invalid);
-        if(data.pixKey().length() < 10) throw new Exception(invalid);
-   
     }
     
 }
