@@ -45,7 +45,7 @@ public class Gift {
     @NonNull
     private BigDecimal price;
 
-    private boolean isBought;
+    private Boolean isBought;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
