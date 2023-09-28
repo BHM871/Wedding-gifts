@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.wedding_gifts.adapters.security.TokenManager;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
+import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
+import com.example.wedding_gifts.core.domain.dtos.authentication.CreatedAccountResponseDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.AccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.AuthenticationController;
@@ -35,7 +37,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<Account> register(
+    public ResponseEntity<CreatedAccountResponseDTO> register(
         @RequestBody CreateAccountDTO account
     ) throws Exception {
         validData(account);
@@ -45,7 +47,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         String encrypPassword = new BCryptPasswordEncoder().encode(account.password());
         String encrypPixKey = new BCryptPasswordEncoder().encode(account.pixKey());
 
-        CreateAccountDTO newAccount = new CreateAccountDTO(
+        CreateAccountDTO createAccount = new CreateAccountDTO(
             account.firstName(), 
             account.lastName(), 
             account.brideGroom(), 
@@ -55,12 +57,19 @@ public class AuthenticationControllerImpl implements AuthenticationController {
             encrypPixKey
         );
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(repository.createAccount(newAccount));
+        Account newAccount = repository.createAccount(createAccount);
+
+        var usernamePassword = new UsernamePasswordAuthenticationToken(newAccount.getEmail(), newAccount.getPassword());
+        var auth = this.authenticationManager.authenticate(usernamePassword);
+
+        String token = tokenManager.generatorToken((Account) auth.getPrincipal());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedAccountResponseDTO(token, newAccount));
     }
 
     @Override
     @PostMapping("/login")
-    public ResponseEntity<String> login(
+    public ResponseEntity<AuthenticationResponseDTO> login(
         @RequestBody LoginDTO login
     ) throws Exception {
         validData(login);
@@ -68,9 +77,9 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(login.email(), login.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        String token = tokenManager.generatorToken((Account)auth.getPrincipal());
+        String token = tokenManager.generatorToken((Account) auth.getPrincipal());
 
-        if(auth.isAuthenticated()) return ResponseEntity.ok(token);
+        if(auth.isAuthenticated()) return ResponseEntity.ok(new AuthenticationResponseDTO(token));
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }

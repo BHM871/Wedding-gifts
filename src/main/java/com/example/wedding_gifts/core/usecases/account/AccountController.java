@@ -4,12 +4,13 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 
+import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 
 public interface AccountController {
 
-    public ResponseEntity<UUID> gifterBegin(String brideGroom) throws Exception;
+    public ResponseEntity<AccountResponseIdDTO> gifterBegin(String brideGroom) throws Exception;
 
     public ResponseEntity<Account> getAccountById(UUID id) throws Exception;
 

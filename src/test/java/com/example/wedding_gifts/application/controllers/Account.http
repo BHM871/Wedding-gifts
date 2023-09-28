@@ -1,25 +1,22 @@
 @accountUrl = http://localhost:8080/account
 @authenticationUrl = http://localhost:8080/auth
 @id = {{create_account.response.body.id}}
-@token = {{authenticated.response.body}}
+@id = {{begin.response.body.id}}
+@token = {{authenticated.response.body.token}}
 
 # @name create_account
-POST {{authenticationUrl}}/register?a={{token}}
+POST {{authenticationUrl}}/register
 Content-Type: application/json
 
 {
     "firstName": "Adrian",
     "lastName": "Almeida",
     "brideGroom": "AdrianAdria",
-    "weddingDate": "2023-12-25",
+    "weddingDate": "2023-07-15",
     "email": "adrian1234@gmail.com",
     "password": "123456789",
     "pixKey": "071311121231"
 }
-
-###
-
-DELETE {{accountUrl}}/delete?id={{id}}
 
 ###
 
@@ -31,3 +28,27 @@ Content-Type: application/json
     "email": "adrian1234@gmail.com",
     "password": "123456789"
 }
+
+###
+
+# @name begin
+GET {{accountUrl}}/begin?brideGroom=AdrianAdria
+
+###
+
+GET {{accountUrl}}/account?id={{id}}
+
+###
+
+PUT {{accountUrl}}/update?id={{id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "weddingDate": "2023-07-15"
+}
+
+###
+
+DELETE {{accountUrl}}/delete?id={{id}}
+Authorization: Bearer {{token}}

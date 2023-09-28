@@ -84,7 +84,7 @@ public class Account implements UserDetails {
         if(account.brideGroom() != null && account.brideGroom().length() > 3) this.brideGroom = account.brideGroom();
         else if(account.brideGroom() != null) throw new Exception(message);
 
-        if(account.weddingDate() != null && account.weddingDate().getTime() > new Date().getTime()) this.weddingDate = account.weddingDate();
+        if(account.weddingDate() != null && account.weddingDate().getTime() >= new Date().getTime()) this.weddingDate = account.weddingDate();
         else if(account.weddingDate() != null) throw new Exception(message);
 
         if(account.firstName() != null && account.firstName().length() > 3) this.firstName = account.firstName();

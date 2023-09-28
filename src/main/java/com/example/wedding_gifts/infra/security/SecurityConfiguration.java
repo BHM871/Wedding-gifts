@@ -28,7 +28,7 @@ public class SecurityConfiguration {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.DELETE, "/account/delete").authenticated()
-                .requestMatchers(HttpMethod.POST, "/account/update").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/account/update").authenticated()
                 .anyRequest().permitAll()
             )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

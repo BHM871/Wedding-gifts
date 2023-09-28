@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.AccountController;
@@ -28,10 +29,11 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     @GetMapping("/begin{brideGroom}")
-    public ResponseEntity<UUID> gifterBegin(
+    public ResponseEntity<AccountResponseIdDTO> gifterBegin(
         @RequestParam(name = "brideGroom", required = true) String brideGroom
     ) throws Exception {
-        return ResponseEntity.ok(services.verificAccountForGifter(brideGroom));    
+        UUID id = services.verificAccountForGifter(brideGroom);
+        return ResponseEntity.ok(new AccountResponseIdDTO(id));    
     }
 
     @Override
