@@ -1,9 +1,10 @@
 @accountUrl = http://localhost:8080/account
 @authenticationUrl = http://localhost:8080/auth
 @id = {{create_account.response.body.id}}
+@token = {{authenticated.response.body}}
 
 # @name create_account
-POST {{authenticationUrl}}/register
+POST {{authenticationUrl}}/register?a={{token}}
 Content-Type: application/json
 
 {
@@ -18,10 +19,11 @@ Content-Type: application/json
 
 ###
 
-DELETE {{accountUrl}}/delete?id=59eaf488-13b8-4527-9aa7-3fa0bf6a44d5
+DELETE {{accountUrl}}/delete?id={{id}}
 
 ###
 
+#  @name authenticated
 POST {{authenticationUrl}}/login
 Content-Type: application/json
 

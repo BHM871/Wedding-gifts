@@ -34,7 +34,7 @@ public class JwtTokenService implements TokenManager {
     }
 
     @Override
-    public String validateToken(String token) throws Exception {
+    public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)

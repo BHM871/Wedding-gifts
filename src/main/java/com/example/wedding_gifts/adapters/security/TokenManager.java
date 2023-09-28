@@ -6,6 +6,6 @@ public interface TokenManager {
 
     public String generatorToken(Account account) throws Exception;
 
-    public String validateToken(String token) throws Exception;
+    public String validateToken(String token);
 
 }

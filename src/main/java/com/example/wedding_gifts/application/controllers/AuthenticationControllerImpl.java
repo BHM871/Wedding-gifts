@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wedding_gifts.adapters.security.TokenManager;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
@@ -29,6 +30,8 @@ public class AuthenticationControllerImpl implements AuthenticationController {
     AccountRepository repository;
     @Autowired
     AuthenticationManager authenticationManager;
+    @Autowired
+    TokenManager tokenManager;
 
     @Override
     @PostMapping("/register")
@@ -65,7 +68,9 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         var usernamePassword = new UsernamePasswordAuthenticationToken(login.email(), login.password());
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        if(auth.isAuthenticated()) return ResponseEntity.ok("OK");
+        String token = tokenManager.generatorToken((Account)auth.getPrincipal());
+
+        if(auth.isAuthenticated()) return ResponseEntity.ok(token);
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
