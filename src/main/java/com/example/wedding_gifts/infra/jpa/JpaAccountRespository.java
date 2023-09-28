@@ -7,8 +7,6 @@ import com.example.wedding_gifts.core.domain.model.Account;
 import java.util.Optional;
 import java.util.UUID;
 
-
-
 public interface JpaAccountRespository extends JpaRepository<Account, UUID> {
 
     public Optional<Account> findByBrideGroom(String brideGroom);

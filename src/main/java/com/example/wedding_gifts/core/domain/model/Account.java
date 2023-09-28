@@ -15,13 +15,11 @@ import com.example.wedding_gifts.commun.LimitDateForAccount;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -64,9 +62,6 @@ public class Account implements UserDetails {
     @Column(unique = true)
     private String pixKey;
 
-    @OneToMany(cascade = {CascadeType.REMOVE})
-    private List<Gift> gifts;
-
     public Account(CreateAccountDTO account){
         this.brideGroom = account.brideGroom();
         this.weddingDate = account.weddingDate();
@@ -75,7 +70,6 @@ public class Account implements UserDetails {
         this.email = account.email();
         this.password = account.password();
         this.pixKey = account.pixKey();
-        this.gifts = new ArrayList<Gift>();
     }
 
     public Account update(UpdateAccountDTO account) throws Exception {

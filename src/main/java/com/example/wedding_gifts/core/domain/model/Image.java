@@ -2,10 +2,14 @@ package com.example.wedding_gifts.core.domain.model;
 
 import java.util.UUID;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +28,10 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private String path;
+    private String pathImage;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "gift_id")
+    private Gift gift;
     
 }

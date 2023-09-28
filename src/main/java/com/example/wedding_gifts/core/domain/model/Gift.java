@@ -10,10 +10,12 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,7 +37,7 @@ public class Gift {
     @NonNull
     private String title;
 
-    private String description;
+    private String giftDescription;
     
     @Enumerated(EnumType.STRING)
     private List<CategoriesEnum> categories;
@@ -43,9 +45,10 @@ public class Gift {
     @NonNull
     private BigDecimal price;
 
-    @OneToMany(cascade = {CascadeType.REMOVE})
-    private List<Image> images;
-
     private boolean isBought;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "account_id")
+    private Account account;
 
 }

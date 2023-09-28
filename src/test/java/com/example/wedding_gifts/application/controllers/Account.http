@@ -2,6 +2,7 @@
 @authenticationUrl = http://localhost:8080/auth
 @id = {{create_account.response.body.id}}
 @id = {{begin.response.body.id}}
+@token = {{create_account.response.body.token}}
 @token = {{authenticated.response.body.token}}
 
 # @name create_account
@@ -12,7 +13,7 @@ Content-Type: application/json
     "firstName": "Adrian",
     "lastName": "Almeida",
     "brideGroom": "AdrianAdria",
-    "weddingDate": "2023-07-15",
+    "weddingDate": "2023-12-25",
     "email": "adrian1234@gmail.com",
     "password": "123456789",
     "pixKey": "071311121231"
@@ -45,7 +46,7 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "weddingDate": "2023-07-15"
+    "weddingDate": "2023-12-15"
 }
 
 ###
