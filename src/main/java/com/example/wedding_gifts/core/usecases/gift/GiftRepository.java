@@ -11,6 +11,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByPrice
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndCategoriesDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
 
 public interface GiftRepository {
@@ -38,5 +39,7 @@ public interface GiftRepository {
     public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher);
 
     public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher);
+
+    public List<Gift> getAllFilters(SearcherDTO searcher);
 
 }

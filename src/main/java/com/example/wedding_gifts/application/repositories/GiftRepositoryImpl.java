@@ -14,6 +14,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByPrice
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndCategoriesDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.usecases.account.AccountRepository;
@@ -121,5 +122,14 @@ public class GiftRepositoryImpl implements GiftRepository {
             return thisJpaRepository.findByTitleAndPriceBetweenAndIsBought(searcher.title(), searcher.startPrice(), searcher.endPrice(), searcher.isBought());
         }
     }
+
+    @Override
+    public List<Gift> getAllFilters(SearcherDTO searcher) {
+        if(searcher.isBought() == null) {
+            return thisJpaRepository.findByTitleAndCategoriesAndPriceBetween(searcher.title(), searcher.categories(), searcher.startPrice(), searcher.endPrice());
+        } else {
+            return thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndIsBought(searcher.title(), searcher.categories(), searcher.startPrice(), searcher.endPrice(), searcher.isBought());
+        }
+    }    
     
 }
