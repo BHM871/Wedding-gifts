@@ -1,10 +1,14 @@
 package com.example.wedding_gifts.core.domain.model;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.lang.NonNull;
+
+import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -29,7 +33,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Gift {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -50,5 +54,30 @@ public class Gift {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
     private Account account;
+
+    public Gift(CreateGiftDTO gift) {
+        this.title = gift.title();
+        this.giftDescription = gift.giftDescription();
+        this.categories = gift.categories();
+        this.price = gift.price();
+        this.isBought = false;
+    }
+
+    public void update(UpdateGiftDTO gift) throws Exception {
+        String message = "Some value is invalid";
+
+        if(gift.title() != null && gift.title().length() > 3) this.title = gift.title();
+        else if(gift.title() != null) throw new Exception(message);
+
+        if(gift.giftDescription() != null && gift.giftDescription().length() > 10) this.giftDescription = gift.giftDescription();
+        else if(gift.giftDescription() != null) throw new Exception(message);
+
+        if(gift.categories() != null) this.categories = gift.categories();
+
+        if(gift.price() != null) this.price = gift.price();
+
+        if(gift.isBought() != null) this.isBought = gift.isBought();
+
+    }
 
 }

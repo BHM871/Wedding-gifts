@@ -11,6 +11,5 @@ public record CreateGiftDTO(
     String giftDescription,
     List<CategoriesEnum> categories,
     BigDecimal price,
-    Boolean isBought,
-    UUID account_id
+    UUID accountId
 ){}
