@@ -17,14 +17,26 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
 
     public List<Gift> findByTitle(String title);
     
-    public List<Gift> findByTitleAndBought(String title, boolean bought);
+    public List<Gift> findByTitleAndIsBought(String title, boolean bought);
 
     public List<Gift> findByCategories(List<CategoriesEnum> categories);
 
-    public List<Gift> findByCategoriesAndBought(List<CategoriesEnum> categories, boolean bought);
+    public List<Gift> findByCategoriesAndIsBought(List<CategoriesEnum> categories, boolean bought);
 
     public List<Gift> findByPriceBetween(BigDecimal start, BigDecimal end);
 
-    public List<Gift> findByPriceBetweenAndBought(BigDecimal start, BigDecimal end, boolean bought);
+    public List<Gift> findByPriceBetweenAndIsBought(BigDecimal start, BigDecimal end, boolean bought);
+
+    public List<Gift> findByTitleAndCategories(String title, List<CategoriesEnum> categories);
+
+    public List<Gift> findByTitleAndCategoriesAndIsBought(String title, List<CategoriesEnum> categories, boolean bought);
+
+    public List<Gift> findByTitleAndPriceBetween(String title, BigDecimal start, BigDecimal end);
+
+    public List<Gift> findByTitleAndPriceBetweenAndIsBought(String title, BigDecimal start, BigDecimal end, boolean bought);
+
+    public List<Gift> findByCategoriesAndPriceBetween(List<CategoriesEnum> categories, BigDecimal start, BigDecimal end);
+
+    public List<Gift> findByCategoriesAndPriceBetweenAndIsBought(List<CategoriesEnum> categories, BigDecimal start, BigDecimal end, boolean bought);
     
 }

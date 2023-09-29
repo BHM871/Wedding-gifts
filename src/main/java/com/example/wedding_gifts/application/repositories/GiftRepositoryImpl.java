@@ -4,18 +4,23 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.SearcherByCategoriesDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.SearcherByPriceDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.SearcherByTitleDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesAndPriceDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByPriceDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndCategoriesDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.usecases.account.AccountRepository;
 import com.example.wedding_gifts.core.usecases.gift.GiftRepository;
 import com.example.wedding_gifts.infra.jpa.JpaGiftRepository;
 
+@Repository
 public class GiftRepositoryImpl implements GiftRepository {
 
     @Autowired
@@ -48,7 +53,7 @@ public class GiftRepositoryImpl implements GiftRepository {
     }
 
     @Override
-    public void delete(UUID id) throws Exception {
+    public void deleteGift(UUID id) throws Exception {
         Gift gift = getById(id);
         thisJpaRepository.delete(gift);
     }
@@ -68,7 +73,7 @@ public class GiftRepositoryImpl implements GiftRepository {
         if(searcher.isBought() == null) {
             return thisJpaRepository.findByTitle(searcher.title());
         } else {
-            return thisJpaRepository.findByTitleAndBought(searcher.title(), searcher.isBought());
+            return thisJpaRepository.findByTitleAndIsBought(searcher.title(), searcher.isBought());
         }
     }
 
@@ -77,16 +82,43 @@ public class GiftRepositoryImpl implements GiftRepository {
         if(searcher.isBought() == null) {
             return thisJpaRepository.findByCategories(searcher.categories());
         } else {
-            return thisJpaRepository.findByCategoriesAndBought(searcher.categories(), searcher.isBought());
+            return thisJpaRepository.findByCategoriesAndIsBought(searcher.categories(), searcher.isBought());
         }
     }
 
     @Override
     public List<Gift> getByPriceOrBought(SearcherByPriceDTO searcher) {
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByPriceBetween(searcher.startPrice(),searcher.endPrice());
+            return thisJpaRepository.findByPriceBetween(searcher.startPrice(), searcher.endPrice());
         } else {
-            return thisJpaRepository.findByPriceBetweenAndBought(searcher.startPrice(), searcher.endPrice(), searcher.isBought());
+            return thisJpaRepository.findByPriceBetweenAndIsBought(searcher.startPrice(), searcher.endPrice(), searcher.isBought());
+        }
+    }
+
+    @Override
+    public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher) {
+        if(searcher.isBought() == null) {
+            return thisJpaRepository.findByCategoriesAndPriceBetween(searcher.categories(), searcher.startPrice(), searcher.endPrice());
+        } else {
+            return thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBought(searcher.categories(), searcher.startPrice(), searcher.endPrice(), searcher.isBought());
+        }
+    }
+
+    @Override
+    public List<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher) {
+        if(searcher.isBought() == null) {
+            return thisJpaRepository.findByTitleAndCategories(searcher.title(), searcher.categories());
+        } else {
+            return thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), searcher.categories(), searcher.isBought());
+        }
+    }
+
+    @Override
+    public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher) {
+        if(searcher.isBought() == null) {
+            return thisJpaRepository.findByTitleAndPriceBetween(searcher.title(), searcher.startPrice(), searcher.endPrice());
+        } else {
+            return thisJpaRepository.findByTitleAndPriceBetweenAndIsBought(searcher.title(), searcher.startPrice(), searcher.endPrice(), searcher.isBought());
         }
     }
     
