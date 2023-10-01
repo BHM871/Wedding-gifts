@@ -19,27 +19,27 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
     
     public List<Gift> findByTitleAndIsBought(String title, Boolean bought);
 
-    public List<Gift> findByCategories(List<CategoriesEnum> categories);
+    public List<Gift> findByCategories(CategoriesEnum categories);
 
-    public List<Gift> findByCategoriesAndIsBought(List<CategoriesEnum> categories, Boolean bought);
+    public List<Gift> findByCategoriesAndIsBought(CategoriesEnum categories, Boolean bought);
 
     public List<Gift> findByPriceBetween(BigDecimal start, BigDecimal end);
 
     public List<Gift> findByPriceBetweenAndIsBought(BigDecimal start, BigDecimal end, Boolean bought);
 
-    public List<Gift> findByTitleAndCategories(String title, List<CategoriesEnum> categories);
+    public List<Gift> findByTitleAndCategories(String title, CategoriesEnum categories);
 
-    public List<Gift> findByTitleAndCategoriesAndIsBought(String title, List<CategoriesEnum> categories, Boolean bought);
+    public List<Gift> findByTitleAndCategoriesAndIsBought(String title, CategoriesEnum categories, Boolean bought);
 
     public List<Gift> findByTitleAndPriceBetween(String title, BigDecimal start, BigDecimal end);
 
     public List<Gift> findByTitleAndPriceBetweenAndIsBought(String title, BigDecimal start, BigDecimal end, Boolean bought);
 
-    public List<Gift> findByCategoriesAndPriceBetween(List<CategoriesEnum> categories, BigDecimal start, BigDecimal end);
+    public List<Gift> findByCategoriesAndPriceBetween(CategoriesEnum categories, BigDecimal start, BigDecimal end);
 
-    public List<Gift> findByCategoriesAndPriceBetweenAndIsBought(List<CategoriesEnum> categories, BigDecimal start, BigDecimal end, Boolean bought);
+    public List<Gift> findByCategoriesAndPriceBetweenAndIsBought(CategoriesEnum categories, BigDecimal start, BigDecimal end, Boolean bought);
     
-    public List<Gift> findByTitleAndCategoriesAndPriceBetween(String title, List<CategoriesEnum> categories, BigDecimal start, BigDecimal end);
+    public List<Gift> findByTitleAndCategoriesAndPriceBetween(String title, CategoriesEnum categories, BigDecimal start, BigDecimal end);
     
-    public List<Gift> findByTitleAndCategoriesAndPriceBetweenAndIsBought(String title, List<CategoriesEnum> categories, BigDecimal start, BigDecimal end, Boolean bought);
+    public List<Gift> findByTitleAndCategoriesAndPriceBetweenAndIsBought(String title, CategoriesEnum categories, BigDecimal start, BigDecimal end, Boolean bought);
 }

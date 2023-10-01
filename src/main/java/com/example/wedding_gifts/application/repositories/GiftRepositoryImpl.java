@@ -1,6 +1,8 @@
 package com.example.wedding_gifts.application.repositories;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
+import com.example.wedding_gifts.core.domain.model.CategoriesEnum;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.usecases.account.AccountRepository;
 import com.example.wedding_gifts.core.usecases.gift.GiftRepository;
@@ -80,11 +83,15 @@ public class GiftRepositoryImpl implements GiftRepository {
 
     @Override
     public List<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher) {
+        Set<Gift> out = new HashSet<Gift>();
+        
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByCategories(searcher.categories());
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategories(cat));
         } else {
-            return thisJpaRepository.findByCategoriesAndIsBought(searcher.categories(), searcher.isBought());
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndIsBought(cat, searcher.isBought()));
         }
+
+        return (List<Gift>) out;
     }
 
     @Override
@@ -98,20 +105,28 @@ public class GiftRepositoryImpl implements GiftRepository {
 
     @Override
     public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher) {
+        Set<Gift> out = new HashSet<Gift>();
+        
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByCategoriesAndPriceBetween(searcher.categories(), searcher.startPrice(), searcher.endPrice());
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetween(cat, searcher.startPrice(), searcher.endPrice()));
         } else {
-            return thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBought(searcher.categories(), searcher.startPrice(), searcher.endPrice(), searcher.isBought());
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBought(cat, searcher.startPrice(), searcher.endPrice(), searcher.isBought()));
         }
+
+        return (List<Gift>) out;
     }
 
     @Override
     public List<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher) {
+        Set<Gift> out = new HashSet<Gift>();
+        
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndCategories(searcher.title(), searcher.categories());
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategories(searcher.title(), cat));
         } else {
-            return thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), searcher.categories(), searcher.isBought());
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), cat, searcher.isBought()));
         }
+
+        return (List<Gift>) out;
     }
 
     @Override
@@ -125,11 +140,15 @@ public class GiftRepositoryImpl implements GiftRepository {
 
     @Override
     public List<Gift> getAllFilters(SearcherDTO searcher) {
+        Set<Gift> out = new HashSet<Gift>();
+        
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndCategoriesAndPriceBetween(searcher.title(), searcher.categories(), searcher.startPrice(), searcher.endPrice());
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategories(searcher.title(), cat));
         } else {
-            return thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndIsBought(searcher.title(), searcher.categories(), searcher.startPrice(), searcher.endPrice(), searcher.isBought());
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), cat, searcher.isBought()));
         }
+
+        return (List<Gift>) out;
     }    
     
 }
