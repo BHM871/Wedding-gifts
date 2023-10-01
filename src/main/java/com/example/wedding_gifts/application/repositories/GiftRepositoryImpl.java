@@ -91,7 +91,7 @@ public class GiftRepositoryImpl implements GiftRepository {
             for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndIsBought(cat, searcher.isBought()));
         }
 
-        return (List<Gift>) out;
+        return List.copyOf(out);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class GiftRepositoryImpl implements GiftRepository {
             for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBought(cat, searcher.startPrice(), searcher.endPrice(), searcher.isBought()));
         }
 
-        return (List<Gift>) out;
+        return List.copyOf(out);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class GiftRepositoryImpl implements GiftRepository {
             for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), cat, searcher.isBought()));
         }
 
-        return (List<Gift>) out;
+        return List.copyOf(out);
     }
 
     @Override
@@ -148,7 +148,7 @@ public class GiftRepositoryImpl implements GiftRepository {
             for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), cat, searcher.isBought()));
         }
 
-        return (List<Gift>) out;
+        return List.copyOf(out);
     }    
     
 }
