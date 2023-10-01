@@ -1,0 +1,2 @@
+ALTER TABLE tb_gift DROP COLUMN categories;
+ALTER TABLE tb_gift ADD categories CHARACTER VARYING[] NOT NULL;

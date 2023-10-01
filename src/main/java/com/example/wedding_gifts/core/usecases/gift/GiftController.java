@@ -1,6 +1,7 @@
 package com.example.wedding_gifts.core.usecases.gift;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 
@@ -13,10 +14,12 @@ public interface GiftController {
     
     public ResponseEntity<Gift> createGift(CreateGiftDTO gift) throws Exception;
 
-    public ResponseEntity<String> updateGift(UpdateGiftDTO gift) throws Exception;
+    public ResponseEntity<String> updateGift(UpdateGiftDTO gift, UUID id) throws Exception;
+
+    public ResponseEntity<String> deleteGift(UUID id) throws Exception;
 
     public ResponseEntity<List<Gift>> getAllGifts();
 
-    public ResponseEntity<List<Gift>> getWithFilter(SearcherDTO searcher);
+    public ResponseEntity<List<Gift>> getWithFilter(SearcherDTO searcher) throws Exception;
 
 }
