@@ -17,7 +17,6 @@ import com.example.wedding_gifts.adapters.security.TokenManager;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.authentication.CreatedAccountResponseDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.AccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.AuthenticationController;
@@ -37,12 +36,12 @@ public class AuthenticationControllerImpl implements AuthenticationController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<CreatedAccountResponseDTO> register(
+    public ResponseEntity<Account> register(
         @RequestBody CreateAccountDTO account
     ) throws Exception {
         validData(account);
 
-        if(repository.getByEmail(account.email()) != null) return ResponseEntity.badRequest().build();
+        if(repository.getByEmail(account.email()) != null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
         String encrypPassword = new BCryptPasswordEncoder().encode(account.password());
         String encrypPixKey = new BCryptPasswordEncoder().encode(account.pixKey());
@@ -59,12 +58,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
 
         Account newAccount = repository.createAccount(createAccount);
 
-        var usernamePassword = new UsernamePasswordAuthenticationToken(newAccount.getEmail(), newAccount.getPassword());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
-
-        String token = tokenManager.generatorToken((Account) auth.getPrincipal());
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CreatedAccountResponseDTO(token, newAccount));
+        return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
     }
 
     @Override
