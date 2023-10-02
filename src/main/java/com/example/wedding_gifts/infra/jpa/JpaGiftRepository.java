@@ -10,71 +10,126 @@ import com.example.wedding_gifts.core.domain.model.Gift;
 import java.util.List;
 import java.math.BigDecimal;
 
+
 public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
-    
-    public List<Gift> findByIsBought(Boolean bought);
 
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title)")
-    public List<Gift> findByTitle(String title);
+                                        "WHERE account_id = :account")
+    public List<Gift> findAllByAccount(@Param("account") UUID account);
     
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) AND is_bought = :bought")
-    public List<Gift> findByTitleAndIsBought(String title, Boolean bought);
+                                        "WHERE is_bought = :bought " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByIsBoughtAndAccount(Boolean bought, @Param("account") UUID account);
 
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE :categories = ANY(categories)")
-    public List<Gift> findByCategories(@Param("categories") String categories);
-
-    @Query(nativeQuery = true, value = "SELECT * " +
-                                        "FROM tb_gift " +
-                                        "WHERE :categories = ANY(categories) AND is_bought = :bought")
-    public List<Gift> findByCategoriesAndIsBought(@Param("categories") String categories, Boolean bought);
-
-    public List<Gift> findByPriceBetween(BigDecimal start, BigDecimal end);
-
-    public List<Gift> findByPriceBetweenAndIsBought(BigDecimal start, BigDecimal end, Boolean bought);
-
-    @Query(nativeQuery = true, value = "SELECT * " +
-                                        "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) AND :categories = ANY(categories)")
-    public List<Gift> findByTitleAndCategories(String title, @Param("categories")String categories);
-
-    @Query(nativeQuery = true, value = "SELECT * " +
-                                        "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) AND :categories = ANY(categories) AND is_bought = :bought")
-    public List<Gift> findByTitleAndCategoriesAndIsBought(String title, @Param("categories") String categories, Boolean bought);
-
-    @Query(nativeQuery = true, value = "SELECT * " +
-                                        "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) AND price >= :start AND price <= :end")
-    public List<Gift> findByTitleAndPriceBetween(String title, BigDecimal start, BigDecimal end);
-
-    @Query(nativeQuery = true, value = "SELECT * " +
-                                        "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) AND price >= :start AND price <= :end AND is_bought = :bought")
-    public List<Gift> findByTitleAndPriceBetweenAndIsBought(String title, BigDecimal start, BigDecimal end, Boolean bought);
-
-    @Query(nativeQuery = true, value = "SELECT * " +
-                                        "FROM tb_gift " +
-                                        "WHERE :categories = ANY(categories) AND price >= :start AND price <= :end")
-    public List<Gift> findByCategoriesAndPriceBetween(@Param("categories") String categories, BigDecimal start, BigDecimal end);
-
-    @Query(nativeQuery = true, value = "SELECT * " +
-                                        "FROM tb_gift " +
-                                        "WHERE :categories = ANY(categories) AND price >= :start AND price <= :end AND is_bought = :bought")
-    public List<Gift> findByCategoriesAndPriceBetweenAndIsBought(@Param("categories") String categories, BigDecimal start, BigDecimal end, Boolean bought);
+                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByTitleAndAccount(String title, @Param("account") UUID account);
     
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) AND :categories = ANY(categories) AND price >= :start AND price <= :end")
-    public List<Gift> findByTitleAndCategoriesAndPriceBetween(String title, @Param("categories") String categories, BigDecimal start, BigDecimal end);
+                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                            "AND is_bought = :bought " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByTitleAndIsBoughtAndAccount(String title, Boolean bought, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE :categories = ANY(categories) " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByCategoriesAndAccount(@Param("categories") String categories, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE :categories = ANY(categories) " + 
+                                            "AND is_bought = :bought " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByCategoriesAndIsBoughtAndAccount(@Param("categories") String categories, Boolean bought, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE price >= :start " +
+                                            "AND price <= :end " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByPriceBetweenAndAccount(BigDecimal start, BigDecimal end, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE price >= :start " +
+                                            "AND price <= :end " +
+                                            "AND is_bought = :bought" +
+                                            "AND account_id = :account")
+    public List<Gift> findByPriceBetweenAndIsBoughtAndAccount(BigDecimal start, BigDecimal end, Boolean bought, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                            "AND :categories = ANY(categories) " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByTitleAndCategoriesAndAccount(String title, @Param("categories")String categories, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                            "AND :categories = ANY(categories) " + 
+                                            "AND is_bought = :bought " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByTitleAndCategoriesAndIsBoughtAndAccount(String title, @Param("categories") String categories, Boolean bought, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                            "AND price >= :start " + 
+                                            "AND price <= :end " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByTitleAndPriceBetweenAndAccount(String title, BigDecimal start, BigDecimal end, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                            "AND price >= :start " + 
+                                            "AND price <= :end " + 
+                                            "AND is_bought = :bought " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByTitleAndPriceBetweenAndIsBoughtAndAccount(String title, BigDecimal start, BigDecimal end, Boolean bought, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE :categories = ANY(categories) " + 
+                                            "AND price >= :start " + 
+                                            "AND price <= :end " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByCategoriesAndPriceBetweenAndAccount(@Param("categories") String categories, BigDecimal start, BigDecimal end, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE :categories = ANY(categories) " + 
+                                            "AND price >= :start " + 
+                                            "AND price <= :end " + 
+                                            "AND is_bought = :bought " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByCategoriesAndPriceBetweenAndIsBoughtAndAccount(@Param("categories") String categories, BigDecimal start, BigDecimal end, Boolean bought, @Param("account") UUID account);
     
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) AND :categories = ANY(categories) AND price >= :start AND price <= :end AND is_bought = :bought")
-    public List<Gift> findByTitleAndCategoriesAndPriceBetweenAndIsBought(String title, @Param("categories") String categories, BigDecimal start, BigDecimal end, Boolean bought);
+                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                            "AND :categories = ANY(categories) " + 
+                                            "AND price >= :start " + 
+                                            "AND price <= :end " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByTitleAndCategoriesAndPriceBetweenAndAccount(String title, @Param("categories") String categories, BigDecimal start, BigDecimal end, @Param("account") UUID account);
+    
+    @Query(nativeQuery = true, value = "SELECT * " +
+                                        "FROM tb_gift " +
+                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                            "AND :categories = ANY(categories) " + 
+                                            "AND price >= :start " + 
+                                            "AND price <= :end " + 
+                                            "AND is_bought = :bought " + 
+                                            "AND account_id = :account")
+    public List<Gift> findByTitleAndCategoriesAndPriceBetweenAndIsBoughtAndAccount(String title, @Param("categories") String categories, BigDecimal start, BigDecimal end, Boolean bought, @Param("account") UUID account);
 }

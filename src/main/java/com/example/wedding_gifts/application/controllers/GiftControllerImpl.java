@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
@@ -40,36 +41,42 @@ public class GiftControllerImpl implements GiftController {
     }
 
     @Override
-    @PutMapping("/update{id}")
+    @PutMapping("/update")
     public ResponseEntity<String> updateGift(
-        @RequestBody UpdateGiftDTO gift, 
-        @RequestParam(name = "id", required = true) UUID id
+        @RequestBody UpdateGiftDTO gift
     ) throws Exception {
-        services.updateGift(gift, id);
+        validData(gift);
+
+        services.updateGift(gift);
         return ResponseEntity.ok("sussefully");
     }
 
     @Override
-    @DeleteMapping("/delete{id}")
+    @DeleteMapping("/delete")
     public ResponseEntity<String> deleteGift(
-        @RequestParam(name = "id", required = true) UUID id
+        @RequestBody DeleteGiftDTO ids
     ) throws Exception {
-        services.deleteGift(id);
+        validData(ids);
+
+        services.deleteGift(ids);
         return ResponseEntity.ok("sussefully");
     }
 
     @Override
-    @GetMapping("/")
-    public ResponseEntity<List<Gift>> getAllGifts() {
-        return ResponseEntity.ok(services.getAllGifts());
+    @GetMapping("/all{accountId}")
+    public ResponseEntity<List<Gift>> getAllGifts(
+        @RequestParam(name = "accountId", required = true) UUID accountId
+    ) throws Exception {
+        return ResponseEntity.ok(services.getAllGifts(accountId));
     }
 
     @Override
-    @GetMapping("/filter")
+    @GetMapping("/filter{accountId}")
     public ResponseEntity<List<Gift>> getWithFilter(
-        @RequestBody SearcherDTO searcher
+        @RequestBody SearcherDTO searcher,
+        @RequestParam(name = "accountId", required = true) UUID accountId
     ) throws Exception {
-        return ResponseEntity.ok(services.getWithFilter(searcher));
+        return ResponseEntity.ok(services.getWithFilter(searcher, accountId));
     }
     
     private void validData(CreateGiftDTO data) throws Exception {
@@ -83,6 +90,22 @@ public class GiftControllerImpl implements GiftController {
         if(data.title().length() < 3) throw new Exception(invalid);
         if(data.giftDescription() != null && data.giftDescription().length() < 5) throw new Exception(invalid);
         if(data.price().doubleValue() < BigDecimal.TEN.doubleValue()) throw new Exception(invalid);
+
+    }
+
+    private void validData(UpdateGiftDTO data) throws Exception {
+        String isNull = "Some value is null";
+
+        if(data.giftId() == null) throw new Exception(isNull);
+        if(data.accountId() == null) throw new Exception(isNull);
+
+    }
+
+    private void validData(DeleteGiftDTO data) throws Exception {
+        String isNull = "Some value is null";
+
+        if(data.giftId() == null) throw new Exception(isNull);
+        if(data.accountId() == null) throw new Exception(isNull);
 
     }
 

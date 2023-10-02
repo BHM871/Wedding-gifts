@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesAndPriceDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesDTO;
@@ -32,48 +33,48 @@ public class GiftServicesImpl implements GiftUseCase {
     }
 
     @Override
-    public void updateGift(UpdateGiftDTO gift, UUID id) throws Exception {
-        repository.updateGift(gift, id);
+    public void updateGift(UpdateGiftDTO gift) throws Exception {
+        repository.updateGift(gift);
     }
 
     @Override
-    public void deleteGift(UUID id) throws Exception {
-        repository.deleteGift(id);
+    public void deleteGift(DeleteGiftDTO ids) throws Exception {
+        repository.deleteGift(ids);
     }
 
     @Override
-    public List<Gift> getAllGifts() {
-        return repository.getAllGifts();
+    public List<Gift> getAllGifts(UUID accountId) throws Exception {
+        return repository.getAllGifts(accountId);
     }
 
     @Override
-    public List<Gift> getWithFilter(SearcherDTO searcher) throws Exception {
+    public List<Gift> getWithFilter(SearcherDTO searcher, UUID accountId) throws Exception {
         if(searcher.title() != null && searcher.categories() != null && (searcher.startPrice() != null || searcher.endPrice() != null)){ 
-            return repository.getAllFilters(searcherDTO(searcher));
+            return repository.getAllFilters(searcherDTO(searcher), accountId);
         }
 
         if(searcher.title() != null){
             if(searcher.categories() != null) {
-                return repository.getByTitleAndCategoriesOrBought(searcherByTitleAndCategoriesDTO(searcher));
+                return repository.getByTitleAndCategoriesOrBought(searcherByTitleAndCategoriesDTO(searcher), accountId);
             }
 
             if(searcher.startPrice() != null || searcher.endPrice() != null) {
-                return repository.getByTitleAndPriceOrBought(searcherByTitleAndPriceDTO(searcher));
+                return repository.getByTitleAndPriceOrBought(searcherByTitleAndPriceDTO(searcher), accountId);
             }
 
-            return repository.getByTitleOrBoutght(searcherByTitleDTO(searcher));
+            return repository.getByTitleOrBoutght(searcherByTitleDTO(searcher), accountId);
         }
 
         if(searcher.categories() != null) {
             if(searcher.startPrice() != null || searcher.endPrice() != null) {
-                return repository.getByCategoriesAndPriceOrBought(searcherByCategoriesAndPriceDTO(searcher));
+                return repository.getByCategoriesAndPriceOrBought(searcherByCategoriesAndPriceDTO(searcher), accountId);
             }
 
-            return repository.getByCategoriesOrBought(searcherByCategoriesDTO(searcher));
+            return repository.getByCategoriesOrBought(searcherByCategoriesDTO(searcher), accountId);
         }
 
         if(searcher.startPrice() != null || searcher.endPrice() != null) {
-            return repository.getByPriceOrBought(searcherByPriceDTO(searcher));
+            return repository.getByPriceOrBought(searcherByPriceDTO(searcher), accountId);
         }
 
         throw new Exception("Filters are null");
