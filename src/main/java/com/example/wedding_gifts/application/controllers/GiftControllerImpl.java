@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
@@ -42,24 +43,24 @@ public class GiftControllerImpl implements GiftController {
 
     @Override
     @PutMapping("/update")
-    public ResponseEntity<String> updateGift(
+    public ResponseEntity<MessageDTO> updateGift(
         @RequestBody UpdateGiftDTO gift
     ) throws Exception {
         validData(gift);
 
         services.updateGift(gift);
-        return ResponseEntity.ok("sussefully");
+        return ResponseEntity.ok(new MessageDTO("sussefully"));
     }
 
     @Override
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteGift(
+    public ResponseEntity<MessageDTO> deleteGift(
         @RequestBody DeleteGiftDTO ids
     ) throws Exception {
         validData(ids);
 
         services.deleteGift(ids);
-        return ResponseEntity.ok("sussefully");
+        return ResponseEntity.ok(new MessageDTO("sussefully"));
     }
 
     @Override

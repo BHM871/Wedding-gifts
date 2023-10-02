@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
+import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.AccountController;
 import com.example.wedding_gifts.core.usecases.account.AccountUseCase;
@@ -55,11 +56,11 @@ public class AccountControllerImpl implements AccountController {
 
     @Override
     @DeleteMapping("/delete{id}")
-    public ResponseEntity<String> deleteAccount(
+    public ResponseEntity<MessageDTO> deleteAccount(
         @RequestParam(name = "id", required = true) UUID id
     ) throws Exception {
         services.deleteAccount(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("successfully");    
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("sussefully"));    
     }
     
 }

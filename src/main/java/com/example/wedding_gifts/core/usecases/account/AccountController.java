@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
+import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 
 public interface AccountController {
@@ -16,5 +17,5 @@ public interface AccountController {
 
     public ResponseEntity<Account> updateAccount(UpdateAccountDTO account, UUID id) throws Exception;
 
-    public ResponseEntity<String> deleteAccount(UUID id) throws Exception;
+    public ResponseEntity<MessageDTO> deleteAccount(UUID id) throws Exception;
 }
