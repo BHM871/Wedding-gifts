@@ -48,153 +48,93 @@ public class GiftServicesImpl implements GiftUseCase {
 
     @Override
     public List<Gift> getWithFilter(SearcherDTO searcher) throws Exception {
-        if(searcher.title() != null && searcher.categories() != null && (searcher.startPrice() != null || searcher.endPrice() != null)){
-            SearcherDTO newSearcher = searcherDTO(searcher);
-            return repository.getAllFilters(newSearcher);
+        if(searcher.title() != null && searcher.categories() != null && (searcher.startPrice() != null || searcher.endPrice() != null)){ 
+            return repository.getAllFilters(searcherDTO(searcher));
         }
 
         if(searcher.title() != null){
             if(searcher.categories() != null) {
-                return repository.getByTitleAndCategoriesOrBought(
-                    new SearcherByTitleAndCategoriesDTO(searcher.title(), searcher.categories(), searcher.isBought() != null ? searcher.isBought() : null)
-                );
+                return repository.getByTitleAndCategoriesOrBought(searcherByTitleAndCategoriesDTO(searcher));
             }
 
             if(searcher.startPrice() != null || searcher.endPrice() != null) {
-                SearcherByTitleAndPriceDTO newSearcher = searcherByTitleAndPriceDTO(searcher);
-                return repository.getByTitleAndPriceOrBought(newSearcher);
+                return repository.getByTitleAndPriceOrBought(searcherByTitleAndPriceDTO(searcher));
             }
 
-            return repository.getByTitleOrBoutght(
-                new SearcherByTitleDTO(searcher.title(), searcher.isBought() != null ? searcher.isBought() : null)
-            );
+            return repository.getByTitleOrBoutght(searcherByTitleDTO(searcher));
         }
 
         if(searcher.categories() != null) {
             if(searcher.startPrice() != null || searcher.endPrice() != null) {
-                SearcherByCategoriesAndPriceDTO newSearcher = searcherByCategoriesAndPriceDTO(searcher);
-                return repository.getByCategoriesAndPriceOrBought(newSearcher);
+                return repository.getByCategoriesAndPriceOrBought(searcherByCategoriesAndPriceDTO(searcher));
             }
 
-            return repository.getByCategoriesOrBought(
-                new SearcherByCategoriesDTO(searcher.categories(), searcher.isBought() != null ? searcher.isBought() : null)
-            );
+            return repository.getByCategoriesOrBought(searcherByCategoriesDTO(searcher));
         }
 
         if(searcher.startPrice() != null || searcher.endPrice() != null) {
-            SearcherByPriceDTO newSearcher = searcherByPriceDTO(searcher);
-            return repository.getByPriceOrBought(newSearcher);
+            return repository.getByPriceOrBought(searcherByPriceDTO(searcher));
         }
 
         throw new Exception("Filters are null");
     }
 
-    private SearcherDTO searcherDTO(SearcherDTO searcher){
-        SearcherDTO newSearcher;
+    private SearcherDTO searcherDTO(SearcherDTO searcher) {
+        return new SearcherDTO(
+            searcher.isBought() != null ? searcher.isBought() : null, 
+            searcher.title(), 
+            searcher.startPrice() != null ? searcher.startPrice() : BigDecimal.ZERO, 
+            searcher.endPrice() != null ? searcher.endPrice() : BigDecimal.valueOf(Double.MAX_VALUE),
+            searcher.categories() 
+        );
+    }
 
-        if(searcher.startPrice() == null) {
-            newSearcher = new SearcherDTO(
-                searcher.isBought() != null ? searcher.isBought() : null, 
-                searcher.title(), 
-                BigDecimal.ZERO, 
-                searcher.endPrice(),
-                searcher.categories() 
-            );
-        } else if(searcher.endPrice() == null) {
-            newSearcher = new SearcherDTO(
-                searcher.isBought() != null ? searcher.isBought() : null, 
-                searcher.title(), 
-                searcher.startPrice(), 
-                BigDecimal.valueOf(Double.MAX_VALUE),
-                searcher.categories() 
-            );
-        } else {
-            newSearcher = searcher;
-        }
-
-        return newSearcher;
+    private SearcherByTitleAndCategoriesDTO searcherByTitleAndCategoriesDTO(SearcherDTO searcher) {
+        return new SearcherByTitleAndCategoriesDTO(
+            searcher.title(), 
+            searcher.categories(), 
+            searcher.isBought() != null ? searcher.isBought() : null
+        );
     }
 
     private SearcherByTitleAndPriceDTO searcherByTitleAndPriceDTO(SearcherDTO searcher) {
-        SearcherByTitleAndPriceDTO newSearcher;
+        return new SearcherByTitleAndPriceDTO(
+            searcher.title(), 
+            searcher.startPrice() != null ? searcher.startPrice() : BigDecimal.ZERO, 
+            searcher.endPrice() != null ? searcher.endPrice() : BigDecimal.valueOf(Double.MAX_VALUE),
+            searcher.isBought() != null ? searcher.isBought() : null 
+        );
+    }
 
-        if(searcher.startPrice() == null) {
-            newSearcher = new SearcherByTitleAndPriceDTO( 
-                searcher.title(),
-                BigDecimal.ZERO, 
-                searcher.endPrice(),
-                searcher.isBought() != null ? searcher.isBought() : null
-            );
-        } else if(searcher.endPrice() == null) {
-            newSearcher = new SearcherByTitleAndPriceDTO(
-                searcher.title(), 
-                searcher.startPrice(), 
-                BigDecimal.valueOf(Double.MAX_VALUE),
-                searcher.isBought() != null ? searcher.isBought() : null 
-            );
-        } else {
-            newSearcher = new SearcherByTitleAndPriceDTO(
-                searcher.title(), 
-                searcher.startPrice(), 
-                searcher.endPrice(), 
-                searcher.isBought() != null ? searcher.isBought() : null);
-        }
-
-        return newSearcher;
+    private SearcherByTitleDTO searcherByTitleDTO(SearcherDTO searcher) {
+        return new SearcherByTitleDTO(
+            searcher.title(), 
+            searcher.isBought() != null ? searcher.isBought() : null
+        );
     }
 
     private SearcherByCategoriesAndPriceDTO searcherByCategoriesAndPriceDTO(SearcherDTO searcher) {
-        SearcherByCategoriesAndPriceDTO newSearcher;
+        return new SearcherByCategoriesAndPriceDTO(
+            searcher.categories(), 
+            searcher.startPrice() != null ? searcher.startPrice() : BigDecimal.ZERO, 
+            searcher.endPrice() != null ? searcher.endPrice() : BigDecimal.valueOf(Double.MAX_VALUE),
+            searcher.isBought() != null ? searcher.isBought() : null 
+        );
+    }
 
-        if(searcher.startPrice() == null) {
-            newSearcher = new SearcherByCategoriesAndPriceDTO( 
-                searcher.categories(),
-                BigDecimal.ZERO, 
-                searcher.endPrice(),
-                searcher.isBought() != null ? searcher.isBought() : null
-            );
-        } else if(searcher.endPrice() == null) {
-            newSearcher = new SearcherByCategoriesAndPriceDTO(
-                searcher.categories(), 
-                searcher.startPrice(), 
-                BigDecimal.valueOf(Double.MAX_VALUE),
-                searcher.isBought() != null ? searcher.isBought() : null 
-            );
-        } else {
-            newSearcher = new SearcherByCategoriesAndPriceDTO(
-                searcher.categories(), 
-                searcher.startPrice(), 
-                searcher.endPrice(), 
-                searcher.isBought() != null ? searcher.isBought() : null);
-        }
-
-        return newSearcher;
+    private SearcherByCategoriesDTO searcherByCategoriesDTO(SearcherDTO searcher) {
+        return new SearcherByCategoriesDTO(
+            searcher.categories(), 
+            searcher.isBought() != null ? searcher.isBought() : null
+        );
     }
 
     private SearcherByPriceDTO searcherByPriceDTO(SearcherDTO searcher) {
-        SearcherByPriceDTO newSearcher;
-
-        if(searcher.startPrice() == null) {
-            newSearcher = new SearcherByPriceDTO(
-                BigDecimal.ZERO, 
-                searcher.endPrice(),
-                searcher.isBought() != null ? searcher.isBought() : null
-            );
-        } else if(searcher.endPrice() == null) {
-            newSearcher = new SearcherByPriceDTO(
-                searcher.startPrice(), 
-                BigDecimal.valueOf(Double.MAX_VALUE),
-                searcher.isBought() != null ? searcher.isBought() : null 
-            );
-        } else {
-            newSearcher = new SearcherByPriceDTO(
-                searcher.startPrice(), 
-                searcher.endPrice(),
-                searcher.isBought() != null ? searcher.isBought() : null 
-            );
-        }
-
-        return newSearcher;
+        return new SearcherByPriceDTO(
+            searcher.startPrice() != null ? searcher.startPrice() : BigDecimal.ZERO, 
+            searcher.endPrice() != null ? searcher.endPrice() : BigDecimal.valueOf(Double.MAX_VALUE),
+            searcher.isBought() != null ? searcher.isBought() : null 
+        );
     }
     
 }
