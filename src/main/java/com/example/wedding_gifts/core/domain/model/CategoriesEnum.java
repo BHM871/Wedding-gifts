@@ -5,6 +5,10 @@ public enum CategoriesEnum {
     KITCHEN,
     ROOM,
     BEDROOM,
-    TOILET
+    TOILET;
+
+    public String toString(){
+        return this.name();
+    }
 
 }

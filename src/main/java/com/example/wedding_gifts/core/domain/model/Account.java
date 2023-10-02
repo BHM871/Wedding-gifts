@@ -1,6 +1,5 @@
 package com.example.wedding_gifts.core.domain.model;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;

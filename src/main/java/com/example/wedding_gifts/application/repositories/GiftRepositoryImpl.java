@@ -86,9 +86,9 @@ public class GiftRepositoryImpl implements GiftRepository {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategories(cat));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategories(cat.toString()));
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndIsBought(cat, searcher.isBought()));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndIsBought(cat.toString(), searcher.isBought()));
         }
 
         return List.copyOf(out);
@@ -108,9 +108,9 @@ public class GiftRepositoryImpl implements GiftRepository {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetween(cat, searcher.startPrice(), searcher.endPrice()));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetween(cat.toString(), searcher.startPrice(), searcher.endPrice()));
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBought(cat, searcher.startPrice(), searcher.endPrice(), searcher.isBought()));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBought(cat.toString(), searcher.startPrice(), searcher.endPrice(), searcher.isBought()));
         }
 
         return List.copyOf(out);
@@ -121,9 +121,9 @@ public class GiftRepositoryImpl implements GiftRepository {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategories(searcher.title(), cat));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategories(searcher.title(), cat.toString()));
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), cat, searcher.isBought()));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), cat.toString(), searcher.isBought()));
         }
 
         return List.copyOf(out);
@@ -143,9 +143,9 @@ public class GiftRepositoryImpl implements GiftRepository {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategories(searcher.title(), cat));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategories(searcher.title(), cat.toString()));
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), cat, searcher.isBought()));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBought(searcher.title(), cat.toString(), searcher.isBought()));
         }
 
         return List.copyOf(out);
