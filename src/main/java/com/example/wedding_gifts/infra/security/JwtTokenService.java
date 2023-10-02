@@ -7,12 +7,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.wedding_gifts.adapters.security.TokenManager;
+import com.example.wedding_gifts.adapters.security.ITokenManager;
 import com.example.wedding_gifts.commun.LimitTimeForToken;
 import com.example.wedding_gifts.core.domain.model.Account;
 
 @Service
-public class JwtTokenService implements TokenManager {
+public class JwtTokenService implements ITokenManager {
 
     @Value("${api.security.token.secret}")
     private String secret;

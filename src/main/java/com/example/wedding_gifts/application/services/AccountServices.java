@@ -8,14 +8,14 @@ import org.springframework.stereotype.Service;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
-import com.example.wedding_gifts.core.usecases.account.AccountRepository;
-import com.example.wedding_gifts.core.usecases.account.AccountUseCase;
+import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
+import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
 
 @Service
-public class AccountServicesImpl implements AccountUseCase {
+public class AccountServices implements IAccountUseCase {
 
     @Autowired
-    AccountRepository repository;
+    IAccountRepository repository;
 
     @Override
     public Account createAccount(CreateAccountDTO account) throws Exception {

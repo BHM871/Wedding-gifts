@@ -7,7 +7,7 @@ import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 
-public interface AuthenticationController {
+public interface IAuthenticationController {
 
     public ResponseEntity<AuthenticationResponseDTO> login(LoginDTO login) throws Exception;
 

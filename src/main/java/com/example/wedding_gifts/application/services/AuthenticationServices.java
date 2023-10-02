@@ -5,14 +5,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.wedding_gifts.core.usecases.account.AccountRepository;
-import com.example.wedding_gifts.core.usecases.auth.AuthenticationService;
+import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
+import com.example.wedding_gifts.core.usecases.auth.IAuthenticationService;
 
 @Service
-public class AuthenticationServicesImpl implements AuthenticationService {
+public class AuthenticationServices implements IAuthenticationService {
 
     @Autowired
-    AccountRepository repository;
+    IAccountRepository repository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

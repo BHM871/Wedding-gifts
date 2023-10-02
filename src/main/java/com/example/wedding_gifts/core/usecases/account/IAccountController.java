@@ -9,7 +9,7 @@ import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 
-public interface AccountController {
+public interface IAccountController {
 
     public ResponseEntity<AccountResponseIdDTO> gifterBegin(String brideGroom) throws Exception;
 

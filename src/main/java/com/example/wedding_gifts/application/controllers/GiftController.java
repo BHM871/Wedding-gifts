@@ -22,15 +22,15 @@ import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
-import com.example.wedding_gifts.core.usecases.gift.GiftController;
-import com.example.wedding_gifts.core.usecases.gift.GiftUseCase;
+import com.example.wedding_gifts.core.usecases.gift.IGiftController;
+import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
 @RestController
 @RequestMapping("/gift")
-public class GiftControllerImpl implements GiftController {
+public class GiftController implements IGiftController {
 
     @Autowired
-    GiftUseCase services;
+    IGiftUseCase services;
 
     @Override
     @PostMapping("/create")

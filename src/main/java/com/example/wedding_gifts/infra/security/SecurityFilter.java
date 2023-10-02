@@ -9,8 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.wedding_gifts.adapters.security.TokenManager;
-import com.example.wedding_gifts.core.usecases.account.AccountRepository;
+import com.example.wedding_gifts.adapters.security.ITokenManager;
+import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -21,9 +21,9 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
-    TokenManager tokenManager;
+    ITokenManager tokenManager;
     @Autowired
-    AccountRepository accountRepository;
+    IAccountRepository accountRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

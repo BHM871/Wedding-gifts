@@ -15,7 +15,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
 
-public interface GiftRepository {
+public interface IGiftRepository {
     
     public Gift save(Gift gift) throws Exception;
 

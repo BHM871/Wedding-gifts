@@ -18,14 +18,14 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
-import com.example.wedding_gifts.core.usecases.gift.GiftRepository;
-import com.example.wedding_gifts.core.usecases.gift.GiftUseCase;
+import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
+import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
 @Service
-public class GiftServicesImpl implements GiftUseCase {
+public class GiftServices implements IGiftUseCase {
 
     @Autowired
-    GiftRepository repository;
+    IGiftRepository repository;
 
     @Override
     public Gift createGift(CreateGiftDTO gift) throws Exception {

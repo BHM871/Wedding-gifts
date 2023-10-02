@@ -12,7 +12,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
 
-public interface GiftController {
+public interface IGiftController {
     
     public ResponseEntity<Gift> createGift(CreateGiftDTO gift) throws Exception;
 

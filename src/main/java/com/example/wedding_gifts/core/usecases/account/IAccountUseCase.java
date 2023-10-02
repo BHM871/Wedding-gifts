@@ -6,7 +6,7 @@ import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 
-public interface AccountUseCase {
+public interface IAccountUseCase {
 
     public Account createAccount(CreateAccountDTO account) throws Exception;
 

@@ -18,15 +18,15 @@ import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
-import com.example.wedding_gifts.core.usecases.account.AccountController;
-import com.example.wedding_gifts.core.usecases.account.AccountUseCase;
+import com.example.wedding_gifts.core.usecases.account.IAccountController;
+import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
 
 @RestController
 @RequestMapping("/account")
-public class AccountControllerImpl implements AccountController {
+public class AccountController implements IAccountController {
 
     @Autowired
-    AccountUseCase services;
+    IAccountUseCase services;
 
     @Override
     @GetMapping("/begin{brideGroom}")

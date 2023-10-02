@@ -13,26 +13,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.wedding_gifts.adapters.security.TokenManager;
+import com.example.wedding_gifts.adapters.security.ITokenManager;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
-import com.example.wedding_gifts.core.usecases.account.AccountRepository;
-import com.example.wedding_gifts.core.usecases.auth.AuthenticationController;
+import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
+import com.example.wedding_gifts.core.usecases.auth.IAuthenticationController;
 
 import lombok.var;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthenticationControllerImpl implements AuthenticationController {
+public class AuthenticationController implements IAuthenticationController {
 
     @Autowired
-    AccountRepository repository;
+    IAccountRepository repository;
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired
-    TokenManager tokenManager;
+    ITokenManager tokenManager;
 
     @Override
     @PostMapping("/register")

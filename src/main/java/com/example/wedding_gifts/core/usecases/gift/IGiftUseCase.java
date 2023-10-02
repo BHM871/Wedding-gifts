@@ -9,7 +9,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
 
-public interface GiftUseCase {
+public interface IGiftUseCase {
 
     public Gift createGift(CreateGiftDTO gift) throws Exception;
 

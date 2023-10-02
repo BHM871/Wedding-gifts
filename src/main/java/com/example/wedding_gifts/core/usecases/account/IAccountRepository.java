@@ -8,7 +8,7 @@ import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 
-public interface AccountRepository {
+public interface IAccountRepository {
 
     public Account save(Account account) throws Exception;
 

@@ -21,17 +21,17 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.domain.model.CategoriesEnum;
 import com.example.wedding_gifts.core.domain.model.Gift;
-import com.example.wedding_gifts.core.usecases.account.AccountRepository;
-import com.example.wedding_gifts.core.usecases.gift.GiftRepository;
+import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
+import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
 import com.example.wedding_gifts.infra.jpa.JpaGiftRepository;
 
 @Repository
-public class GiftRepositoryImpl implements GiftRepository {
+public class GiftRepository implements IGiftRepository {
 
     @Autowired
     JpaGiftRepository thisJpaRepository;
     @Autowired
-    AccountRepository accountRepository;
+    IAccountRepository accountRepository;
 
     @Override
     public Gift save(Gift gift) throws Exception {
