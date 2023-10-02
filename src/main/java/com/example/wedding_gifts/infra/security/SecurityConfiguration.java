@@ -29,6 +29,9 @@ public class SecurityConfiguration {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.DELETE, "/account/delete").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/account/update").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/gift/delete").authenticated()
+                .requestMatchers(HttpMethod.POST, "/gift/create").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/gift/update").authenticated()
                 .anyRequest().permitAll()
             )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
