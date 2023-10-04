@@ -1,15 +1,19 @@
 package com.example.wedding_gifts.core.usecases.image;
 
+import java.util.List;
+import java.util.UUID;
+
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 
 public interface IImageUseCase {
     
-    public String saveImage(SaveImageDTO saveImage) throws Exception;
-
-    public String updateImage(UpdateImageDTO updateImage) throws Exception;
+    public String saveImage(ImageDTO saveImage) throws Exception;
 
     public void deleteImage(DeleteImageDTO deleteImage) throws Exception;
+
+    public String getById(UUID imageId) throws Exception;
+
+    public List<String> getAllByGift(UUID giftId) throws Exception;
 
 }

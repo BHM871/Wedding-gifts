@@ -2,6 +2,9 @@ package com.example.wedding_gifts.core.domain.model;
 
 import java.util.UUID;
 
+import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
+
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,10 +29,17 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Nonnull
     private String pathImage;
 
     @ManyToOne()
     @JoinColumn(name = "gift_id")
     private Gift gift;
+
+    public Image(SaveImageDTO saveImage) throws Exception {
+        if(saveImage.pathImage() == null) throw new Exception("Error in save image");
+
+        this.pathImage = saveImage.pathImage();
+    }
     
 }
