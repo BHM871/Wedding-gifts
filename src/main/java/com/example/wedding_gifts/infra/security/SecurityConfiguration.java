@@ -30,7 +30,6 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/account/delete").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/account/update").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/gift/delete").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/gift/update").authenticated()
                 .anyRequest().permitAll()
             )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

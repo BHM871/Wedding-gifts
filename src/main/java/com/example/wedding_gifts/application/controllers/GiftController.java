@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,6 +44,7 @@ public class GiftController implements IGiftController {
 
     @Override
     @PutMapping("/update")
+    @CrossOrigin
     public ResponseEntity<MessageDTO> updateGift(
         @RequestBody UpdateGiftDTO gift
     ) throws Exception {
@@ -55,7 +57,7 @@ public class GiftController implements IGiftController {
     @Override
     @DeleteMapping("/delete")
     public ResponseEntity<MessageDTO> deleteGift(
-        @RequestBody DeleteGiftDTO ids
+        DeleteGiftDTO ids
     ) throws Exception {
         validData(ids);
 

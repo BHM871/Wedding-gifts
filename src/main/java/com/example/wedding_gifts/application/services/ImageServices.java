@@ -39,7 +39,7 @@ public class ImageServices implements IImageUseCase {
             Path imagePath = Paths.get(generateImagePath(path, image.image())); 
             Files.write(imagePath, bytesOfImage);
 
-            return repository.saveImage(new SaveImageDTO(imagePath.toString(), image.giftId())); 
+            return repository.saveImage(new SaveImageDTO(imagePath.toString().replace('\\', '/'), image.giftId())); 
         } catch (IOException e) {
             throw new Exception(e.getMessage(), e);
         }
@@ -47,7 +47,8 @@ public class ImageServices implements IImageUseCase {
 
     @Override
     public void deleteImage(DeleteImageDTO deleteImage) throws Exception {
-        boolean isDeleted = Files.deleteIfExists(Paths.get(deleteImage.pathImage()));
+        Path a = Paths.get(deleteImage.pathImage());
+        boolean isDeleted = Files.deleteIfExists(a);
         
         if(isDeleted){
             repository.deleteImage(deleteImage);
