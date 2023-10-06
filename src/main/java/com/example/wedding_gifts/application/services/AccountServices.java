@@ -1,5 +1,6 @@
 package com.example.wedding_gifts.application.services;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,15 +8,20 @@ import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
+import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
 @Service
 public class AccountServices implements IAccountUseCase {
 
     @Autowired
     IAccountRepository repository;
+    @Autowired
+    IGiftUseCase giftServices;
 
     @Override
     public Account createAccount(CreateAccountDTO account) throws Exception {
@@ -41,6 +47,14 @@ public class AccountServices implements IAccountUseCase {
 
     @Override
     public void deleteAccount(UUID id) throws Exception {
+        List<GiftResponseDTO> gifts = giftServices.getAllGifts(id);
+
+        for(GiftResponseDTO gift : gifts) {
+            giftServices.deleteGift(
+                new DeleteGiftDTO(gift.gift().getId(), id)
+            );
+        }
+
         repository.deleteAccount(id);
     }
     
