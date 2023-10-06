@@ -1,14 +1,17 @@
 package com.example.wedding_gifts.application.services;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
@@ -20,7 +23,7 @@ import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
 @Service
 public class ImageServices implements IImageUseCase {
 
-    String sourceImages = "com/exemple/wedding_gifts/infra/images/";
+    private static final String sourceImages = "src/main/resources/db/images/";
     
     @Autowired
     IImageRepository repository;
@@ -29,12 +32,16 @@ public class ImageServices implements IImageUseCase {
     public String saveImage(ImageDTO image) throws Exception {
         try {
             byte[] bytesOfImage = image.image().getBytes();
-            Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId()+"/"+LocalDateTime.now().toString());
-            Files.write(path, bytesOfImage);
 
-            return repository.saveImage(new SaveImageDTO(path.toString(), image.giftId())); 
-        } catch (Exception e) {
-            throw new Exception("Error in save image", e);
+            Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
+            Files.createDirectories(path);
+
+            Path imagePath = Paths.get(generateImagePath(path, image.image())); 
+            Files.write(imagePath, bytesOfImage);
+
+            return repository.saveImage(new SaveImageDTO(imagePath.toString(), image.giftId())); 
+        } catch (IOException e) {
+            throw new Exception(e.getMessage(), e);
         }
     }
 
@@ -66,6 +73,14 @@ public class ImageServices implements IImageUseCase {
         List<String> pathImages = images.stream().map(image -> image.getPathImage()).toList();
 
         return pathImages;
+    }
+
+    private String generateImagePath(Path path, MultipartFile image) throws Exception {
+        if(image.getContentType() == null) throw new Exception();
+
+        return path.toString()+"/"+
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")).toString()+"."
+                +image.getContentType().replaceAll("image/", "");
     }
     
 }

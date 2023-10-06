@@ -20,6 +20,6 @@ public interface JpaImageRespository extends JpaRepository<Image, UUID> {
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_image " +
                                         "WHERE gift_id = :gift")
-    public List<Image> findAllByGift(@Param("gift")String gift);
+    public List<Image> findAllByGift(@Param("gift")UUID gift);
     
 }

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
@@ -35,9 +34,10 @@ public class GiftController implements IGiftController {
     @Override
     @PostMapping("/create")
     public ResponseEntity<GiftResponseDTO> createGift(
-        @RequestBody CreateGiftDTO gift
+        CreateGiftDTO gift
     ) throws Exception {
         validData(gift);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(gift));
     }
 

@@ -43,10 +43,8 @@ public class GiftServices implements IGiftUseCase {
         for(MultipartFile image : gift.images()) {
 
             if(
-                !image.getName().endsWith(".jpeg") && 
-                !image.getName().endsWith(".png") && 
-                !image.getName().endsWith(".jpg")
-            ) throw new Exception(image.getName()+" is not image");
+                image.getContentType() == null || !image.getContentType().startsWith("image")
+            ) throw new Exception(image.getOriginalFilename()+" is not image");
 
             images.add(
                 imageService.saveImage(

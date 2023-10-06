@@ -58,7 +58,7 @@ public class ImageRepository implements IImageRepository {
 
     @Override
     public List<Image> getAllImagesByGift(UUID giftId) throws Exception {
-        return thisJpaRespository.findAllByGift(giftId.toString());
+        return thisJpaRespository.findAllByGift(giftId);
     }
     
 }
