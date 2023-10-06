@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.adapters.security.ITokenManager;
+import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
@@ -36,7 +37,7 @@ public class AuthenticationController implements IAuthenticationController {
 
     @Override
     @PostMapping("/register")
-    public ResponseEntity<Account> register(
+    public ResponseEntity<AccountResponseAccountDTO> register(
         @RequestBody CreateAccountDTO account
     ) throws Exception {
         validData(account);
@@ -56,7 +57,7 @@ public class AuthenticationController implements IAuthenticationController {
             encrypPixKey
         );
 
-        Account newAccount = repository.createAccount(createAccount);
+        AccountResponseAccountDTO newAccount = repository.createAccount(createAccount);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
     }

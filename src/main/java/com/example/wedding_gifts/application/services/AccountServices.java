@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
@@ -24,7 +25,7 @@ public class AccountServices implements IAccountUseCase {
     IGiftUseCase giftServices;
 
     @Override
-    public Account createAccount(CreateAccountDTO account) throws Exception {
+    public AccountResponseAccountDTO createAccount(CreateAccountDTO account) throws Exception {
         return repository.createAccount(account);
     }
 
@@ -36,12 +37,20 @@ public class AccountServices implements IAccountUseCase {
     }
 
     @Override
-    public Account getAccountById(UUID id) throws Exception {
-        return repository.getAccountById(id);
+    public AccountResponseAccountDTO getAccountById(UUID id) throws Exception {
+        Account account = repository.getAccountById(id);
+
+        return new AccountResponseAccountDTO(
+            account.getId(), 
+            account.getBrideGroom(), 
+            account.getWeddingDate(), 
+            account.getFirstName(), 
+            account.getLastName(), 
+            account.getEmail());
     }
 
     @Override
-    public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
+    public AccountResponseAccountDTO updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
         return repository.updateAccount(account, id);
     }
 

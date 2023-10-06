@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
-import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountController;
 import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
 
@@ -39,7 +39,7 @@ public class AccountController implements IAccountController {
 
     @Override
     @GetMapping("/account{id}")
-    public ResponseEntity<Account> getAccountById(
+    public ResponseEntity<AccountResponseAccountDTO> getAccountById(
         @RequestParam(name = "id", required = true) UUID id
     ) throws Exception {
         return ResponseEntity.ok(services.getAccountById(id));
@@ -47,7 +47,7 @@ public class AccountController implements IAccountController {
 
     @Override
     @PutMapping("/update{id}")
-    public ResponseEntity<Account> updateAccount(
+    public ResponseEntity<AccountResponseAccountDTO> updateAccount(
         @RequestBody UpdateAccountDTO account,
         @RequestParam(name = "id", required = true) UUID id
     ) throws Exception {
