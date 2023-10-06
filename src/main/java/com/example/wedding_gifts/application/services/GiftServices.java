@@ -40,7 +40,7 @@ public class GiftServices implements IGiftUseCase {
     public GiftResponseDTO createGift(CreateGiftDTO gift) throws Exception {
         Gift newGift = repository.createGift(gift);
 
-        List<String> images = new ArrayList<String>();
+        List<Image> images = new ArrayList<Image>();
         for(MultipartFile image : gift.images()) {
 
             if(
@@ -51,7 +51,7 @@ public class GiftServices implements IGiftUseCase {
                 imageService.saveImage(
                     new ImageDTO(image,
                     newGift.getId(), newGift.getAccount().getId())
-                ).getPathImage()
+                )
             );
         }
 
@@ -101,10 +101,9 @@ public class GiftServices implements IGiftUseCase {
         List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
         for(Gift gift : gifts) {
             List<Image> images = imageService.getAllByGift(gift.getId());
-            List<String> imagesPath = images.stream().map(image -> image.getPathImage()).toList();
 
             giftResponseList.add(
-                new GiftResponseDTO(gift, imagesPath)
+                new GiftResponseDTO(gift, images)
             );
         }
 
@@ -147,10 +146,9 @@ public class GiftServices implements IGiftUseCase {
         List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
         for(Gift gift : gifts) {
             List<Image> images = imageService.getAllByGift(gift.getId());
-            List<String> imagesPath = images.stream().map(image -> image.getPathImage()).toList();
 
             giftResponseList.add(
-                new GiftResponseDTO(gift, imagesPath)
+                new GiftResponseDTO(gift, images)
             );
         }
 

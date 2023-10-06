@@ -46,7 +46,7 @@ public class GiftController implements IGiftController {
     @PutMapping("/update")
     @CrossOrigin
     public ResponseEntity<MessageDTO> updateGift(
-        @RequestBody UpdateGiftDTO gift
+        UpdateGiftDTO gift
     ) throws Exception {
         validData(gift);
 
