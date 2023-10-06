@@ -29,7 +29,7 @@ public class ImageServices implements IImageUseCase {
     IImageRepository repository;
 
     @Override
-    public String saveImage(ImageDTO image) throws Exception {
+    public Image saveImage(ImageDTO image) throws Exception {
         try {
             byte[] bytesOfImage = image.image().getBytes();
 
@@ -47,8 +47,8 @@ public class ImageServices implements IImageUseCase {
 
     @Override
     public void deleteImage(DeleteImageDTO deleteImage) throws Exception {
-        Path a = Paths.get(deleteImage.pathImage());
-        boolean isDeleted = Files.deleteIfExists(a);
+        Image image = repository.getById(deleteImage.imageId());
+        boolean isDeleted = Files.deleteIfExists(Paths.get(image.getPathImage()));
         
         if(isDeleted){
             repository.deleteImage(deleteImage);
@@ -58,22 +58,13 @@ public class ImageServices implements IImageUseCase {
     }
 
     @Override
-    public String getById(UUID imageId) throws Exception {
-        return repository.getById(imageId).getPathImage();
+    public Image getById(UUID imageId) throws Exception {
+        return repository.getById(imageId);
     }
 
     @Override
-    public UUID getImageIdByPath(String path) throws Exception {
-        return repository.getByPath(path).getId();
-    }
-
-    @Override
-    public List<String> getAllByGift(UUID giftId) throws Exception {
-        List<Image> images = repository.getAllImagesByGift(giftId);
-
-        List<String> pathImages = images.stream().map(image -> image.getPathImage()).toList();
-
-        return pathImages;
+    public List<Image> getAllByGift(UUID giftId) throws Exception {
+        return repository.getAllImagesByGift(giftId);
     }
 
     private String generateImagePath(Path path, MultipartFile image) throws Exception {

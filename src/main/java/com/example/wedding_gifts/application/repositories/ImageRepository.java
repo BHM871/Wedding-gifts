@@ -22,13 +22,13 @@ public class ImageRepository implements IImageRepository {
     GiftRepository giftRepository;
 
     @Override
-    public String saveImage(SaveImageDTO image) throws Exception {
+    public Image saveImage(SaveImageDTO image) throws Exception {
         Image newImage = new Image(image);
         Gift gift = giftRepository.getGiftById(image.giftId());
 
         newImage.setGift(gift);
 
-        return thisJpaRespository.save(newImage).getPathImage();
+        return thisJpaRespository.save(newImage);
     }
 
     @Override
@@ -49,11 +49,6 @@ public class ImageRepository implements IImageRepository {
     @Override
     public Image getById(UUID imageId) throws Exception {
         return thisJpaRespository.findById(imageId).orElseThrow(() -> new Exception("Image not found"));
-    }
-
-    @Override
-    public Image getByPath(String path) throws Exception {
-        return thisJpaRespository.findByPathImage(path).orElseThrow(() -> new Exception("Image not found"));
     }
 
     @Override

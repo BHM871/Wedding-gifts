@@ -23,6 +23,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
+import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
@@ -50,7 +51,7 @@ public class GiftServices implements IGiftUseCase {
                 imageService.saveImage(
                     new ImageDTO(image,
                     newGift.getId(), newGift.getAccount().getId())
-                )
+                ).getPathImage()
             );
         }
 
@@ -63,9 +64,9 @@ public class GiftServices implements IGiftUseCase {
 
         if(gift.images() != null) {
             if(gift.images().imagesPath() != null) {
-                for(String image : gift.images().imagesPath()) {
+                for(UUID imageId : gift.images().imagesPath()) {
                     imageService.deleteImage(
-                        new DeleteImageDTO(image, imageService.getImageIdByPath(image), gift.giftId(), gift.accountId())
+                        new DeleteImageDTO(imageId, gift.giftId(), gift.accountId())
                     );
                 }
             } 
@@ -84,9 +85,9 @@ public class GiftServices implements IGiftUseCase {
     @Override
     public void deleteGift(DeleteGiftDTO deleteGift) throws Exception {
 
-        for(String image : deleteGift.images()) {
+        for(UUID imageId : deleteGift.images()) {
             imageService.deleteImage(
-                new DeleteImageDTO(image, imageService.getImageIdByPath(image), deleteGift.giftId(), deleteGift.accountId())
+                new DeleteImageDTO(imageId, deleteGift.giftId(), deleteGift.accountId())
             );
         }
 
@@ -99,10 +100,11 @@ public class GiftServices implements IGiftUseCase {
 
         List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
         for(Gift gift : gifts) {
-            List<String> images = imageService.getAllByGift(gift.getId());
+            List<Image> images = imageService.getAllByGift(gift.getId());
+            List<String> imagesPath = images.stream().map(image -> image.getPathImage()).toList();
 
             giftResponseList.add(
-                new GiftResponseDTO(gift, images)
+                new GiftResponseDTO(gift, imagesPath)
             );
         }
 
@@ -144,10 +146,11 @@ public class GiftServices implements IGiftUseCase {
 
         List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
         for(Gift gift : gifts) {
-            List<String> images = imageService.getAllByGift(gift.getId());
+            List<Image> images = imageService.getAllByGift(gift.getId());
+            List<String> imagesPath = images.stream().map(image -> image.getPathImage()).toList();
 
             giftResponseList.add(
-                new GiftResponseDTO(gift, images)
+                new GiftResponseDTO(gift, imagesPath)
             );
         }
 

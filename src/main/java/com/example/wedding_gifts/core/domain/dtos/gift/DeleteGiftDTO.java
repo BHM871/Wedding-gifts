@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 public record DeleteGiftDTO(
-    List<String> images,
+    List<UUID> images,
     UUID giftId,
     UUID accountId
 ){}
