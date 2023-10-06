@@ -52,6 +52,11 @@ public class ImageRepository implements IImageRepository {
     }
 
     @Override
+    public Image getByPath(String path) throws Exception {
+        return thisJpaRespository.findByPathImage(path).orElseThrow(() -> new Exception("Image not found"));
+    }
+
+    @Override
     public List<Image> getAllImagesByGift(UUID giftId) throws Exception {
         return thisJpaRespository.findAllByGift(giftId.toString());
     }

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageOfGiftDTO;
 import com.example.wedding_gifts.core.domain.model.CategoriesEnum;
 
 public record UpdateGiftDTO(
@@ -13,5 +14,6 @@ public record UpdateGiftDTO(
     String giftDescription,
     List<CategoriesEnum> categories,
     BigDecimal price,
-    Boolean isBought
+    Boolean isBought,
+    UpdateImageOfGiftDTO images
 ){}

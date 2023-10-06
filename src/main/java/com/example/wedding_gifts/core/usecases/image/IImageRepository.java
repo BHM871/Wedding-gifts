@@ -15,6 +15,8 @@ public interface IImageRepository {
 
     public Image getById(UUID imageId) throws Exception;
 
+    public Image getByPath(String path) throws Exception;
+
     public List<Image> getAllImagesByGift(UUID giftId) throws Exception;
 
 }

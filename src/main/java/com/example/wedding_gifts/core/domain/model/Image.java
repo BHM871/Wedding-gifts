@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
 
 import jakarta.annotation.Nonnull;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +31,7 @@ public class Image {
     private UUID id;
 
     @Nonnull
+    @Column(unique = true)
     private String pathImage;
 
     @ManyToOne()

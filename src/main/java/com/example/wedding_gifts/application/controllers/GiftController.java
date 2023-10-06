@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
-import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
@@ -34,7 +34,7 @@ public class GiftController implements IGiftController {
 
     @Override
     @PostMapping("/create")
-    public ResponseEntity<Gift> createGift(
+    public ResponseEntity<GiftResponseDTO> createGift(
         @RequestBody CreateGiftDTO gift
     ) throws Exception {
         validData(gift);
@@ -65,7 +65,7 @@ public class GiftController implements IGiftController {
 
     @Override
     @GetMapping("/all{accountId}")
-    public ResponseEntity<List<Gift>> getAllGifts(
+    public ResponseEntity<List<GiftResponseDTO>> getAllGifts(
         @RequestParam(name = "accountId", required = true) UUID accountId
     ) throws Exception {
         return ResponseEntity.ok(services.getAllGifts(accountId));
@@ -73,7 +73,7 @@ public class GiftController implements IGiftController {
 
     @Override
     @GetMapping("/filter{accountId}")
-    public ResponseEntity<List<Gift>> getWithFilter(
+    public ResponseEntity<List<GiftResponseDTO>> getWithFilter(
         @RequestBody SearcherDTO searcher,
         @RequestParam(name = "accountId", required = true) UUID accountId
     ) throws Exception {

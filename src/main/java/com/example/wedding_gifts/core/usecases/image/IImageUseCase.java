@@ -13,6 +13,8 @@ public interface IImageUseCase {
     public void deleteImage(DeleteImageDTO deleteImage) throws Exception;
 
     public String getById(UUID imageId) throws Exception;
+    
+    public UUID getImageIdByPath(String path) throws Exception;
 
     public List<String> getAllByGift(UUID giftId) throws Exception;
 

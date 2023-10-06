@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
@@ -16,6 +17,7 @@ import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
 
+@Service
 public class ImageServices implements IImageUseCase {
 
     String sourceImages = "com/exemple/wedding_gifts/infra/images/";
@@ -50,6 +52,11 @@ public class ImageServices implements IImageUseCase {
     @Override
     public String getById(UUID imageId) throws Exception {
         return repository.getById(imageId).getPathImage();
+    }
+
+    @Override
+    public UUID getImageIdByPath(String path) throws Exception {
+        return repository.getByPath(path).getId();
     }
 
     @Override
