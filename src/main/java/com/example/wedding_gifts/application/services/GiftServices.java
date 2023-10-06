@@ -22,6 +22,8 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.RemoveImagesDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.AddImagesDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
@@ -60,34 +62,38 @@ public class GiftServices implements IGiftUseCase {
 
     @Override
     public void updateGift(UpdateGiftDTO gift) throws Exception {
-        repository.updateGift(gift);
+        repository.updateGift(gift);        
+    }
 
-        if(gift.images() != null) {
-            if(gift.images().imagesPath() != null) {
-                for(UUID imageId : gift.images().imagesPath()) {
-                    imageService.deleteImage(
-                        new DeleteImageDTO(imageId, gift.giftId(), gift.accountId())
-                    );
-                }
-            } 
-            
-            if(gift.images().imagesFile() != null) {
-                for(MultipartFile image : gift.images().imagesFile()) {
-                    imageService.saveImage(
-                        new ImageDTO(image, gift.giftId(), gift.accountId())
-                    );
-                }
+    @Override
+    public void updateGift(AddImagesDTO images) throws Exception {
+        if(images.imagesFile() != null) {
+            for(MultipartFile image : images.imagesFile()) {
+                imageService.saveImage(
+                    new ImageDTO(image, images.giftId(), images.accountId())
+                );
             }
         }
-        
+    }
+
+    @Override
+    public void updateGift(RemoveImagesDTO images) throws Exception {
+        if(images.imagesId() != null) {
+            for(UUID imageId : images.imagesId()) {
+                imageService.deleteImage(
+                    new DeleteImageDTO(imageId, images.giftId(), images.accountId())
+                );
+            }
+        } 
     }
 
     @Override
     public void deleteGift(DeleteGiftDTO deleteGift) throws Exception {
 
-        for(UUID imageId : deleteGift.images()) {
+        List<Image> imagesByGift = imageService.getAllByGift(deleteGift.giftId());
+        for(Image image : imagesByGift) {
             imageService.deleteImage(
-                new DeleteImageDTO(imageId, deleteGift.giftId(), deleteGift.accountId())
+                new DeleteImageDTO(image.getId(), deleteGift.giftId(), deleteGift.accountId())
             );
         }
 

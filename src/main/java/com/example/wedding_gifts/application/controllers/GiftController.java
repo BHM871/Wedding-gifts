@@ -22,6 +22,8 @@ import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.AddImagesDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.RemoveImagesDTO;
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
@@ -44,9 +46,8 @@ public class GiftController implements IGiftController {
 
     @Override
     @PutMapping("/update")
-    @CrossOrigin
     public ResponseEntity<MessageDTO> updateGift(
-        UpdateGiftDTO gift
+        @RequestBody UpdateGiftDTO gift
     ) throws Exception {
         validData(gift);
 
@@ -55,9 +56,32 @@ public class GiftController implements IGiftController {
     }
 
     @Override
+    @PutMapping("/update/add/image")
+    @CrossOrigin
+    public ResponseEntity<MessageDTO> updateGift(
+        AddImagesDTO image
+    ) throws Exception {
+        validData(image);
+        
+        services.updateGift(image);
+        return ResponseEntity.ok(new MessageDTO("sussefully"));
+    }
+
+    @Override
+    @PutMapping("/update/remove/image")
+    public ResponseEntity<MessageDTO> updateGift(
+        @RequestBody RemoveImagesDTO image
+    ) throws Exception {
+        validData(image);
+        
+        services.updateGift(image);
+        return ResponseEntity.ok(new MessageDTO("sussefully"));
+    }
+
+    @Override
     @DeleteMapping("/delete")
     public ResponseEntity<MessageDTO> deleteGift(
-        DeleteGiftDTO ids
+        @RequestBody DeleteGiftDTO ids
     ) throws Exception {
         validData(ids);
 
@@ -97,6 +121,22 @@ public class GiftController implements IGiftController {
     }
 
     private void validData(UpdateGiftDTO data) throws Exception {
+        String isNull = "Some value is null";
+
+        if(data.giftId() == null) throw new Exception(isNull);
+        if(data.accountId() == null) throw new Exception(isNull);
+
+    }
+
+    private void validData(AddImagesDTO data) throws Exception {
+        String isNull = "Some value is null";
+
+        if(data.giftId() == null) throw new Exception(isNull);
+        if(data.accountId() == null) throw new Exception(isNull);
+
+    }
+
+    private void validData(RemoveImagesDTO data) throws Exception {
         String isNull = "Some value is null";
 
         if(data.giftId() == null) throw new Exception(isNull);

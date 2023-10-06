@@ -10,12 +10,18 @@ import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.AddImagesDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.RemoveImagesDTO;
 
 public interface IGiftController {
     
     public ResponseEntity<GiftResponseDTO> createGift(CreateGiftDTO gift) throws Exception;
 
     public ResponseEntity<MessageDTO> updateGift(UpdateGiftDTO gift) throws Exception;
+
+    public ResponseEntity<MessageDTO> updateGift(AddImagesDTO images) throws Exception;
+
+    public ResponseEntity<MessageDTO> updateGift(RemoveImagesDTO images) throws Exception;
 
     public ResponseEntity<MessageDTO> deleteGift(DeleteGiftDTO ids) throws Exception;
 

@@ -48,11 +48,12 @@ public class ImageServices implements IImageUseCase {
     @Override
     public void deleteImage(DeleteImageDTO deleteImage) throws Exception {
         Image image = repository.getById(deleteImage.imageId());
-        boolean isDeleted = Files.deleteIfExists(Paths.get(image.getPathImage()));
         
-        if(isDeleted){
-            repository.deleteImage(deleteImage);
-        } else {
+        repository.deleteImage(deleteImage);
+        
+        boolean isDeleted = Files.deleteIfExists(Paths.get(image.getPathImage()));
+
+        if(!isDeleted) {
             throw new Exception("Image not exists");
         }
     }
