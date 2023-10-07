@@ -22,6 +22,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.ImageResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.RemoveImagesDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.AddImagesDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
@@ -42,18 +43,20 @@ public class GiftServices implements IGiftUseCase {
     public GiftResponseDTO createGift(CreateGiftDTO gift) throws Exception {
         Gift newGift = repository.createGift(gift);
 
-        List<Image> images = new ArrayList<Image>();
+        List<ImageResponseDTO> images = new ArrayList<ImageResponseDTO>();
         for(MultipartFile image : gift.images()) {
 
             if(
                 image.getContentType() == null || !image.getContentType().startsWith("image")
             ) throw new Exception(image.getOriginalFilename()+" is not image");
 
-            images.add(
-                imageService.saveImage(
+            Image savedImage = imageService.saveImage(
                     new ImageDTO(image,
                     newGift.getId(), newGift.getAccount().getId())
-                )
+                );
+
+            images.add(
+                new ImageResponseDTO(savedImage.getId(), savedImage.getPathImage())
             );
         }
 
@@ -104,16 +107,7 @@ public class GiftServices implements IGiftUseCase {
     public List<GiftResponseDTO> getAllGifts(UUID accountId) throws Exception {
         List<Gift> gifts = repository.getAllGifts(accountId);
 
-        List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
-        for(Gift gift : gifts) {
-            List<Image> images = imageService.getAllByGift(gift.getId());
-
-            giftResponseList.add(
-                new GiftResponseDTO(gift, images)
-            );
-        }
-
-        return giftResponseList;
+        return generatedGiftResponse(gifts);
     }
 
     @Override
@@ -149,16 +143,7 @@ public class GiftServices implements IGiftUseCase {
             throw new Exception("Filters are null");
         }
 
-        List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
-        for(Gift gift : gifts) {
-            List<Image> images = imageService.getAllByGift(gift.getId());
-
-            giftResponseList.add(
-                new GiftResponseDTO(gift, images)
-            );
-        }
-
-        return giftResponseList;
+        return generatedGiftResponse(gifts);
     }
 
     private SearcherDTO searcherDTO(SearcherDTO searcher) {
@@ -217,6 +202,31 @@ public class GiftServices implements IGiftUseCase {
             searcher.endPrice() != null ? searcher.endPrice() : BigDecimal.valueOf(Double.MAX_VALUE),
             searcher.isBought() != null ? searcher.isBought() : null 
         );
+    }
+
+    private List<GiftResponseDTO> generatedGiftResponse(List<Gift> gifts) throws Exception {
+        List<List<Image>> imagesByGifts = new ArrayList<List<Image>>();
+        for(Gift gift : gifts) {
+            List<Image> images = imageService.getAllByGift(gift.getId());
+            imagesByGifts.add(images);
+        }
+
+        List<List<ImageResponseDTO>> imagesResponse = new ArrayList<List<ImageResponseDTO>>();
+        for(List<Image> images : imagesByGifts) {
+            List<ImageResponseDTO> temp = images
+                                            .stream()
+                                            .map(image -> new ImageResponseDTO(image.getId(), image.getPathImage()))
+                                            .toList();
+            imagesResponse.add(temp);
+        }
+
+        List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
+        for(int i = 0; i < gifts.size(); i++) {
+            GiftResponseDTO giftResponse = new GiftResponseDTO(gifts.get(i), imagesResponse.get(i));
+            giftResponseList.add(giftResponse);
+        }
+
+        return giftResponseList;
     }
     
 }
