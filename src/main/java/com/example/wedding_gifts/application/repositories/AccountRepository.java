@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
-import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
@@ -25,16 +24,10 @@ public class AccountRepository implements IAccountRepository {
     }
 
     @Override
-    public AccountResponseAccountDTO createAccount(CreateAccountDTO account) throws Exception {
+    public Account createAccount(CreateAccountDTO account) throws Exception {
         Account newAccount = new Account(account);
 
-        return new AccountResponseAccountDTO(
-            newAccount.getId(), 
-            newAccount.getBrideGroom(), 
-            newAccount.getWeddingDate(), 
-            newAccount.getFirstName(), 
-            newAccount.getLastName(), 
-            newAccount.getEmail()); 
+        return save(newAccount);
     }
 
     @Override
@@ -55,20 +48,12 @@ public class AccountRepository implements IAccountRepository {
     }
 
     @Override
-    public AccountResponseAccountDTO updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
+    public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
         Account upAccount = getAccountById(id);
         
         upAccount = upAccount.update(account);
 
-        save(upAccount);
-
-        return new AccountResponseAccountDTO(
-            upAccount.getId(), 
-            upAccount.getBrideGroom(), 
-            upAccount.getWeddingDate(), 
-            upAccount.getFirstName(), 
-            upAccount.getLastName(), 
-            upAccount.getEmail());
+        return save(upAccount);
     }
 
     @Override

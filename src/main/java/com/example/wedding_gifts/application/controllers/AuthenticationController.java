@@ -57,7 +57,16 @@ public class AuthenticationController implements IAuthenticationController {
             encrypPixKey
         );
 
-        AccountResponseAccountDTO newAccount = repository.createAccount(createAccount);
+        Account savedAccount = repository.createAccount(createAccount);
+
+        AccountResponseAccountDTO newAccount = new AccountResponseAccountDTO(
+            savedAccount.getId(), 
+            savedAccount.getBrideGroom(), 
+            savedAccount.getWeddingDate(), 
+            savedAccount.getFirstName(), 
+            savedAccount.getLastName(), 
+            savedAccount.getEmail());
+
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
     }

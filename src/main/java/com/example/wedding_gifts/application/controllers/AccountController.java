@@ -18,6 +18,7 @@ import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccount
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountController;
 import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
 
@@ -42,7 +43,17 @@ public class AccountController implements IAccountController {
     public ResponseEntity<AccountResponseAccountDTO> getAccountById(
         @RequestParam(name = "id", required = true) UUID id
     ) throws Exception {
-        return ResponseEntity.ok(services.getAccountById(id));
+        Account account = services.getAccountById(id);
+
+        AccountResponseAccountDTO accountResponse = new AccountResponseAccountDTO(
+            account.getId(), 
+            account.getBrideGroom(), 
+            account.getWeddingDate(), 
+            account.getFirstName(), 
+            account.getLastName(), 
+            account.getEmail());
+
+        return ResponseEntity.ok(accountResponse);
     }
 
     @Override
@@ -51,7 +62,17 @@ public class AccountController implements IAccountController {
         @RequestBody UpdateAccountDTO account,
         @RequestParam(name = "id", required = true) UUID id
     ) throws Exception {
-        return ResponseEntity.ok(services.updateAccount(account, id));
+        Account upAccount = services.updateAccount(account, id);
+
+        AccountResponseAccountDTO accountResponse = new AccountResponseAccountDTO(
+            upAccount.getId(), 
+            upAccount.getBrideGroom(), 
+            upAccount.getWeddingDate(), 
+            upAccount.getFirstName(), 
+            upAccount.getLastName(), 
+            upAccount.getEmail());
+
+        return ResponseEntity.ok(accountResponse);
     }
 
     @Override
