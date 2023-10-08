@@ -205,25 +205,12 @@ public class GiftServices implements IGiftUseCase {
     }
 
     private List<GiftResponseDTO> generatedGiftResponse(List<Gift> gifts) throws Exception {
-        List<List<Image>> imagesByGifts = new ArrayList<List<Image>>();
+        List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
         for(Gift gift : gifts) {
             List<Image> images = imageService.getAllByGift(gift.getId());
-            imagesByGifts.add(images);
-        }
-
-        List<List<ImageResponseDTO>> imagesResponse = new ArrayList<List<ImageResponseDTO>>();
-        for(List<Image> images : imagesByGifts) {
-            List<ImageResponseDTO> temp = images
-                                            .stream()
-                                            .map(image -> new ImageResponseDTO(image.getId(), image.getPathImage()))
-                                            .toList();
-            imagesResponse.add(temp);
-        }
-
-        List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
-        for(int i = 0; i < gifts.size(); i++) {
-            GiftResponseDTO giftResponse = new GiftResponseDTO(gifts.get(i), imagesResponse.get(i));
-            giftResponseList.add(giftResponse);
+            List<ImageResponseDTO> imageResponse = images.stream().map(image -> new ImageResponseDTO(image.getId(), image.getPathImage())).toList(); 
+            
+            giftResponseList.add(new GiftResponseDTO(gift, imageResponse));
         }
 
         return giftResponseList;
