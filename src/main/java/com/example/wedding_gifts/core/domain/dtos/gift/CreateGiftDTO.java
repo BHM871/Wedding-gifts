@@ -13,6 +13,6 @@ public record CreateGiftDTO(
     String giftDescription,
     List<CategoriesEnum> categories,
     BigDecimal price,
-    List<MultipartFile> images,
-    UUID accountId
+    UUID accountId,
+    List<MultipartFile> images
 ){}

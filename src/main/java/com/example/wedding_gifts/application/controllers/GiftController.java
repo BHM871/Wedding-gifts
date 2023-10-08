@@ -1,6 +1,7 @@
 package com.example.wedding_gifts.application.controllers;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,20 +16,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.AddImagesDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.RemoveImagesDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
 @RestController
 @RequestMapping("/gift")
+@CrossOrigin
 public class GiftController implements IGiftController {
 
     @Autowired
@@ -37,11 +41,28 @@ public class GiftController implements IGiftController {
     @Override
     @PostMapping("/create")
     public ResponseEntity<GiftResponseDTO> createGift(
-        CreateGiftDTO gift
+        @RequestBody CreateGiftDTO gift,
+        @RequestPart MultipartFile images[]
     ) throws Exception {
         validData(gift);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(gift));
+        List<MultipartFile> imagesFile = new ArrayList<MultipartFile>();
+        if(images != null) {
+            for(MultipartFile image : images) {
+                imagesFile.add(image);
+            }
+        }
+
+        CreateGiftDTO createGiftDTO = new CreateGiftDTO(
+            gift.title(), 
+            gift.giftDescription(), 
+            gift.categories(), 
+            gift.price(),
+            gift.accountId(),
+            images != null ? imagesFile : null
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(createGiftDTO));
     }
 
     @Override
@@ -56,25 +77,28 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @PutMapping("/update/add/image")
-    @CrossOrigin
+    @PutMapping("/update/image")
     public ResponseEntity<MessageDTO> updateGift(
-        AddImagesDTO image
+        UpdateImageDTO update,
+        @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
-        validData(image);
-        
-        services.updateGift(image);
-        return ResponseEntity.ok(new MessageDTO("sussefully"));
-    }
+        validData(update);
 
-    @Override
-    @PutMapping("/update/remove/image")
-    public ResponseEntity<MessageDTO> updateGift(
-        @RequestBody RemoveImagesDTO image
-    ) throws Exception {
-        validData(image);
-        
-        services.updateGift(image);
+        List<MultipartFile> imagesFile = new ArrayList<MultipartFile>();
+        if(images != null) {
+            for(MultipartFile image : images) {
+                imagesFile.add(image);
+            }
+        }
+
+        UpdateImageDTO updateImageDTO = new UpdateImageDTO(
+            update.giftId(), 
+            update.accountId(), 
+            update.imagesId() != null ? update.imagesId() : null, 
+            images != null ? update.imagesFiles() : null
+        );
+
+        services.updateGift(updateImageDTO);
         return ResponseEntity.ok(new MessageDTO("sussefully"));
     }
 
@@ -128,15 +152,7 @@ public class GiftController implements IGiftController {
 
     }
 
-    private void validData(AddImagesDTO data) throws Exception {
-        String isNull = "Some value is null";
-
-        if(data.giftId() == null) throw new Exception(isNull);
-        if(data.accountId() == null) throw new Exception(isNull);
-
-    }
-
-    private void validData(RemoveImagesDTO data) throws Exception {
+    private void validData(UpdateImageDTO data) throws Exception {
         String isNull = "Some value is null";
 
         if(data.giftId() == null) throw new Exception(isNull);

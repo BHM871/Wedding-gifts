@@ -25,8 +25,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.RemoveImagesDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.AddImagesDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
@@ -45,23 +44,6 @@ public class GiftServices implements IGiftUseCase {
     public GiftResponseDTO createGift(CreateGiftDTO gift) throws Exception {
         Gift newGift = repository.createGift(gift);
 
-        List<ImageResponseDTO> images = new ArrayList<ImageResponseDTO>();
-        for(MultipartFile image : gift.images()) {
-
-            if(
-                image.getContentType() == null || !image.getContentType().startsWith("image")
-            ) throw new Exception(image.getOriginalFilename()+" is not image");
-
-            Image savedImage = imageService.saveImage(
-                    new ImageDTO(image,
-                    newGift.getId(), newGift.getAccount().getId())
-                );
-
-            images.add(
-                new ImageResponseDTO(savedImage.getId(), savedImage.getPathImage())
-            );
-        }
-
         GiftDTO newGiftDto = new GiftDTO(
             newGift.getId(), 
             newGift.getTitle(), 
@@ -72,7 +54,7 @@ public class GiftServices implements IGiftUseCase {
             new AccountResponseIdDTO(newGift.getAccount().getId())
         );
         
-        return new GiftResponseDTO(newGiftDto, images);
+        return new GiftResponseDTO(newGiftDto, new ArrayList<ImageResponseDTO>());
     }
 
     @Override
@@ -81,25 +63,22 @@ public class GiftServices implements IGiftUseCase {
     }
 
     @Override
-    public void updateGift(AddImagesDTO images) throws Exception {
-        if(images.imagesFile() != null) {
-            for(MultipartFile image : images.imagesFile()) {
-                imageService.saveImage(
-                    new ImageDTO(image, images.giftId(), images.accountId())
-                );
-            }
-        }
-    }
-
-    @Override
-    public void updateGift(RemoveImagesDTO images) throws Exception {
+    public void updateGift(UpdateImageDTO images) throws Exception {
         if(images.imagesId() != null) {
             for(UUID imageId : images.imagesId()) {
                 imageService.deleteImage(
                     new DeleteImageDTO(imageId, images.giftId(), images.accountId())
                 );
             }
-        } 
+        }
+
+        if(images.imagesFiles() != null) {
+            for(MultipartFile image : images.imagesFiles()) {
+                imageService.saveImage(
+                    new ImageDTO(image, images.giftId(), images.accountId())
+                );
+            }
+        }
     }
 
     @Override

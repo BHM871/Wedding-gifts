@@ -8,8 +8,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.AddImagesDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.RemoveImagesDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 
 public interface IGiftUseCase {
 
@@ -17,9 +16,7 @@ public interface IGiftUseCase {
 
     public void updateGift(UpdateGiftDTO gift) throws Exception;
 
-    public void updateGift(AddImagesDTO images) throws Exception;
-
-    public void updateGift(RemoveImagesDTO images) throws Exception;
+    public void updateGift(UpdateImageDTO images) throws Exception;
 
     public void deleteGift(DeleteGiftDTO ids) throws Exception;
 

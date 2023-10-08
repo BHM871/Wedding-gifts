@@ -5,8 +5,9 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public record AddImagesDTO(
+public record UpdateImageDTO(
     UUID giftId,
     UUID accountId,
-    List<MultipartFile> imagesFile
+    List<UUID> imagesId,
+    List<MultipartFile> imagesFiles
 ){}
