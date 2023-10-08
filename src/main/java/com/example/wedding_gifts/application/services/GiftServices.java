@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
+import com.example.wedding_gifts.core.domain.dtos.gift.GiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesAndPriceDTO;
@@ -60,7 +62,17 @@ public class GiftServices implements IGiftUseCase {
             );
         }
 
-        return new GiftResponseDTO(newGift, images);
+        GiftDTO newGiftDto = new GiftDTO(
+            newGift.getId(), 
+            newGift.getTitle(), 
+            newGift.getGiftDescription(), 
+            newGift.getPrice(), 
+            newGift.getCategories(), 
+            newGift.getIsBought(), 
+            new AccountResponseIdDTO(newGift.getAccount().getId())
+        );
+        
+        return new GiftResponseDTO(newGiftDto, images);
     }
 
     @Override
@@ -205,9 +217,22 @@ public class GiftServices implements IGiftUseCase {
     }
 
     private List<GiftResponseDTO> generatedGiftResponse(List<Gift> gifts) throws Exception {
+
+        List<GiftDTO> giftsDto = gifts.stream().map( gift ->
+            new GiftDTO(
+                gift.getId(), 
+                gift.getTitle(), 
+                gift.getGiftDescription(), 
+                gift.getPrice(), 
+                gift.getCategories(), 
+                gift.getIsBought(), 
+                new AccountResponseIdDTO(gift.getAccount().getId())
+            )
+        ).toList();
+        
         List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
-        for(Gift gift : gifts) {
-            List<Image> images = imageService.getAllByGift(gift.getId());
+        for(GiftDTO gift : giftsDto) {
+            List<Image> images = imageService.getAllByGift(gift.id());
             List<ImageResponseDTO> imageResponse = images.stream().map(image -> new ImageResponseDTO(image.getId(), image.getPathImage())).toList(); 
             
             giftResponseList.add(new GiftResponseDTO(gift, imageResponse));

@@ -51,7 +51,7 @@ public class AccountServices implements IAccountUseCase {
 
         for(GiftResponseDTO gift : gifts) {
             giftServices.deleteGift(
-                new DeleteGiftDTO(gift.gift().getId(), id)
+                new DeleteGiftDTO(gift.gift().id(), id)
             );
         }
 
