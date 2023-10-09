@@ -29,9 +29,9 @@ import com.example.wedding_gifts.infra.jpa.JpaGiftRepository;
 public class GiftRepository implements IGiftRepository {
 
     @Autowired
-    JpaGiftRepository thisJpaRepository;
+    private JpaGiftRepository thisJpaRepository;
     @Autowired
-    IAccountRepository accountRepository;
+    private IAccountRepository accountRepository;
 
     @Override
     public Gift save(Gift gift) throws Exception {
@@ -70,6 +70,14 @@ public class GiftRepository implements IGiftRepository {
         if(compared != 0) throw new Exception("This gift is not your");
 
         thisJpaRepository.delete(gift);
+    }
+
+    @Override
+    public void deleteAllByAccount(UUID accountId) throws Exception {        
+        accountRepository.getAccountById(accountId);
+        List<Gift> gifts = getAllGifts(accountId);
+
+        if(gifts != null && !gifts.isEmpty()) thisJpaRepository.deleteAll(gifts);
     }
 
     @Override

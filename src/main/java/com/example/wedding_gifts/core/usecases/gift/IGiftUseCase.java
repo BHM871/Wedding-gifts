@@ -22,6 +22,8 @@ public interface IGiftUseCase {
 
     public void deleteGift(DeleteGiftDTO ids) throws Exception;
 
+    public void deleteAllByAccount(UUID accountId) throws Exception;
+
     public List<GiftResponseDTO> getAllGifts(UUID accountId) throws Exception;
 
     public List<GiftResponseDTO> getWithFilter(SearcherDTO searcher, UUID accoountId) throws Exception;

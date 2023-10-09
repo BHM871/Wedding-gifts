@@ -17,9 +17,9 @@ import com.example.wedding_gifts.infra.jpa.JpaImageRespository;
 public class ImageRepository implements IImageRepository {
 
     @Autowired
-    JpaImageRespository thisJpaRespository;
+    private JpaImageRespository thisJpaRespository;
     @Autowired
-    GiftRepository giftRepository;
+    private GiftRepository giftRepository;
 
     @Override
     public Image saveImage(SaveImageDTO image) throws Exception {
@@ -44,6 +44,15 @@ public class ImageRepository implements IImageRepository {
         if(compared != 0) throw new Exception("This gift is not your");
 
         thisJpaRespository.delete(image);
+    }
+
+    @Override
+    public void deleteAllByGift(UUID giftId) throws Exception {
+        giftRepository.getGiftById(giftId);
+        
+        List<Image> images = getAllImagesByGift(giftId);
+
+        if(images != null && !images.isEmpty()) thisJpaRespository.deleteAll(images);
     }
 
     @Override

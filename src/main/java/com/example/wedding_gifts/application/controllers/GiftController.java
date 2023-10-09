@@ -35,13 +35,13 @@ import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 public class GiftController implements IGiftController {
 
     @Autowired
-    IGiftUseCase services;
+    private IGiftUseCase services;
 
     @Override
     @PostMapping("/create")
     public ResponseEntity<GiftResponseDTO> createGift(
-        @RequestBody CreateGiftDTO gift,
-        @RequestPart(required = false) MultipartFile images[]
+        @RequestPart CreateGiftDTO gift,
+        @RequestPart(required = false) MultipartFile images []
     ) throws Exception {
         validData(gift);
 
@@ -62,10 +62,10 @@ public class GiftController implements IGiftController {
     @Override
     @PutMapping("/update/image")
     public ResponseEntity<MessageDTO> updateGift(
-        @RequestBody UpdateImageDTO update,
+        @RequestPart UpdateImageDTO update,
         @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
-        validData(update);
+        validData(update, images);
 
         services.updateGift(update, images);
         return ResponseEntity.ok(new MessageDTO("sussefully"));
@@ -83,18 +83,29 @@ public class GiftController implements IGiftController {
     }
 
     @Override
+    @DeleteMapping("/delete/all{account}")
+    public ResponseEntity<MessageDTO> deleteAllByAccount(
+        @RequestParam(name = "account") UUID accountId
+    ) throws Exception {
+        if(accountId == null) throw new Exception("Account id is null");
+
+        services.deleteAllByAccount(accountId);
+        return ResponseEntity.ok(new MessageDTO("sussefully"));
+    }
+
+    @Override
     @GetMapping("/all{accountId}")
     public ResponseEntity<List<GiftResponseDTO>> getAllGifts(
-        @RequestParam(name = "accountId", required = true) UUID accountId
+        @RequestParam(name = "accountId") UUID accountId
     ) throws Exception {
         return ResponseEntity.ok(services.getAllGifts(accountId));
     }
 
     @Override
-    @GetMapping("/filter{accountId}")
+    @GetMapping("/filter{account}")
     public ResponseEntity<List<GiftResponseDTO>> getWithFilter(
         @RequestBody SearcherDTO searcher,
-        @RequestParam(name = "accountId", required = true) UUID accountId
+        @RequestParam(name = "account") UUID accountId
     ) throws Exception {
         return ResponseEntity.ok(services.getWithFilter(searcher, accountId));
     }
@@ -121,11 +132,12 @@ public class GiftController implements IGiftController {
 
     }
 
-    private void validData(UpdateImageDTO data) throws Exception {
+    private void validData(UpdateImageDTO data, MultipartFile images[]) throws Exception {
         String isNull = "Some value is null";
 
         if(data.giftId() == null) throw new Exception(isNull);
         if(data.accountId() == null) throw new Exception(isNull);
+        if(data.imagesId() == null && images == null) throw new Exception(isNull);
 
     }
 

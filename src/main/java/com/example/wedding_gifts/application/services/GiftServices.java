@@ -36,9 +36,9 @@ import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
 public class GiftServices implements IGiftUseCase {
 
     @Autowired
-    IGiftRepository repository;
+    private IGiftRepository repository;
     @Autowired
-    IImageUseCase imageService;
+    private IImageUseCase imageService;
     
     @Override
     public GiftResponseDTO createGift(CreateGiftDTO gift, MultipartFile images[]) throws Exception {
@@ -97,14 +97,20 @@ public class GiftServices implements IGiftUseCase {
     @Override
     public void deleteGift(DeleteGiftDTO deleteGift) throws Exception {
 
-        List<Image> imagesByGift = imageService.getAllByGift(deleteGift.giftId());
-        for(Image image : imagesByGift) {
-            imageService.deleteImage(
-                new DeleteImageDTO(image.getId(), deleteGift.giftId(), deleteGift.accountId())
-            );
-        }
+        imageService.deleteAllByGift(deleteGift.giftId());
 
         repository.deleteGift(deleteGift);
+    }
+
+    @Override
+    public void deleteAllByAccount(UUID accountId) throws Exception {
+
+        List<Gift> gifts = repository.getAllGifts(accountId);
+        for(Gift gift : gifts) {
+            imageService.deleteAllByGift(gift.getId());
+        }
+
+        repository.deleteAllByAccount(accountId);
     }
 
     @Override

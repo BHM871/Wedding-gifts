@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.application.services;
 
-import java.io.IOException;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -26,7 +26,7 @@ public class ImageServices implements IImageUseCase {
     private static final String sourceImages = "src/main/resources/db/images/";
     
     @Autowired
-    IImageRepository repository;
+    private IImageRepository repository;
 
     @Override
     public Image saveImage(ImageDTO image) throws Exception {
@@ -39,7 +39,8 @@ public class ImageServices implements IImageUseCase {
         byte[] bytesOfImage = image.image().getBytes();
 
         Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
-        Files.createDirectories(path);
+        if(!Files.exists(path)) 
+            Files.createDirectories(path);
 
         Path imagePath = Paths.get(generateImagePath(path, image.image())); 
         Files.write(imagePath, bytesOfImage);
@@ -49,14 +50,32 @@ public class ImageServices implements IImageUseCase {
 
     @Override
     public void deleteImage(DeleteImageDTO deleteImage) throws Exception {
-        Image image = repository.getById(deleteImage.imageId());
+        Image image = getById(deleteImage.imageId());
         
         repository.deleteImage(deleteImage);
         
         boolean isDeleted = Files.deleteIfExists(Paths.get(image.getPathImage()));
 
         if(!isDeleted) {
-            throw new Exception("Image not exists");
+            throw new Exception(sourceImages.replace(
+                                                "src/main/resources/db/images/"+deleteImage.accountId()+"/"+deleteImage.giftId()+"/", 
+                                    ""
+                                            ) + " not exists");       
+        }
+    }
+
+    @Override
+    public void deleteAllByGift(UUID giftId) throws Exception {
+        try{
+            List<Image> images = getAllByGift(giftId);
+        
+            repository.deleteAllByGift(giftId);
+        
+            for(Image image : images) {
+                Files.deleteIfExists(Paths.get(image.getPathImage()));
+            }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -74,7 +93,7 @@ public class ImageServices implements IImageUseCase {
         if(image.getContentType() == null) throw new Exception();
 
         return path.toString()+"/"+
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")).toString()+"."
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+"."
                 +image.getContentType().replaceAll("image/", "");
     }
     

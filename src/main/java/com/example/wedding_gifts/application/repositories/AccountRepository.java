@@ -16,7 +16,7 @@ import com.example.wedding_gifts.infra.jpa.JpaAccountRespository;
 public class AccountRepository implements IAccountRepository {
 
     @Autowired
-    JpaAccountRespository thisJpaRespository;
+    private JpaAccountRespository thisJpaRespository;
 
     @Override
     public Account save(Account account) throws Exception {

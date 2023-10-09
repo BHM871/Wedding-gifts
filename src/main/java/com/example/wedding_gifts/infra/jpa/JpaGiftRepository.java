@@ -132,4 +132,10 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
                                             "AND is_bought = :bought " + 
                                             "AND account_id = :account")
     public List<Gift> findByTitleAndCategoriesAndPriceBetweenAndIsBoughtAndAccount(String title, @Param("categories") String categories, BigDecimal start, BigDecimal end, Boolean bought, @Param("account") UUID account);
+
+    @Query(nativeQuery = true, value = "DELETE " +
+                                        "FROM tb_gift " +
+                                        "WHERE  account_id = :account")
+    public void deleteAllByAccount(@Param("account") UUID account); 
+
 }

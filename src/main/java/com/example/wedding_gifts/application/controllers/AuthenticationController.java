@@ -29,11 +29,11 @@ import lombok.var;
 public class AuthenticationController implements IAuthenticationController {
 
     @Autowired
-    IAccountRepository repository;
+    private IAccountRepository repository;
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
     @Autowired
-    ITokenManager tokenManager;
+    private ITokenManager tokenManager;
 
     @Override
     @PostMapping("/register")

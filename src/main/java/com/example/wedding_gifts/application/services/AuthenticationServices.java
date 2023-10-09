@@ -12,7 +12,7 @@ import com.example.wedding_gifts.core.usecases.auth.IAuthenticationService;
 public class AuthenticationServices implements IAuthenticationService {
 
     @Autowired
-    IAccountRepository repository;
+    private IAccountRepository repository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

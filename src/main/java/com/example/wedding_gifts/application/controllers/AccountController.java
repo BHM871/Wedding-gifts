@@ -27,12 +27,12 @@ import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
 public class AccountController implements IAccountController {
 
     @Autowired
-    IAccountUseCase services;
+    private IAccountUseCase services;
 
     @Override
     @GetMapping("/begin{brideGroom}")
     public ResponseEntity<AccountResponseIdDTO> gifterBegin(
-        @RequestParam(name = "brideGroom", required = true) String brideGroom
+        @RequestParam String brideGroom
     ) throws Exception {
         UUID id = services.verificAccountForGifter(brideGroom);
         return ResponseEntity.ok(new AccountResponseIdDTO(id));    
@@ -41,7 +41,7 @@ public class AccountController implements IAccountController {
     @Override
     @GetMapping("/account{id}")
     public ResponseEntity<AccountResponseAccountDTO> getAccountById(
-        @RequestParam(name = "id", required = true) UUID id
+        @RequestParam UUID id
     ) throws Exception {
         Account account = services.getAccountById(id);
 
@@ -60,7 +60,7 @@ public class AccountController implements IAccountController {
     @PutMapping("/update{id}")
     public ResponseEntity<AccountResponseAccountDTO> updateAccount(
         @RequestBody UpdateAccountDTO account,
-        @RequestParam(name = "id", required = true) UUID id
+        @RequestParam UUID id
     ) throws Exception {
         Account upAccount = services.updateAccount(account, id);
 

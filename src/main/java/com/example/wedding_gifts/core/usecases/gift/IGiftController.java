@@ -24,6 +24,8 @@ public interface IGiftController {
 
     public ResponseEntity<MessageDTO> deleteGift(DeleteGiftDTO ids) throws Exception;
 
+    public ResponseEntity<MessageDTO> deleteAllByAccount(UUID accountId) throws Exception;
+
     public ResponseEntity<List<GiftResponseDTO>> getAllGifts(UUID accountId) throws Exception;
 
     public ResponseEntity<List<GiftResponseDTO>> getWithFilter(SearcherDTO searcher, UUID accountId) throws Exception;

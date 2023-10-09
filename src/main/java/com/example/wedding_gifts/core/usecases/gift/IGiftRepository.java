@@ -25,6 +25,8 @@ public interface IGiftRepository {
 
     public void deleteGift(DeleteGiftDTO ids) throws Exception;
 
+    public void deleteAllByAccount(UUID accountId) throws Exception;
+
     public Gift getGiftById(UUID giftId) throws Exception;
 
     public List<Gift> getAllGifts(UUID accountId) throws Exception;

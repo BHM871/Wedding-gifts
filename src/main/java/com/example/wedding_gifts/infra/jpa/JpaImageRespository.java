@@ -22,4 +22,9 @@ public interface JpaImageRespository extends JpaRepository<Image, UUID> {
                                         "WHERE gift_id = :gift")
     public List<Image> findAllByGift(@Param("gift") UUID gift);
     
+    @Query(nativeQuery = true, value = "DELETE " +
+                                        "FROM tb_image " +
+                                        "WHERE gift_id = :gift")
+    public void deleteAllByGift(@Param("gift") UUID gift);
+    
 }

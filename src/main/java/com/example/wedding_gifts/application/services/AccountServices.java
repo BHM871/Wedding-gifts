@@ -19,9 +19,9 @@ import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 public class AccountServices implements IAccountUseCase {
 
     @Autowired
-    IAccountRepository repository;
+    private IAccountRepository repository;
     @Autowired
-    IGiftUseCase giftServices;
+    private IGiftUseCase giftServices;
 
     @Override
     public Account createAccount(CreateAccountDTO account) throws Exception {
