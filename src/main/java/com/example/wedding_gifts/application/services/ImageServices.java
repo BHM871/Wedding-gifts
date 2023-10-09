@@ -30,19 +30,21 @@ public class ImageServices implements IImageUseCase {
 
     @Override
     public Image saveImage(ImageDTO image) throws Exception {
-        try {
-            byte[] bytesOfImage = image.image().getBytes();
 
-            Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
-            Files.createDirectories(path);
+        if(
+            image.image().getContentType() != null && 
+            (image.image().getContentType().endsWith("gif") || !image.image().getContentType().startsWith("image"))
+        ) throw new Exception(image.image().getOriginalFilename() + " is not a image");
+    
+        byte[] bytesOfImage = image.image().getBytes();
 
-            Path imagePath = Paths.get(generateImagePath(path, image.image())); 
-            Files.write(imagePath, bytesOfImage);
+        Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
+        Files.createDirectories(path);
 
-            return repository.saveImage(new SaveImageDTO(imagePath.toString().replace('\\', '/'), image.giftId())); 
-        } catch (IOException e) {
-            throw new Exception(e.getMessage(), e);
-        }
+        Path imagePath = Paths.get(generateImagePath(path, image.image())); 
+        Files.write(imagePath, bytesOfImage);
+
+        return repository.saveImage(new SaveImageDTO(imagePath.toString().replace('\\', '/'), image.giftId()));
     }
 
     @Override

@@ -41,7 +41,7 @@ public class GiftServices implements IGiftUseCase {
     IImageUseCase imageService;
     
     @Override
-    public GiftResponseDTO createGift(CreateGiftDTO gift) throws Exception {
+    public GiftResponseDTO createGift(CreateGiftDTO gift, MultipartFile images[]) throws Exception {
         Gift newGift = repository.createGift(gift);
 
         GiftDTO newGiftDto = new GiftDTO(
@@ -53,8 +53,21 @@ public class GiftServices implements IGiftUseCase {
             newGift.getIsBought(), 
             new AccountResponseIdDTO(newGift.getAccount().getId())
         );
+
+        List<ImageResponseDTO> imagesResponse = new ArrayList<ImageResponseDTO>();
+        if(images != null) {
+            for(MultipartFile image : images) {
+                Image temp = imageService.saveImage(
+                    new ImageDTO(image, newGift.getId(), newGift.getAccount().getId())
+                );
+
+                imagesResponse.add(
+                    new ImageResponseDTO(temp.getId(), temp.getPathImage())
+                );
+            }
+        }
         
-        return new GiftResponseDTO(newGiftDto, new ArrayList<ImageResponseDTO>());
+        return new GiftResponseDTO(newGiftDto, imagesResponse);
     }
 
     @Override
@@ -63,19 +76,19 @@ public class GiftServices implements IGiftUseCase {
     }
 
     @Override
-    public void updateGift(UpdateImageDTO images) throws Exception {
-        if(images.imagesId() != null) {
-            for(UUID imageId : images.imagesId()) {
+    public void updateGift(UpdateImageDTO update, MultipartFile images[]) throws Exception {
+        if(update.imagesId() != null) {
+            for(UUID imageId : update.imagesId()) {
                 imageService.deleteImage(
-                    new DeleteImageDTO(imageId, images.giftId(), images.accountId())
+                    new DeleteImageDTO(imageId, update.giftId(), update.accountId())
                 );
             }
         }
 
-        if(images.imagesFiles() != null) {
-            for(MultipartFile image : images.imagesFiles()) {
+        if(images != null) {
+            for(MultipartFile image : images) {
                 imageService.saveImage(
-                    new ImageDTO(image, images.giftId(), images.accountId())
+                    new ImageDTO(image, update.giftId(), update.accountId())
                 );
             }
         }

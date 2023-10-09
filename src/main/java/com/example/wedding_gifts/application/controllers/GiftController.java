@@ -1,7 +1,6 @@
 package com.example.wedding_gifts.application.controllers;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,27 +41,11 @@ public class GiftController implements IGiftController {
     @PostMapping("/create")
     public ResponseEntity<GiftResponseDTO> createGift(
         @RequestBody CreateGiftDTO gift,
-        @RequestPart MultipartFile images[]
+        @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
         validData(gift);
 
-        List<MultipartFile> imagesFile = new ArrayList<MultipartFile>();
-        if(images != null) {
-            for(MultipartFile image : images) {
-                imagesFile.add(image);
-            }
-        }
-
-        CreateGiftDTO createGiftDTO = new CreateGiftDTO(
-            gift.title(), 
-            gift.giftDescription(), 
-            gift.categories(), 
-            gift.price(),
-            gift.accountId(),
-            images != null ? imagesFile : null
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(createGiftDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(gift, images));
     }
 
     @Override
@@ -79,26 +62,12 @@ public class GiftController implements IGiftController {
     @Override
     @PutMapping("/update/image")
     public ResponseEntity<MessageDTO> updateGift(
-        UpdateImageDTO update,
+        @RequestBody UpdateImageDTO update,
         @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
         validData(update);
 
-        List<MultipartFile> imagesFile = new ArrayList<MultipartFile>();
-        if(images != null) {
-            for(MultipartFile image : images) {
-                imagesFile.add(image);
-            }
-        }
-
-        UpdateImageDTO updateImageDTO = new UpdateImageDTO(
-            update.giftId(), 
-            update.accountId(), 
-            update.imagesId() != null ? update.imagesId() : null, 
-            images != null ? update.imagesFiles() : null
-        );
-
-        services.updateGift(updateImageDTO);
+        services.updateGift(update, images);
         return ResponseEntity.ok(new MessageDTO("sussefully"));
     }
 
