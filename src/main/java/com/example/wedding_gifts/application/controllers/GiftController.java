@@ -94,9 +94,9 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @GetMapping("/all{accountId}")
+    @GetMapping("/all{account}")
     public ResponseEntity<List<GiftResponseDTO>> getAllGifts(
-        @RequestParam(name = "accountId") UUID accountId
+        @RequestParam(name = "account") UUID accountId
     ) throws Exception {
         return ResponseEntity.ok(services.getAllGifts(accountId));
     }
