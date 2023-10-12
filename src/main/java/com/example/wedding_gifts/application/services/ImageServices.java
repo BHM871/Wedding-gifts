@@ -3,7 +3,6 @@ package com.example.wedding_gifts.application.services;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -66,8 +65,7 @@ public class ImageServices implements IImageUseCase {
         if(!isDeleted) {
             throw new Exception(sourceImages.replace(
                                                 "src/main/resources/db/images/"+deleteImage.accountId()+"/"+deleteImage.giftId()+"/", 
-                                    ""
-                                            ) + " not exists");       
+                                    "") + " not exists");       
         }
     }
 
@@ -98,14 +96,13 @@ public class ImageServices implements IImageUseCase {
 
     @Override
     public void cropImageAndSave(byte[] bytesOfImage, String extention, Path path) throws Exception {
-        InputStream imageInputStream = new ByteArrayInputStream(bytesOfImage);
-        BufferedImage buffer = ImageIO.read(imageInputStream);
+        BufferedImage buffer = ImageIO.read(new ByteArrayInputStream(bytesOfImage));
     
         int width = buffer.getWidth();
         int height = buffer.getHeight();
 
         if(extention.equals("jpeg")) {
-            Metadata m = ImageMetadataReader.readMetadata(imageInputStream);
+            Metadata m = ImageMetadataReader.readMetadata(new ByteArrayInputStream(bytesOfImage));
             ExifIFD0Directory e = m.getFirstDirectoryOfType(ExifIFD0Directory.class);
             int o = e.getInt(ExifIFD0Directory.TAG_ORIENTATION);
 

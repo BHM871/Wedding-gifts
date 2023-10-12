@@ -113,8 +113,6 @@ public class GiftController implements IGiftController {
     private void validData(CreateGiftDTO data) throws Exception {
         String invalid = "Some value is invalid";
         String isNull = "Some value is null";
-
-        if(data == null) throw new Exception("All is null");
         
         if(data.title() == null || data.title().isEmpty()) throw new Exception(isNull);
         if(data.price() == null) throw new Exception(isNull);
@@ -129,8 +127,6 @@ public class GiftController implements IGiftController {
     private void validData(UpdateGiftDTO data) throws Exception {
         String isNull = "Some value is null";
 
-        if(data == null) throw new Exception("All is null");
-
         if(data.giftId() == null) throw new Exception(isNull);
         if(data.accountId() == null) throw new Exception(isNull);
 
@@ -138,8 +134,6 @@ public class GiftController implements IGiftController {
 
     private void validData(UpdateImageDTO data, MultipartFile images[]) throws Exception {
         String isNull = "Some value is null";
-
-        if(data == null) throw new Exception("All is null");
 
         if(data.giftId() == null) throw new Exception(isNull);
         if(data.accountId() == null) throw new Exception(isNull);
@@ -149,8 +143,6 @@ public class GiftController implements IGiftController {
 
     private void validData(DeleteGiftDTO data) throws Exception {
         String isNull = "Some value is null";
-
-        if(data == null) throw new Exception("All is null");
 
         if(data.giftId() == null) throw new Exception(isNull);
         if(data.accountId() == null) throw new Exception(isNull);
