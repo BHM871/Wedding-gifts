@@ -1,18 +1,16 @@
 package com.example.wedding_gifts.core.domain.model;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 
-import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,29 +18,26 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tb_image")
+@Table(name = "tb_toekn")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Image {
-
+public class Token {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @NonNull
-    @Column(unique = true)
-    private String pathImage;
+    private String token;
 
-    @ManyToOne()
-    @JoinColumn(name = "gift_id")
-    private Gift gift;
+    @NonNull
+    private LocalDateTime limitHour;
 
-    public Image(SaveImageDTO saveImage) throws Exception {
-        if(saveImage.pathImage() == null) throw new Exception("Error in save image");
+    @NonNull
+    @OneToOne
+    @MapsId
+    private Account account;
 
-        this.pathImage = saveImage.pathImage();
-    }
-    
 }
