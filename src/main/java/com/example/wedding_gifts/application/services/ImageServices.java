@@ -40,7 +40,7 @@ public class ImageServices implements IImageUseCase {
 
         if(
             image.image().getContentType() == null || 
-            (!image.image().getContentType().endsWith("jpeg") || !image.image().getContentType().endsWith("png"))
+            (!image.image().getContentType().endsWith("jpeg") && !image.image().getContentType().endsWith("png"))
         ) throw new Exception(image.image().getOriginalFilename() + " is not valid. Only JPEG or PNG");
 
         String extention = image.image().getContentType().replace("image/", "");
@@ -126,6 +126,8 @@ public class ImageServices implements IImageUseCase {
             : width < height
                 ? buffer.getSubimage(0, height/2-width/2, width, width)
                 : buffer;
+        } else {
+            throw new Exception("Image is not accepted");
         }
         
         ImageIO.write(buffer, extention, path.toFile());
