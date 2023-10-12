@@ -41,7 +41,7 @@ public class GiftController implements IGiftController {
     @PostMapping("/create")
     public ResponseEntity<GiftResponseDTO> createGift(
         @RequestPart CreateGiftDTO gift,
-        @RequestPart(required = false) MultipartFile images []
+        @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
         validData(gift);
 
@@ -62,7 +62,7 @@ public class GiftController implements IGiftController {
     @Override
     @PutMapping("/update/image")
     public ResponseEntity<MessageDTO> updateGift(
-        @RequestPart UpdateImageDTO update,
+        @RequestPart(name = "update") UpdateImageDTO update,
         @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
         validData(update, images);
@@ -113,6 +113,8 @@ public class GiftController implements IGiftController {
     private void validData(CreateGiftDTO data) throws Exception {
         String invalid = "Some value is invalid";
         String isNull = "Some value is null";
+
+        if(data == null) throw new Exception("All is null");
         
         if(data.title() == null || data.title().isEmpty()) throw new Exception(isNull);
         if(data.price() == null) throw new Exception(isNull);
@@ -127,6 +129,8 @@ public class GiftController implements IGiftController {
     private void validData(UpdateGiftDTO data) throws Exception {
         String isNull = "Some value is null";
 
+        if(data == null) throw new Exception("All is null");
+
         if(data.giftId() == null) throw new Exception(isNull);
         if(data.accountId() == null) throw new Exception(isNull);
 
@@ -134,6 +138,8 @@ public class GiftController implements IGiftController {
 
     private void validData(UpdateImageDTO data, MultipartFile images[]) throws Exception {
         String isNull = "Some value is null";
+
+        if(data == null) throw new Exception("All is null");
 
         if(data.giftId() == null) throw new Exception(isNull);
         if(data.accountId() == null) throw new Exception(isNull);
@@ -143,6 +149,8 @@ public class GiftController implements IGiftController {
 
     private void validData(DeleteGiftDTO data) throws Exception {
         String isNull = "Some value is null";
+
+        if(data == null) throw new Exception("All is null");
 
         if(data.giftId() == null) throw new Exception(isNull);
         if(data.accountId() == null) throw new Exception(isNull);

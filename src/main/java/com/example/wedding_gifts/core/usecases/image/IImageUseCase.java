@@ -1,5 +1,6 @@
 package com.example.wedding_gifts.core.usecases.image;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,5 +19,7 @@ public interface IImageUseCase {
     public Image getById(UUID imageId) throws Exception;
 
     public List<Image> getAllByGift(UUID giftId) throws Exception;
+
+    public void cropImageAndSave(byte[] imageBytes, String extention, Path path) throws Exception;
 
 }

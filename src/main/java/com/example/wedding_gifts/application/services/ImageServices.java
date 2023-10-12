@@ -1,6 +1,9 @@
 package com.example.wedding_gifts.application.services;
 
-import java.io.File;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,10 +12,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifIFD0Directory;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
@@ -32,18 +39,18 @@ public class ImageServices implements IImageUseCase {
     public Image saveImage(ImageDTO image) throws Exception {
 
         if(
-            image.image().getContentType() != null && 
-            (image.image().getContentType().endsWith("gif") || !image.image().getContentType().startsWith("image"))
-        ) throw new Exception(image.image().getOriginalFilename() + " is not a image");
-    
-        byte[] bytesOfImage = image.image().getBytes();
+            image.image().getContentType() == null || 
+            (!image.image().getContentType().endsWith("jpeg") || !image.image().getContentType().endsWith("png"))
+        ) throw new Exception(image.image().getOriginalFilename() + " is not valid. Only JPEG or PNG");
+
+        String extention = image.image().getContentType().replace("image/", "");
 
         Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
         if(!Files.exists(path)) 
             Files.createDirectories(path);
 
-        Path imagePath = Paths.get(generateImagePath(path, image.image())); 
-        Files.write(imagePath, bytesOfImage);
+        Path imagePath = Paths.get(generateImagePath(path, extention)); 
+        cropImageAndSave(image.image().getBytes(), extention, imagePath);
 
         return repository.saveImage(new SaveImageDTO(imagePath.toString().replace('\\', '/'), image.giftId()));
     }
@@ -75,7 +82,7 @@ public class ImageServices implements IImageUseCase {
                 Files.deleteIfExists(Paths.get(image.getPathImage()));
             }
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            throw new Exception("Some image not exists", e);
         }
     }
 
@@ -89,12 +96,46 @@ public class ImageServices implements IImageUseCase {
         return repository.getAllImagesByGift(giftId);
     }
 
-    private String generateImagePath(Path path, MultipartFile image) throws Exception {
-        if(image.getContentType() == null) throw new Exception();
+    @Override
+    public void cropImageAndSave(byte[] bytesOfImage, String extention, Path path) throws Exception {
+        InputStream imageInputStream = new ByteArrayInputStream(bytesOfImage);
+        BufferedImage buffer = ImageIO.read(imageInputStream);
+    
+        int width = buffer.getWidth();
+        int height = buffer.getHeight();
 
+        if(extention.equals("jpeg")) {
+            Metadata m = ImageMetadataReader.readMetadata(imageInputStream);
+            ExifIFD0Directory e = m.getFirstDirectoryOfType(ExifIFD0Directory.class);
+            int o = e.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+
+            buffer = buffer.getSubimage(width/2-height/2, 0, height, height);
+
+            if(o == 6){
+                BufferedImage rotateI = new BufferedImage(height, height, buffer.getType());
+                Graphics2D graphics = rotateI.createGraphics();
+
+                graphics.rotate(Math.toRadians(90), height/2, height/2);
+                graphics.drawImage(buffer, null, 0, 0);
+
+                buffer = rotateI;
+            }
+        } else if(extention.equals("png")) {
+            buffer = width > height
+            ? buffer.getSubimage(width/2-height/2, 0, height, height)
+            : width < height
+                ? buffer.getSubimage(0, height/2-width/2, width, width)
+                : buffer;
+        }
+        
+        ImageIO.write(buffer, extention, path.toFile());
+
+    }
+
+    private String generateImagePath(Path path, String extention) throws Exception {
         return path.toString()+"/"+
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+"."
-                +image.getContentType().replaceAll("image/", "");
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+
+                "."+extention;
     }
     
 }
