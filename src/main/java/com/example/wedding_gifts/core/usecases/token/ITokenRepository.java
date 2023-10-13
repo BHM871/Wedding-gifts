@@ -1,11 +1,11 @@
 package com.example.wedding_gifts.core.usecases.token;
 
-import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
+import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 import com.example.wedding_gifts.core.domain.dtos.token.ValidTokenDTO;
 
 public interface ITokenRepository {
 
-    public String saveToken(SaveImageDTO tokenDto) throws Exception;
+    public String saveToken(SaveTokenDTO tokenDto) throws Exception;
 
     public String getToken(ValidTokenDTO validToken) throws Exception;
 

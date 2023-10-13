@@ -5,6 +5,8 @@ import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 
+import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +27,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Token {
     
+    public Token(SaveTokenDTO tokenDto) {
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
