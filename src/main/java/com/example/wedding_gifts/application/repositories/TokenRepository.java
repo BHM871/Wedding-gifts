@@ -2,6 +2,7 @@ package com.example.wedding_gifts.application.repositories;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -48,6 +49,13 @@ public class TokenRepository implements ITokenRepository {
         Token tokenForDelete = thisJpaRepository.findByToken(token).orElseThrow(() -> new Exception("Token not found"));
 
         thisJpaRepository.delete(tokenForDelete);
+    }
+
+    @Override
+    public void deleteTokenByAccount(UUID accountId) throws Exception {
+        Token token = thisJpaRepository.findByAccount(accountId).orElseThrow(() -> new Exception("Token not found"));
+
+        thisJpaRepository.delete(token);
     }
     
 }
