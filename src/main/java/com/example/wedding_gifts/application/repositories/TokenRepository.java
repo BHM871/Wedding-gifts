@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 import com.example.wedding_gifts.core.domain.dtos.token.ValidTokenDTO;
@@ -11,6 +12,7 @@ import com.example.wedding_gifts.core.domain.model.Token;
 import com.example.wedding_gifts.core.usecases.token.ITokenRepository;
 import com.example.wedding_gifts.infra.jpa.JpaTokenRepository;
 
+@Repository
 public class TokenRepository implements ITokenRepository {
 
     @Autowired
