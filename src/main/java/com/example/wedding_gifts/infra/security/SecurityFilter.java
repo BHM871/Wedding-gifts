@@ -11,6 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.wedding_gifts.adapters.security.ITokenManager;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
+import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,6 +25,8 @@ public class SecurityFilter extends OncePerRequestFilter {
     private ITokenManager tokenManager;
     @Autowired
     private IAccountRepository accountRepository;
+    @Autowired
+    private ITokenUseCase tokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -32,6 +35,11 @@ public class SecurityFilter extends OncePerRequestFilter {
         if(token != null) {
             try {
                 String subject = tokenManager.validateToken(token);
+                if(tokenService.validateToken(token) == null) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+                
                 UserDetails userDetails = accountRepository.getByEmail(subject);
 
                 var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

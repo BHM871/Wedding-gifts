@@ -27,12 +27,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Token {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @NonNull
-    private String token;
+    private String tokenValue;
 
     @NonNull
     private LocalDateTime limitHour;
@@ -48,7 +50,7 @@ public class Token {
         if(tokenDto.token() == null) throw new Exception(message);
         if(tokenDto.limitHour() == null || tokenDto.limitHour().isBefore(LocalDateTime.now())) throw new Exception(message);
 
-        this.token = tokenDto.token();
+        this.tokenValue = tokenDto.token();
         this.limitHour = tokenDto.limitHour();
     }
 

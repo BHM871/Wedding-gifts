@@ -27,23 +27,28 @@ public class TokenRepository implements ITokenRepository {
         Optional<Token> oldToken = thisJpaRepository.findByAccount(tokenDto.accountId());
 
         if(oldToken.isPresent() && oldToken.get().getLimitHour().isBefore(LocalDateTime.now())) 
-            deleteToken(oldToken.get().getToken());
+            deleteToken(oldToken.get().getTokenValue());
         else if(oldToken.isPresent())
-            return oldToken.get().getToken();
+            return oldToken.get().getTokenValue();
 
         Token newToken = new Token(tokenDto);
         Account account = accountRepository.getAccountById(tokenDto.accountId());
 
         newToken.setAccount(account);
 
-        return thisJpaRepository.save(newToken).getToken();
+        return thisJpaRepository.save(newToken).getTokenValue();
     }
 
     @Override
     public String getToken(String token) throws Exception {
-        Token oldToken = thisJpaRepository.findByToken(token).orElseThrow(() -> new Exception("Token not found"));
+        Optional<Token> oldToken = thisJpaRepository.findByTokenValue(token);
 
-        if(oldToken.getLimitHour().isBefore(LocalDateTime.now())) return null;
+        if(!oldToken.isPresent()) {
+            return null;
+        } else if(oldToken.get().getLimitHour().isBefore(LocalDateTime.now())) {
+            deleteToken(oldToken.get().getTokenValue());
+            return null;
+        }
 
         return token;
     }
@@ -52,13 +57,13 @@ public class TokenRepository implements ITokenRepository {
     public String getTokenByAccount(UUID accountId) {
         Optional<Token> token = thisJpaRepository.findByAccount(accountId);
 
-        if(token.isPresent()) return token.get().getToken();
+        if(token.isPresent()) return token.get().getTokenValue();
         else return null;
     }
 
     @Override
     public void deleteToken(String token) throws Exception {
-        Token tokenForDelete = thisJpaRepository.findByToken(token).orElseThrow(() -> new Exception("Token not found"));
+        Token tokenForDelete = thisJpaRepository.findByTokenValue(token).orElseThrow(() -> new Exception("Token not found"));
 
         thisJpaRepository.delete(tokenForDelete);
     }

@@ -27,6 +27,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Image {
 
+    private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;

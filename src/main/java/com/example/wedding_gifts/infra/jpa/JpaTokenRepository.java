@@ -12,7 +12,7 @@ import com.example.wedding_gifts.core.domain.model.Token;
 
 public interface JpaTokenRepository extends JpaRepository<Token, UUID> {
 
-    public Optional<Token> findByToken(String token);
+    public Optional<Token> findByTokenValue(String token);
 
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_token " +

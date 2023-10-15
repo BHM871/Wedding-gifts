@@ -68,14 +68,14 @@
 		</dependency>
 
 		<dependency>
-  <groupId>com.drewnoakes</groupId>
-  <artifactId>metadata-extractor</artifactId>
-  <version>2.18.0</version>
-</dependency>
+			<groupId>com.drewnoakes</groupId>
+			<artifactId>metadata-extractor</artifactId>
+			<version>2.18.0</version>
+		</dependency>
 
 	</dependencies>
 
-	<build>
+ 	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
