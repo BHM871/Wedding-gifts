@@ -10,6 +10,8 @@ public interface ITokenUseCase {
 
     public String validateToken(String token) throws Exception;
 
+    public String getTokenByAccount(UUID accounId);
+
     public void deleteToken(String token) throws Exception;
 
     public void deleteTokenByAccount(UUID accountId) throws Exception;

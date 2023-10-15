@@ -26,6 +26,11 @@ public class TokenServices implements ITokenUseCase {
     }
 
     @Override
+    public String getTokenByAccount(UUID accounId) {
+        return repository.getTokenByAccount(accounId);
+    }
+
+    @Override
     public void deleteToken(String token) throws Exception {
         repository.deleteToken(token);
     }

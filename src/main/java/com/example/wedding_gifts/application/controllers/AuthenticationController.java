@@ -8,9 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.adapters.security.ITokenManager;
@@ -18,9 +20,11 @@ import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccount
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
+import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.IAuthenticationController;
+import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
 
 import lombok.var;
 
@@ -34,6 +38,8 @@ public class AuthenticationController implements IAuthenticationController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private ITokenManager tokenManager;
+    @Autowired
+    private ITokenUseCase tokenService;
 
     @Override
     @PostMapping("/register")
@@ -86,6 +92,16 @@ public class AuthenticationController implements IAuthenticationController {
         if(auth.isAuthenticated()) return ResponseEntity.ok(new AuthenticationResponseDTO(token));
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
+    @Override
+    @PatchMapping("/logout")
+    public ResponseEntity<MessageDTO> logout(
+        @RequestParam String token
+    ) throws Exception {
+        tokenService.deleteToken(token);
+
+        return ResponseEntity.ok(new MessageDTO("successfully"));
     }
 
     private void validData(CreateAccountDTO data) throws Exception{

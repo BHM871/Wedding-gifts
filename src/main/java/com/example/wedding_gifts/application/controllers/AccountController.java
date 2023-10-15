@@ -81,7 +81,7 @@ public class AccountController implements IAccountController {
         @RequestParam(name = "id", required = true) UUID id
     ) throws Exception {
         services.deleteAccount(id);
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("sussefully"));    
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("successfully"));    
     }
     
 }

@@ -30,6 +30,9 @@ public class JwtTokenService implements ITokenManager {
     @Override
     public String generatorToken(Account account) throws Exception {
         try {
+            String actualToken = tokenService.getTokenByAccount(account.getId());
+            if(actualToken != null) return actualToken;
+
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                 .withIssuer(issuer)

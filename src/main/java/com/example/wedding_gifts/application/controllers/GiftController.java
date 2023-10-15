@@ -56,7 +56,7 @@ public class GiftController implements IGiftController {
         validData(gift);
 
         services.updateGift(gift);
-        return ResponseEntity.ok(new MessageDTO("sussefully"));
+        return ResponseEntity.ok(new MessageDTO("successfully"));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class GiftController implements IGiftController {
         validData(update, images);
 
         services.updateGift(update, images);
-        return ResponseEntity.ok(new MessageDTO("sussefully"));
+        return ResponseEntity.ok(new MessageDTO("successfully"));
     }
 
     @Override
@@ -79,7 +79,7 @@ public class GiftController implements IGiftController {
         validData(ids);
 
         services.deleteGift(ids);
-        return ResponseEntity.ok(new MessageDTO("sussefully"));
+        return ResponseEntity.ok(new MessageDTO("successfully"));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class GiftController implements IGiftController {
         if(accountId == null) throw new Exception("Account id is null");
 
         services.deleteAllByAccount(accountId);
-        return ResponseEntity.ok(new MessageDTO("sussefully"));
+        return ResponseEntity.ok(new MessageDTO("successfully"));
     }
 
     @Override

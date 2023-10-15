@@ -17,6 +17,6 @@ public interface JpaTokenRepository extends JpaRepository<Token, UUID> {
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_token " +
                                         "WHERE account_id = :account")
-    public Optional<Token> findByAccount(@Param("account")UUID account);
+    public Optional<Token> findByAccount(@Param("account" )UUID account);
     
 }

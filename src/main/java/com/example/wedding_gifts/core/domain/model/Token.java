@@ -20,15 +20,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "tb_toekn")
+@Table(name = "tb_token")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Token {
-    
-    public Token(SaveTokenDTO tokenDto) {
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -44,5 +41,15 @@ public class Token {
     @OneToOne
     @MapsId
     private Account account;
+    
+    public Token(SaveTokenDTO tokenDto) throws Exception {
+        String message = "Some value is invalid";
+
+        if(tokenDto.token() == null) throw new Exception(message);
+        if(tokenDto.limitHour() == null || tokenDto.limitHour().isBefore(LocalDateTime.now())) throw new Exception(message);
+
+        this.token = tokenDto.token();
+        this.limitHour = tokenDto.limitHour();
+    }
 
 }

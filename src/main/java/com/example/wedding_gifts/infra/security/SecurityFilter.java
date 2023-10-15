@@ -29,16 +29,16 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = recoverToken(request);
 
-        if(token == null) throw new IOException("Token not shared");
+        if(token != null) {
+            try {
+                String subject = tokenManager.validateToken(token);
+                UserDetails userDetails = accountRepository.getByEmail(subject);
 
-        try {
-            String subject = tokenManager.validateToken(token);
-            UserDetails userDetails = accountRepository.getByEmail(subject);
-
-            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } catch (Exception e) {
-            throw new IOException(e);
+                var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception e) {
+                throw new IOException(e);
+            }
         }
 
         filterChain.doFilter(request, response);
