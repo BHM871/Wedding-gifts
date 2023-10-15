@@ -21,20 +21,24 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
-    ITokenManager tokenManager;
+    private ITokenManager tokenManager;
     @Autowired
-    IAccountRepository accountRepository;
+    private IAccountRepository accountRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = recoverToken(request);
 
-        if(token != null){
+        if(token == null) throw new IOException("Token not shared");
+
+        try {
             String subject = tokenManager.validateToken(token);
-            UserDetails account = accountRepository.getByEmail(subject);
-            
-            var authentication = new UsernamePasswordAuthenticationToken(account, null, account.getAuthorities());
+            UserDetails userDetails = accountRepository.getByEmail(subject);
+
+            var authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+        } catch (Exception e) {
+            throw new IOException(e);
         }
 
         filterChain.doFilter(request, response);

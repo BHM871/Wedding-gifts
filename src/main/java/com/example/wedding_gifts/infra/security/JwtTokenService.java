@@ -27,6 +27,7 @@ public class JwtTokenService implements ITokenManager {
                 .withSubject(account.getEmail())
                 .withExpiresAt(LimitTimeForToken.genExpirationInstant())
                 .sign(algorithm);
+                
             return token;
         } catch (JWTCreationException e) {
             throw new RuntimeException("Error while generating token", e);
@@ -46,7 +47,5 @@ public class JwtTokenService implements ITokenManager {
             return "";
         }
     }
-
-    
     
 }

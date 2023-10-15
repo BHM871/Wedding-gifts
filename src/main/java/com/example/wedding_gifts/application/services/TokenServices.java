@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
-import com.example.wedding_gifts.core.domain.dtos.token.ValidTokenDTO;
 import com.example.wedding_gifts.core.usecases.token.ITokenRepository;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
 
@@ -22,8 +21,8 @@ public class TokenServices implements ITokenUseCase {
     }
 
     @Override
-    public String validateToken(ValidTokenDTO validToken) throws Exception {
-        return repository.getToken(validToken);
+    public String validateToken(String token) throws Exception {
+        return repository.getToken(token);
     }
 
     @Override
