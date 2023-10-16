@@ -26,7 +26,7 @@ public class TokenServices implements ITokenUseCase {
     }
 
     @Override
-    public String getTokenByAccount(UUID accounId) {
+    public String getTokenByAccount(UUID accounId) throws Exception {
         return repository.getTokenByAccount(accounId);
     }
 

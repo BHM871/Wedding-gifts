@@ -54,11 +54,17 @@ public class TokenRepository implements ITokenRepository {
     }
 
     @Override
-    public String getTokenByAccount(UUID accountId) {
+    public String getTokenByAccount(UUID accountId) throws Exception {
         Optional<Token> token = thisJpaRepository.findByAccount(accountId);
 
-        if(token.isPresent()) return token.get().getTokenValue();
-        else return null;
+        if(!token.isPresent()) {
+            return null;
+        } else if(token.get().getLimitHour().isBefore(LocalDateTime.now())) {
+            deleteToken(token.get().getTokenValue());
+            return null;
+        }
+
+        return token.get().getTokenValue();
     }
 
     @Override

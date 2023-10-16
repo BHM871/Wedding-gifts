@@ -10,7 +10,7 @@ public interface ITokenRepository {
 
     public String getToken(String token) throws Exception;
 
-    public String getTokenByAccount(UUID accountId);
+    public String getTokenByAccount(UUID accountId) throws Exception;
 
     public void deleteToken(String token) throws Exception;
     

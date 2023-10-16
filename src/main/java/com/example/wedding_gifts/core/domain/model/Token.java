@@ -41,7 +41,6 @@ public class Token {
 
     @NonNull
     @OneToOne
-    @MapsId
     private Account account;
     
     public Token(SaveTokenDTO tokenDto) throws Exception {
