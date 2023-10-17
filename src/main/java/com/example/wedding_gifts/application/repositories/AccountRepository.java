@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.infra.jpa.JpaAccountRespository;
@@ -31,35 +32,53 @@ public class AccountRepository implements IAccountRepository {
     }
 
     @Override
-    public UserDetails getByEmail(String email){
-        return thisJpaRespository.findByEmail(email);
+    public UserDetails getByEmail(String email) throws Exception {
+        UserDetails user = thisJpaRespository.findByEmail(email);
+
+        if(user == null) throw new AccountNotFoundException("Email not found");
+
+        return user;
     }
 
     @Override
     public UUID verificForGifter(String brindAndGifter) throws Exception {
-        Account account = thisJpaRespository.findByBrideGroom(brindAndGifter).orElseThrow(() -> new Exception("Bride and groom not found"));
+        Account account = thisJpaRespository.findByBrideGroom(brindAndGifter)
+            .orElseThrow(() -> new AccountNotFoundException("Bride and groom not found"));
         
         return account.getId();
     }
 
     @Override
     public Account getAccountById(UUID id) throws Exception {
-        return thisJpaRespository.findById(id).orElseThrow(() -> new Exception("Account not found"));
+        return thisJpaRespository.findById(id)
+            .orElseThrow(() -> new AccountNotFoundException("Account not found"));
     }
 
     @Override
     public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
-        Account upAccount = getAccountById(id);
+        try{
+            Account upAccount = getAccountById(id);
         
-        upAccount = upAccount.update(account);
+            upAccount = upAccount.update(account);
 
-        return save(upAccount);
+            return save(upAccount);
+        } catch (AccountNotFoundException e){
+            throw new AccountNotFoundException("ID shared not exists");
+        } catch (Exception e){
+            throw new Exception(e);
+        }
     }
 
     @Override
     public void deleteAccount(UUID id) throws Exception {
-        Account account = getAccountById(id);
-        thisJpaRespository.delete(account);
+        try{
+            Account account = getAccountById(id);
+            thisJpaRespository.delete(account);
+        } catch (AccountNotFoundException e){
+            throw new AccountNotFoundException("ID shared not exists");
+        } catch (Exception e){
+            throw new Exception(e);
+        }
     }
     
 }

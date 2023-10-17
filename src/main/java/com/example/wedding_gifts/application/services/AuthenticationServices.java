@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.IAuthenticationService;
 
@@ -16,7 +17,13 @@ public class AuthenticationServices implements IAuthenticationService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.getByEmail(username);
+        try {
+            return repository.getByEmail(username);
+        } catch (AccountNotFoundException e) {
+            throw new UsernameNotFoundException(e.getMessage());
+        } catch (Exception e) {
+            throw new UsernameNotFoundException("Account not found");
+        }
     }
     
 }

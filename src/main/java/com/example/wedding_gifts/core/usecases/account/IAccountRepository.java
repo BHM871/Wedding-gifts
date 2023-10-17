@@ -14,7 +14,7 @@ public interface IAccountRepository {
 
     public Account createAccount(CreateAccountDTO accountDTO) throws Exception;
 
-    public UserDetails getByEmail(String email);
+    public UserDetails getByEmail(String email) throws Exception;
 
     public UUID verificForGifter(String brindAndGifter) throws Exception;
 
