@@ -36,10 +36,10 @@ public class AccountRepository implements IAccountRepository {
             Account newAccount = new Account(account);
 
             return save(newAccount);
-        } catch(AccountExecutionException e) {
+        } catch (AccountExecutionException e) {
             throw e;
         } catch (Exception e) {
-            throw e;
+            throw new AccountExecutionException("Some error in create account");
         }
     }
 
