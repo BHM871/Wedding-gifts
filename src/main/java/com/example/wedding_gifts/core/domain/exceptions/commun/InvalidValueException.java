@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.core.domain.exceptions.commun;
 
-public class InvalidValueException extends MyException {
+public abstract class InvalidValueException extends MyException {
 
     private static int statusCode = 422;
     private static String message = "Invalid Value";

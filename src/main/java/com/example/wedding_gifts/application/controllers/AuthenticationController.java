@@ -21,6 +21,8 @@ import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.IAuthenticationController;
@@ -104,37 +106,37 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     private void validData(CreateAccountDTO data) throws Exception{
-        String invalid = "Some value is invalid";
-        String isNull = "Some value is null";
+        String invalid = "%s is invalid";
+        String isNull = "%s value is null";
         
-        if(data.brideGroom() == null || data.brideGroom().isEmpty()) throw new Exception(isNull);
-        if(data.weddingDate() == null) throw new Exception(isNull);
-        if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
-        if(data.lastName() == null || data.lastName().isEmpty()) throw new Exception(isNull);
-        if(data.email() == null || data.email().isEmpty()) throw new Exception(isNull);
-        if(data.password() == null || data.password().isEmpty()) throw new Exception(isNull);
-        if(data.pixKey() == null || data.pixKey().isEmpty()) throw new Exception(isNull);
-        if(data.firstName() == null || data.firstName().isEmpty()) throw new Exception(isNull);
+        if(data.brideGroom() == null || data.brideGroom().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "brideGroom"));
+        if(data.weddingDate() == null) throw new AccountNotNullableException(String.format(isNull, "weddingDate"));
+        if(data.firstName() == null || data.firstName().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "firstName"));
+        if(data.lastName() == null || data.lastName().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "lastName"));
+        if(data.email() == null || data.email().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "email"));
+        if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
+        if(data.pixKey() == null || data.pixKey().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "pixKey"));
         
-        if(data.brideGroom().length() < 3) throw new Exception(invalid);
-        if(data.weddingDate().getTime() < new Date().getTime()) throw new Exception(invalid);
-        if(data.firstName().length() < 3) throw new Exception(invalid);
-        if(data.lastName().length() < 3) throw new Exception(invalid);
-        if(data.email().length() < 13) throw new Exception(invalid);
-        if(data.password().length() < 8) throw new Exception(invalid);
-        if(data.pixKey().length() < 10) throw new Exception(invalid);
+        if(data.brideGroom().length() < 3) throw new AccountInvalidValueException(String.format(invalid, "brideGroom"));
+        if(data.weddingDate().getTime() < new Date().getTime()) throw new AccountInvalidValueException(String.format(invalid, "weddingDate"));
+        if(data.firstName().length() < 3) throw new AccountInvalidValueException(String.format(invalid, "firstName"));
+        if(data.lastName().length() < 3) throw new AccountInvalidValueException(String.format(invalid, "lastName"));
+        if(data.email().length() < 13) throw new AccountInvalidValueException(String.format(invalid, "email"));
+        if(data.password().length() < 8) throw new AccountInvalidValueException(String.format(invalid, "password"));
+        if(data.pixKey().length() < 10) throw new AccountInvalidValueException(String.format(invalid, "pisxKey"));
    
     }
 
     private void validData(LoginDTO data) throws Exception {
-        String invalid = "Some value is invalid";
-        String isNull = "Some value is null";
+        String invalid = "%s is invalid";
+        String isNull = "%s is null";
 
-        if(data.email() == null || data.email().isEmpty()) throw new Exception(isNull);
-        if(data.password() == null || data.password().isEmpty()) throw new Exception(isNull);
+        if(data.email() == null || data.email().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "email"));
+        if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
         
-        if(data.email().length() < 13) throw new Exception(invalid);
-        if(data.password().length() < 8) throw new Exception(invalid);
+        if(data.email().length() < 13) throw new Exception(String.format(invalid, "email"));
+        if(data.password().length() < 8) throw new Exception(String.format(invalid, "password"));
+        
     }
     
 }

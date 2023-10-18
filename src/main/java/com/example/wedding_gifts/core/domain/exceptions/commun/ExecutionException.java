@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.core.domain.exceptions.commun;
 
-public class ExecutionException extends MyException {
+public abstract class ExecutionException extends MyException {
 
     private static int statusCode = 400;
     private static String message = "Execution Error";
