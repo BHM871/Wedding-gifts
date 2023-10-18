@@ -2,8 +2,6 @@ package com.example.wedding_gifts.application.repositories;
 
 import java.util.UUID;
 
-import javax.security.auth.login.AccountException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
@@ -77,6 +76,8 @@ public class AccountRepository implements IAccountRepository {
             return save(upAccount);
         } catch (AccountNotFoundException e){
             throw new AccountNotFoundException("ID shared not exists");
+        } catch (AccountInvalidValueException e){
+            throw e;
         } catch (Exception e){
             throw new AccountExecutionException("Some erro in update account", e);
         }
@@ -90,7 +91,7 @@ public class AccountRepository implements IAccountRepository {
         } catch (AccountNotFoundException e){
             throw new AccountNotFoundException("ID shared not exists");
         } catch (Exception e){
-            throw new AccountExecutionException("Some erro in update account", e);
+            throw new AccountExecutionException("Some erro in delete account", e);
         }
     }
     

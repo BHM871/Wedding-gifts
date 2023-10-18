@@ -51,7 +51,6 @@ public class AuthenticationController implements IAuthenticationController {
         if(repository.getByEmail(account.email()) != null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
         String encrypPassword = new BCryptPasswordEncoder().encode(account.password());
-        String encrypPixKey = new BCryptPasswordEncoder().encode(account.pixKey());
 
         CreateAccountDTO createAccount = new CreateAccountDTO(
             account.firstName(), 
@@ -60,7 +59,7 @@ public class AuthenticationController implements IAuthenticationController {
             account.weddingDate(), 
             account.email(), 
             encrypPassword, 
-            encrypPixKey
+            account.pixKey()
         );
 
         Account savedAccount = repository.createAccount(createAccount);

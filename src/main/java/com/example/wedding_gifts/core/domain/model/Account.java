@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.example.wedding_gifts.commun.LimitDateForAccount;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -74,25 +75,21 @@ public class Account implements UserDetails {
     }
 
     public Account update(UpdateAccountDTO account) throws Exception {
-        String message = "Some value is invalid";
+        String message = "Error in update. %s is invalid. ";
 
-        if(account.brideGroom() != null && account.brideGroom().length() > 3) this.brideGroom = account.brideGroom();
-        else if(account.brideGroom() != null) throw new Exception(message);
+        if(account.brideGroom() != null && account.brideGroom().length() <= 3) throw new AccountInvalidValueException(String.format(message, "brideGroom"));
+        if(account.weddingDate() != null && account.weddingDate().getTime() < new Date().getTime()) throw new AccountInvalidValueException(String.format(message, "weddingDate"));
+        if(account.firstName() != null && account.firstName().length() <= 3) throw new AccountInvalidValueException(String.format(message, "firstName"));
+        if(account.lastName() != null && account.lastName().length() <= 3) throw new AccountInvalidValueException(String.format(message, "lastName"));
+        if(account.password() != null && account.password().length() <= 8) throw new AccountInvalidValueException(String.format(message, "password"));
+        if(account.pixKey() != null && account.pixKey().length() <= 10) throw new AccountInvalidValueException(String.format(message, "pixKey"));
 
-        if(account.weddingDate() != null && account.weddingDate().getTime() >= new Date().getTime()) this.weddingDate = account.weddingDate();
-        else if(account.weddingDate() != null) throw new Exception(message);
-
-        if(account.firstName() != null && account.firstName().length() > 3) this.firstName = account.firstName();
-        else if (account.firstName() != null) throw new Exception(message);
-
-        if(account.lastName() != null && account.lastName().length() > 3) this.lastName = account.lastName();
-        else if(account.lastName() != null) throw new Exception(message);
-
-        if(account.password() != null && account.password().length() > 8) this.password = account.password();
-        else if(account.password() != null) throw new Exception(message);
-
-        if(account.pixKey() != null && account.pixKey().length() > 10) this.pixKey = account.pixKey();
-        else if(account.pixKey() != null) throw new Exception(message);
+        this.brideGroom = account.brideGroom() != null ? account.brideGroom() : brideGroom;
+        this.weddingDate = account.weddingDate() != null ? account.weddingDate() : weddingDate;
+        this.firstName = account.firstName() != null ? account.firstName() : firstName;
+        this.lastName = account.lastName() != null ? account.lastName() : lastName;
+        this.password = account.password() != null ? account.password() : password;
+        this.pixKey = account.pixKey() != null ? account.pixKey() : pixKey;
 
         return this;
     }
