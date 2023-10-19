@@ -18,6 +18,8 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.domain.model.CategoriesEnum;
@@ -36,49 +38,81 @@ public class GiftRepository implements IGiftRepository {
 
     @Override
     public Gift save(Gift gift) throws Exception {
-        return thisJpaRepository.save(gift);
+        try {
+            return thisJpaRepository.save(gift);
+        } catch (Exception e){
+            throw new GiftExecutionException("Gift can't be saved", e);
+        }
     }
 
     @Override
     public Gift createGift(CreateGiftDTO gift) throws Exception {
-        Gift newGift = new Gift(gift);
-        Account account  = accountRepository.getAccountById(gift.accountId());
+        try{
+            Gift newGift = new Gift(gift);
+            Account account  = accountRepository.getAccountById(gift.accountId());
 
-        newGift.setAccount(account);
+            newGift.setAccount(account);
 
-        return save(newGift);
+            return save(newGift);
+        } catch (AccountNotFoundException e){
+            throw e;
+        } catch (GiftExecutionException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GiftExecutionException("Gift can't be created", e);
+        }
     }
 
     @Override
     public void updateGift(UpdateGiftDTO upGift) throws Exception {
-        Gift updateGift = getGiftById(upGift.giftId());
+        try{
+            Gift updateGift = getGiftById(upGift.giftId());
 
-        int compared = updateGift.getAccount().getId()
-                            .compareTo(upGift.accountId());
-        if(compared != 0) throw new Exception("This gift is not your");
+            int compared = updateGift.getAccount().getId()
+                                .compareTo(upGift.accountId());
+            if(compared != 0) throw new Exception("This gift is not your");
 
-        updateGift.update(upGift);
+            updateGift.update(upGift);
 
-        save(updateGift);
+            save(updateGift);
+        } catch(GiftNotFoundException e){
+            throw e;
+        } catch (GiftExecutionException e){
+            throw e;
+        } catch (Exception e) {
+            throw new GiftExecutionException("Gift can't be updated", e);
+        }
     }
 
     @Override
     public void deleteGift(DeleteGiftDTO ids) throws Exception {
-        Gift gift = getGiftById(ids.giftId());
-        
-        int compared = gift.getAccount().getId()
-                        .compareTo(ids.accountId());
-        if(compared != 0) throw new Exception("This gift is not your");
+        try{
+            Gift gift = getGiftById(ids.giftId());
+            
+            int compared = gift.getAccount().getId()
+                            .compareTo(ids.accountId());
+            if(compared != 0) throw new Exception("This gift is not your");
 
-        thisJpaRepository.delete(gift);
+            thisJpaRepository.delete(gift);
+        } catch(GiftNotFoundException e){
+            throw e;
+        } catch (Exception e){
+            throw new GiftExecutionException("Gift can't be deleted", e);
+        }
     }
 
     @Override
-    public void deleteAllByAccount(UUID accountId) throws Exception {        
-        accountRepository.getAccountById(accountId);
-        List<Gift> gifts = getAllGifts(accountId);
+    public void deleteAllByAccount(UUID accountId) throws Exception { 
+        try{       
+            accountRepository.getAccountById(accountId);
+            List<Gift> gifts = getAllGifts(accountId);
 
-        if(gifts != null && !gifts.isEmpty()) thisJpaRepository.deleteAll(gifts);
+            if(gifts != null && !gifts.isEmpty()) thisJpaRepository.deleteAll(gifts);
+        } catch (AccountNotFoundException e){
+            throw e;
+        } catch (Exception e){
+            throw new GiftExecutionException("Some Gift can't be deleted, but some was deleted", e);
+        }
     }
 
     @Override
@@ -87,23 +121,23 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public List<Gift> getAllGifts(UUID accountId) throws Exception {
+    public List<Gift> getAllGifts(UUID accountId) {
         return thisJpaRepository.findAllByAccount(accountId);
     }
 
     @Override
-    public List<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId) throws Exception {
+    public List<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId) {
 
         if(searcher.isBought() == null) {
             return thisJpaRepository.findByTitleAndAccount(searcher.title(), accountId);
         } else {
             return thisJpaRepository.findByTitleAndIsBoughtAndAccount(searcher.title(), searcher.isBought(), accountId);
         }
-        
+
     }
 
     @Override
-    public List<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId) throws Exception {
+    public List<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId) {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
@@ -116,7 +150,7 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public List<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId) throws Exception {
+    public List<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId) {
 
         if(searcher.isBought() == null) {
             return thisJpaRepository.findByPriceBetweenAndAccount(searcher.startPrice(), searcher.endPrice(), accountId);
@@ -127,7 +161,7 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId) throws Exception {
+    public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId) {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
@@ -140,7 +174,7 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public List<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId) throws Exception {
+    public List<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId) {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
@@ -153,7 +187,7 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId) throws Exception {
+    public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId) {
 
         if(searcher.isBought() == null) {
             return thisJpaRepository.findByTitleAndPriceBetweenAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), accountId);
@@ -164,7 +198,7 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public List<Gift> getAllFilters(SearcherDTO searcher, UUID accountId) throws Exception {
+    public List<Gift> getAllFilters(SearcherDTO searcher, UUID accountId) {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {

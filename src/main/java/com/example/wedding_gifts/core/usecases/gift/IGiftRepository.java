@@ -29,20 +29,20 @@ public interface IGiftRepository {
 
     public Gift getGiftById(UUID giftId) throws Exception;
 
-    public List<Gift> getAllGifts(UUID accountId) throws Exception;
+    public List<Gift> getAllGifts(UUID accountId);
 
-    public List<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId) throws Exception;
+    public List<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId);
 
-    public List<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId) throws Exception;
+    public List<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId);
 
-    public List<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId) throws Exception;
+    public List<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId);
 
-    public List<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId) throws Exception;
+    public List<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId);
 
-    public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId) throws Exception;
+    public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId);
 
-    public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId) throws Exception;
+    public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId);
 
-    public List<Gift> getAllFilters(SearcherDTO searcher, UUID accountId) throws Exception;
+    public List<Gift> getAllFilters(SearcherDTO searcher, UUID accountId);
 
 }
