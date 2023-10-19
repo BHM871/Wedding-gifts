@@ -31,12 +31,12 @@ public class TokenServices implements ITokenUseCase {
     }
 
     @Override
-    public void deleteToken(String token) throws Exception {
+    public void deleteToken(String token) {
         repository.deleteToken(token);
     }
 
     @Override
-    public void deleteTokenByAccount(UUID accountId) throws Exception {
+    public void deleteTokenByAccount(UUID accountId) {
         repository.deleteTokenByAccount(accountId);
     }
     

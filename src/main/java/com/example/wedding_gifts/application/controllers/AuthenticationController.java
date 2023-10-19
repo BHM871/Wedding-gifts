@@ -105,7 +105,7 @@ public class AuthenticationController implements IAuthenticationController {
         return ResponseEntity.ok(new MessageDTO("successfully"));
     }
 
-    private void validData(CreateAccountDTO data) throws Exception{
+    private void validData(CreateAccountDTO data) throws Exception {
         String invalid = "%s is invalid";
         String isNull = "%s value is null";
         

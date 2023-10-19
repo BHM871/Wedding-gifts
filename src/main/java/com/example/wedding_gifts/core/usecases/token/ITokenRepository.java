@@ -12,8 +12,8 @@ public interface ITokenRepository {
 
     public String getTokenByAccount(UUID accountId) throws Exception;
 
-    public void deleteToken(String token) throws Exception;
+    public void deleteToken(String token);
     
-    public void deleteTokenByAccount(UUID accountId) throws Exception;
+    public void deleteTokenByAccount(UUID accountId);
 
 }

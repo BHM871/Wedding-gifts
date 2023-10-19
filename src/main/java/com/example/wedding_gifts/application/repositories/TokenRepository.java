@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
+import com.example.wedding_gifts.core.domain.exceptions.token.TokenExecutionException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.domain.model.Token;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
@@ -24,61 +25,73 @@ public class TokenRepository implements ITokenRepository {
 
     @Override
     public String saveToken(SaveTokenDTO tokenDto) throws Exception {
-        Optional<Token> oldToken = thisJpaRepository.findByAccount(tokenDto.accountId());
+        try{
+            Optional<Token> oldToken = thisJpaRepository.findByAccount(tokenDto.accountId());
 
-        if(oldToken.isPresent() && oldToken.get().getLimitHour().isBefore(LocalDateTime.now())) 
-            deleteToken(oldToken.get().getTokenValue());
-        else if(oldToken.isPresent())
-            return oldToken.get().getTokenValue();
+            if(oldToken.isPresent() && oldToken.get().getLimitHour().isBefore(LocalDateTime.now())) 
+                deleteToken(oldToken.get().getTokenValue());
+            else if(oldToken.isPresent())
+                return oldToken.get().getTokenValue();
 
-        Token newToken = new Token(tokenDto);
-        Account account = accountRepository.getAccountById(tokenDto.accountId());
+            Token newToken = new Token(tokenDto);
+            Account account = accountRepository.getAccountById(tokenDto.accountId());
 
-        newToken.setAccount(account);
+            newToken.setAccount(account);
 
-        return thisJpaRepository.save(newToken).getTokenValue();
+            return thisJpaRepository.save(newToken).getTokenValue();
+        } catch (Exception e) {
+            throw new TokenExecutionException("Token can't be saved", e);
+        }
     }
 
     @Override
     public String getToken(String token) throws Exception {
-        Optional<Token> oldToken = thisJpaRepository.findByTokenValue(token);
+        try{
+            Optional<Token> oldToken = thisJpaRepository.findByTokenValue(token);
 
-        if(!oldToken.isPresent()) {
-            return null;
-        } else if(oldToken.get().getLimitHour().isBefore(LocalDateTime.now())) {
-            deleteToken(oldToken.get().getTokenValue());
-            return null;
+            if(!oldToken.isPresent()) {
+                return null;
+            } else if(oldToken.get().getLimitHour().isBefore(LocalDateTime.now())) {
+                deleteToken(oldToken.get().getTokenValue());
+                return null;
+            }
+
+            return token;
+        } catch (Exception e){
+            throw new TokenExecutionException("Error in Token validation", e);
         }
-
-        return token;
     }
 
     @Override
     public String getTokenByAccount(UUID accountId) throws Exception {
+        try{
+            Optional<Token> token = thisJpaRepository.findByAccount(accountId);
+
+            if(!token.isPresent()) {
+                return null;
+            } else if(token.get().getLimitHour().isBefore(LocalDateTime.now())) {
+                deleteToken(token.get().getTokenValue());
+                return null;
+            }
+
+            return token.get().getTokenValue();
+        } catch (Exception e){
+            throw new TokenExecutionException("Error in Token verification");
+        }
+    }
+
+    @Override
+    public void deleteToken(String token) {
+        Optional<Token> tokenForDelete = thisJpaRepository.findByTokenValue(token);
+
+        if(tokenForDelete.isPresent()) thisJpaRepository.delete(tokenForDelete.get());
+    }
+
+    @Override
+    public void deleteTokenByAccount(UUID accountId) {
         Optional<Token> token = thisJpaRepository.findByAccount(accountId);
 
-        if(!token.isPresent()) {
-            return null;
-        } else if(token.get().getLimitHour().isBefore(LocalDateTime.now())) {
-            deleteToken(token.get().getTokenValue());
-            return null;
-        }
-
-        return token.get().getTokenValue();
-    }
-
-    @Override
-    public void deleteToken(String token) throws Exception {
-        Token tokenForDelete = thisJpaRepository.findByTokenValue(token).orElseThrow(() -> new Exception("Token not found"));
-
-        thisJpaRepository.delete(tokenForDelete);
-    }
-
-    @Override
-    public void deleteTokenByAccount(UUID accountId) throws Exception {
-        Token token = thisJpaRepository.findByAccount(accountId).orElseThrow(() -> new Exception("Token not found"));
-
-        thisJpaRepository.delete(token);
+        if(token.isPresent()) thisJpaRepository.delete(token.get());
     }
     
 }
