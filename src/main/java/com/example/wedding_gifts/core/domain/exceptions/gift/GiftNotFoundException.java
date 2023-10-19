@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.core.domain.exceptions.gift;
 
-import com.example.wedding_gifts.core.domain.exceptions.commun.NotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.common.NotFoundException;
 
 public class GiftNotFoundException extends NotFoundException {
 

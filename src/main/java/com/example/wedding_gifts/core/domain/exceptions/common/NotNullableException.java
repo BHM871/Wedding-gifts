@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.core.domain.exceptions.commun;
+package com.example.wedding_gifts.core.domain.exceptions.common;
 
 public abstract class NotNullableException extends MyException {
 

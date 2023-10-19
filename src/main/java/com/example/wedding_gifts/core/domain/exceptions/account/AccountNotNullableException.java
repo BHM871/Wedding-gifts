@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.core.domain.exceptions.account;
 
-import com.example.wedding_gifts.core.domain.exceptions.commun.NotNullableException;
+import com.example.wedding_gifts.core.domain.exceptions.common.NotNullableException;
 
 public class AccountNotNullableException extends NotNullableException {
 

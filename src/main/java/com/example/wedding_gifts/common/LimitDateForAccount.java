@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.commun;
+package com.example.wedding_gifts.common;
 
 import java.time.Instant;
 import java.util.Date;

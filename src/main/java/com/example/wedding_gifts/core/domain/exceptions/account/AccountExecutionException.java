@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.core.domain.exceptions.account;
 
-import com.example.wedding_gifts.core.domain.exceptions.commun.ExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.common.ExecutionException;
 
 public class AccountExecutionException extends ExecutionException {
 

@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.core.domain.exceptions.gift;
 
-import com.example.wedding_gifts.core.domain.exceptions.commun.ExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.common.ExecutionException;
 
 public class GiftExecutionException extends ExecutionException {
 

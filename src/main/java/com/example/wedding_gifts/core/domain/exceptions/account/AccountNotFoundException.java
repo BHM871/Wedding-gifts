@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.core.domain.exceptions.account;
 
-import com.example.wedding_gifts.core.domain.exceptions.commun.NotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.common.NotFoundException;
 
 public class AccountNotFoundException extends NotFoundException {
 

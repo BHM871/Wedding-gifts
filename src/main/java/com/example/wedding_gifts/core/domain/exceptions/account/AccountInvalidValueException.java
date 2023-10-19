@@ -1,6 +1,6 @@
 package com.example.wedding_gifts.core.domain.exceptions.account;
 
-import com.example.wedding_gifts.core.domain.exceptions.commun.InvalidValueException;
+import com.example.wedding_gifts.core.domain.exceptions.common.InvalidValueException;
 
 public class AccountInvalidValueException extends InvalidValueException {
 
