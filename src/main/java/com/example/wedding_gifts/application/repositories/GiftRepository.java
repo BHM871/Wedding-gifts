@@ -18,6 +18,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.domain.model.CategoriesEnum;
 import com.example.wedding_gifts.core.domain.model.Gift;
@@ -82,7 +83,7 @@ public class GiftRepository implements IGiftRepository {
 
     @Override
     public Gift getGiftById(UUID id) throws Exception {
-        return thisJpaRepository.findById(id).orElseThrow(() -> new Exception("Gift not found"));
+        return thisJpaRepository.findById(id).orElseThrow(() -> new GiftNotFoundException("Gift not found"));
     }
 
     @Override
@@ -98,6 +99,7 @@ public class GiftRepository implements IGiftRepository {
         } else {
             return thisJpaRepository.findByTitleAndIsBoughtAndAccount(searcher.title(), searcher.isBought(), accountId);
         }
+        
     }
 
     @Override
@@ -121,6 +123,7 @@ public class GiftRepository implements IGiftRepository {
         } else {
             return thisJpaRepository.findByPriceBetweenAndIsBoughtAndAccount(searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId);
         }
+
     }
 
     @Override
@@ -157,6 +160,7 @@ public class GiftRepository implements IGiftRepository {
         } else {
             return thisJpaRepository.findByTitleAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId);
         }
+
     }
 
     @Override
