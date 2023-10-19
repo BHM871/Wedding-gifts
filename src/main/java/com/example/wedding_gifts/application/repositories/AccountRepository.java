@@ -26,7 +26,7 @@ public class AccountRepository implements IAccountRepository {
         try{
             return thisJpaRespository.save(account);
         } catch (Exception e) {
-            throw new AccountExecutionException("Some error in save Account", e);
+            throw new AccountExecutionException("Account can't be saved", e);
         }
     }
 
@@ -39,7 +39,7 @@ public class AccountRepository implements IAccountRepository {
         } catch (AccountExecutionException e) {
             throw e;
         } catch (Exception e) {
-            throw new AccountExecutionException("Some error in create account");
+            throw new AccountExecutionException("Account can't be created");
         }
     }
 
@@ -79,7 +79,7 @@ public class AccountRepository implements IAccountRepository {
         } catch (AccountInvalidValueException e){
             throw e;
         } catch (Exception e){
-            throw new AccountExecutionException("Some erro in update account", e);
+            throw new AccountExecutionException("Account can't be updated", e);
         }
     }
 
@@ -91,7 +91,7 @@ public class AccountRepository implements IAccountRepository {
         } catch (AccountNotFoundException e){
             throw new AccountNotFoundException("ID shared not exists");
         } catch (Exception e){
-            throw new AccountExecutionException("Some erro in delete account", e);
+            throw new AccountExecutionException("Account can't be deleted", e);
         }
     }
     
