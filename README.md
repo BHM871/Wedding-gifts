@@ -1,4 +1,4 @@
-<h1 align="center">Wedding-gifts</h1>
+<h1 align="center">Wedding Gifts API</h1>
 
 <h3 align="center">This project is for gift management, in which, the gifts will not be essential, only the value, so that the gift-givers send only the money and do not have to buy the gifts.</h3>
 
