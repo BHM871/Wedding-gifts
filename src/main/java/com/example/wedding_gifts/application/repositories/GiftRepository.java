@@ -18,7 +18,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
-import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotFoundException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotYourException;
@@ -55,9 +55,7 @@ public class GiftRepository implements IGiftRepository {
             newGift.setAccount(account);
 
             return save(newGift);
-        } catch (AccountNotFoundException e){
-            throw e;
-        } catch (GiftExecutionException e) {
+        } catch (MyException e){
             throw e;
         } catch (Exception e) {
             throw new GiftExecutionException("Gift can't be created", e);
@@ -76,11 +74,7 @@ public class GiftRepository implements IGiftRepository {
             updateGift.update(upGift);
 
             save(updateGift);
-        } catch(GiftNotFoundException e){
-            throw e;
-        } catch(GiftNotYourException e){
-            throw e;
-        } catch (GiftExecutionException e){
+        } catch(MyException e){
             throw e;
         } catch (Exception e) {
             throw new GiftExecutionException("Gift can't be updated", e);
@@ -97,9 +91,7 @@ public class GiftRepository implements IGiftRepository {
             if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
             thisJpaRepository.delete(gift);
-        } catch(GiftNotFoundException e){
-            throw e;
-        } catch(GiftNotYourException e){
+        } catch(MyException e){
             throw e;
         } catch (Exception e){
             throw new GiftExecutionException("Gift can't be deleted", e);
@@ -113,7 +105,7 @@ public class GiftRepository implements IGiftRepository {
             List<Gift> gifts = getAllGifts(accountId);
 
             if(gifts != null && !gifts.isEmpty()) thisJpaRepository.deleteAll(gifts);
-        } catch (AccountNotFoundException e){
+        } catch (MyException e){
             throw e;
         } catch (Exception e){
             throw new GiftExecutionException("Some Gift can't be deleted, but some was deleted", e);

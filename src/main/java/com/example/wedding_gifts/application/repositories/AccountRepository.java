@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
-import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.infra.jpa.JpaAccountRespository;
@@ -36,7 +36,7 @@ public class AccountRepository implements IAccountRepository {
             Account newAccount = new Account(account);
 
             return save(newAccount);
-        } catch (AccountExecutionException e) {
+        } catch (MyException e) {
             throw e;
         } catch (Exception e) {
             throw new AccountExecutionException("Account can't be created");
@@ -76,7 +76,7 @@ public class AccountRepository implements IAccountRepository {
             return save(upAccount);
         } catch (AccountNotFoundException e){
             throw new AccountNotFoundException("ID shared not exists");
-        } catch (AccountInvalidValueException e){
+        } catch (MyException e){
             throw e;
         } catch (Exception e){
             throw new AccountExecutionException("Account can't be updated", e);

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
@@ -31,6 +32,8 @@ public class ImageRepository implements IImageRepository {
             newImage.setGift(gift);
 
             return thisJpaRespository.save(newImage);
+        } catch(MyException e){
+            throw e;
         } catch(Exception e){
             throw new ImageExecutionException("Image can't be saved", e);
         }
@@ -50,6 +53,8 @@ public class ImageRepository implements IImageRepository {
             if(compared != 0) throw new Exception("This gift is not your");
 
             thisJpaRespository.delete(image);
+        } catch(MyException e){
+            throw e;
         } catch(Exception e){
             throw new ImageExecutionException("Image can't be deleted");
         }
@@ -63,6 +68,8 @@ public class ImageRepository implements IImageRepository {
             List<Image> images = getAllImagesByGift(giftId);
 
             if(images != null && !images.isEmpty()) thisJpaRespository.deleteAll(images);
+        } catch(MyException e){
+            throw e;
         } catch(Exception e){
             throw new ImageExecutionException("Image can't be deleted");
         }
