@@ -150,7 +150,7 @@ public class GiftServices implements IGiftUseCase {
             gifts.addAll(repository.getByPriceOrBought(searcherByPriceDTO(searcher), accountId));
         
         } else {
-            throw new Exception("Filters are null");
+            gifts.addAll(repository.getAllGifts(accountId));
         }
 
         return generatedGiftResponse(gifts);

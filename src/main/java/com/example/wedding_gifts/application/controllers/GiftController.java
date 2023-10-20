@@ -26,6 +26,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
@@ -112,11 +113,11 @@ public class GiftController implements IGiftController {
     
     private void validData(CreateGiftDTO data) throws Exception {
         String invalid = "Some value is invalid";
-        String isNull = "Some value is null";
+        String isNull = "%s is null";
         
-        if(data.title() == null || data.title().isEmpty()) throw new Exception(isNull);
-        if(data.price() == null) throw new Exception(isNull);
-        if(data.categories() == null || data.categories().isEmpty()) throw new Exception(isNull);
+        if(data.title() == null || data.title().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "title"));
+        if(data.price() == null) throw new GiftNotNullableException(String.format(isNull, "price"));
+        if(data.categories() == null || data.categories().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "categories"));
 
         if(data.title().length() < 3) throw new Exception(invalid);
         if(data.giftDescription() != null && data.giftDescription().length() < 5) throw new Exception(invalid);
@@ -125,27 +126,27 @@ public class GiftController implements IGiftController {
     }
 
     private void validData(UpdateGiftDTO data) throws Exception {
-        String isNull = "Some value is null";
+        String isNull = "%s is null";
 
-        if(data.giftId() == null) throw new Exception(isNull);
-        if(data.accountId() == null) throw new Exception(isNull);
+        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "accountId"));
 
     }
 
     private void validData(UpdateImageDTO data, MultipartFile images[]) throws Exception {
-        String isNull = "Some value is null";
+        String isNull = "%s is null";
 
-        if(data.giftId() == null) throw new Exception(isNull);
-        if(data.accountId() == null) throw new Exception(isNull);
-        if(data.imagesId() == null && images == null) throw new Exception(isNull);
+        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "accountId"));
+        if(data.imagesId() == null && images == null) throw new GiftNotNullableException(String.format(isNull, "images").replace("is", "are"));
 
     }
 
     private void validData(DeleteGiftDTO data) throws Exception {
-        String isNull = "Some value is null";
+        String isNull = "%s is null";
 
-        if(data.giftId() == null) throw new Exception(isNull);
-        if(data.accountId() == null) throw new Exception(isNull);
+        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "accountId"));
 
     }
 
