@@ -71,7 +71,7 @@ public class AccountRepository implements IAccountRepository {
         try{
             Account upAccount = getAccountById(id);
         
-            upAccount = upAccount.update(account);
+            upAccount.update(account);
 
             return save(upAccount);
         } catch (AccountNotFoundException e){

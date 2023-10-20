@@ -74,7 +74,7 @@ public class Account implements UserDetails {
         this.pixKey = account.pixKey();
     }
 
-    public Account update(UpdateAccountDTO account) throws Exception {
+    public void update(UpdateAccountDTO account) throws Exception {
         String message = "Error in update. %s is invalid. ";
 
         if(account.brideGroom() != null && account.brideGroom().length() <= 3) throw new AccountInvalidValueException(String.format(message, "brideGroom"));
@@ -91,7 +91,6 @@ public class Account implements UserDetails {
         this.password = account.password() != null ? account.password() : password;
         this.pixKey = account.pixKey() != null ? account.pixKey() : pixKey;
 
-        return this;
     }
 
     @Override
