@@ -21,6 +21,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotYourException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.domain.model.CategoriesEnum;
 import com.example.wedding_gifts.core.domain.model.Gift;
@@ -70,12 +71,14 @@ public class GiftRepository implements IGiftRepository {
 
             int compared = updateGift.getAccount().getId()
                                 .compareTo(upGift.accountId());
-            if(compared != 0) throw new Exception("This gift is not your");
+            if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
             updateGift.update(upGift);
 
             save(updateGift);
         } catch(GiftNotFoundException e){
+            throw e;
+        } catch(GiftNotYourException e){
             throw e;
         } catch (GiftExecutionException e){
             throw e;
@@ -91,10 +94,12 @@ public class GiftRepository implements IGiftRepository {
             
             int compared = gift.getAccount().getId()
                             .compareTo(ids.accountId());
-            if(compared != 0) throw new Exception("This gift is not your");
+            if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
             thisJpaRepository.delete(gift);
         } catch(GiftNotFoundException e){
+            throw e;
+        } catch(GiftNotYourException e){
             throw e;
         } catch (Exception e){
             throw new GiftExecutionException("Gift can't be deleted", e);
