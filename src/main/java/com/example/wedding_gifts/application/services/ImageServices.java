@@ -44,21 +44,17 @@ public class ImageServices implements IImageUseCase {
 
             String extention = image.image().getContentType().replace("image/", "");
 
-            Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
-            if(!Files.exists(path)) 
-                Files.createDirectories(path);
+            Path path = generateImagePath(image, extention);
 
-            Path imagePath = Paths.get(generateImagePath(path, extention)); 
-            cropImageAndSave(image.image().getBytes(), extention, imagePath);
+            cropImageAndSave(image.image().getBytes(), extention, path);
 
-            return repository.saveImage(new SaveImageDTO(imagePath.toString().replace('\\', '/'), image.giftId()));
+            return repository.saveImage(new SaveImageDTO(path.toString().replace('\\', '/'), image.giftId()));
         } catch(Exception e){
             String extention = image.image().getContentType().replace("image/", "");
 
-            Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
-            Path imagePath = Paths.get(generateImagePath(path, extention));
+            Path path = generateImagePath(image, extention);
 
-            Files.deleteIfExists(imagePath);
+            Files.deleteIfExists(path);
 
             throw e;
         }
@@ -73,9 +69,10 @@ public class ImageServices implements IImageUseCase {
         boolean isDeleted = Files.deleteIfExists(Paths.get(image.getPathImage()));
 
         if(!isDeleted) {
-            throw new Exception(sourceImages.replace(
+            throw new Exception(image.getPathImage().replace(
                                                 "src/main/resources/db/images/"+deleteImage.accountId()+"/"+deleteImage.giftId()+"/", 
-                                    "") + " not exists");       
+                                    " ") 
+                                + "not exists");       
         }
     }
 
@@ -141,10 +138,16 @@ public class ImageServices implements IImageUseCase {
 
     }
 
-    private String generateImagePath(Path path, String extention) throws Exception {
-        return path.toString()+"/"+
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+
-                "."+extention;
+    private Path generateImagePath(ImageDTO image, String extention) throws Exception {
+        Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
+        if(!Files.exists(path)) 
+            Files.createDirectories(path);
+
+        return Paths.get(
+                    path.toString()+"/"+
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+
+                    "."+extention
+                );
     }
     
 }
