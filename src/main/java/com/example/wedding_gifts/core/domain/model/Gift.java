@@ -9,6 +9,7 @@ import org.springframework.lang.NonNull;
 
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -64,18 +65,15 @@ public class Gift implements Serializable {
     }
 
     public void update(UpdateGiftDTO gift) throws Exception {
-        String message = "Some value is invalid";
+        String message = "%s is invalid";
 
-        if(gift.title() != null && gift.title().length() > 3) this.title = gift.title();
-        else if(gift.title() != null) throw new Exception(message);
+        if(gift.title() != null && gift.title().length() <= 3) throw new GiftInvalidValueException(String.format(message, "title"));
+        if(gift.giftDescription() != null && gift.giftDescription().length() > 10) throw new GiftInvalidValueException(String.format(message, "description")); 
 
-        if(gift.giftDescription() != null && gift.giftDescription().length() > 10) this.giftDescription = gift.giftDescription();
-        else if(gift.giftDescription() != null) throw new Exception(message);
-
+        if(gift.title() != null) this.title = gift.title();
+        if(gift.giftDescription() != null) this.giftDescription = gift.giftDescription();
         if(gift.categories() != null) this.categories = gift.categories();
-
         if(gift.price() != null) this.price = gift.price();
-
         if(gift.isBought() != null) this.isBought = gift.isBought();
 
     }

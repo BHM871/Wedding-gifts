@@ -26,6 +26,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
@@ -112,16 +113,16 @@ public class GiftController implements IGiftController {
     }
     
     private void validData(CreateGiftDTO data) throws Exception {
-        String invalid = "Some value is invalid";
+        String invalid = "%s is invalid";
         String isNull = "%s is null";
         
         if(data.title() == null || data.title().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "title"));
         if(data.price() == null) throw new GiftNotNullableException(String.format(isNull, "price"));
         if(data.categories() == null || data.categories().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "categories"));
 
-        if(data.title().length() < 3) throw new Exception(invalid);
-        if(data.giftDescription() != null && data.giftDescription().length() < 5) throw new Exception(invalid);
-        if(data.price().doubleValue() < BigDecimal.TEN.doubleValue()) throw new Exception(invalid);
+        if(data.title().length() < 3) throw new GiftInvalidValueException(String.format(invalid, "title"));
+        if(data.giftDescription() != null && data.giftDescription().length() < 5) throw new GiftInvalidValueException(String.format(invalid, "description"));
+        if(data.price().doubleValue() < BigDecimal.TEN.doubleValue()) throw new GiftInvalidValueException(String.format(invalid, "price"));
 
     }
 
