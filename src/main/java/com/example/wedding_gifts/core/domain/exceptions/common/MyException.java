@@ -99,6 +99,27 @@ public abstract class MyException extends Exception {
         );
     }
 
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Throwable getCause() {
+        return cause;
+    }
+
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
     }
@@ -117,11 +138,6 @@ public abstract class MyException extends Exception {
 
     public String getThowable(){
         return cause.toString();
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
     }
     
 }
