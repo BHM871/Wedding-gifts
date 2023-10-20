@@ -77,7 +77,7 @@ public class ImageRepository implements IImageRepository {
 
     @Override
     public Image getById(UUID imageId) throws Exception {
-        return thisJpaRespository.findById(imageId).orElseThrow(() -> new Exception("Image not found"));
+        return thisJpaRespository.findById(imageId).orElseThrow(() -> new Exception("Image not exists"));
     }
 
     @Override

@@ -47,7 +47,7 @@ public class AccountRepository implements IAccountRepository {
     public UserDetails getByEmail(String email) throws Exception {
         UserDetails user = thisJpaRespository.findByEmail(email);
 
-        if(user == null) throw new AccountNotFoundException("Email not found");
+        if(user == null) throw new AccountNotFoundException("Email not exists");
 
         return user;
     }
@@ -55,7 +55,7 @@ public class AccountRepository implements IAccountRepository {
     @Override
     public UUID verificForGifter(String brindAndGifter) throws Exception {
         Account account = thisJpaRespository.findByBrideGroom(brindAndGifter)
-            .orElseThrow(() -> new AccountNotFoundException("Bride and groom not found"));
+            .orElseThrow(() -> new AccountNotFoundException("Bride and groom not exists"));
         
         return account.getId();
     }
@@ -63,7 +63,7 @@ public class AccountRepository implements IAccountRepository {
     @Override
     public Account getAccountById(UUID id) throws Exception {
         return thisJpaRespository.findById(id)
-            .orElseThrow(() -> new AccountNotFoundException("Account not found"));
+            .orElseThrow(() -> new AccountNotFoundException("Account not exists"));
     }
 
     @Override

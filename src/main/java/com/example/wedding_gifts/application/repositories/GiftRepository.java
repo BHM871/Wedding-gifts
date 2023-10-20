@@ -114,7 +114,7 @@ public class GiftRepository implements IGiftRepository {
 
     @Override
     public Gift getGiftById(UUID id) throws Exception {
-        return thisJpaRepository.findById(id).orElseThrow(() -> new GiftNotFoundException("Gift not found"));
+        return thisJpaRepository.findById(id).orElseThrow(() -> new GiftNotFoundException("Gift not exists"));
     }
 
     @Override
