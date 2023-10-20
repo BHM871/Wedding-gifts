@@ -57,7 +57,7 @@ public class GiftServices implements IGiftUseCase {
         List<ImageResponseDTO> imagesResponse = new ArrayList<ImageResponseDTO>();
         if(images != null) {
             for(MultipartFile image : images) {
-                Image temp = imageService.saveImage(
+                Image temp = imageService.createImage(
                     new ImageDTO(image, newGift.getId(), newGift.getAccount().getId())
                 );
 
@@ -87,7 +87,7 @@ public class GiftServices implements IGiftUseCase {
 
         if(images != null) {
             for(MultipartFile image : images) {
-                imageService.saveImage(
+                imageService.createImage(
                     new ImageDTO(image, update.giftId(), update.accountId())
                 );
             }

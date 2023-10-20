@@ -17,6 +17,6 @@ public interface IImageRepository {
 
     public Image getById(UUID imageId) throws Exception;
 
-    public List<Image> getAllImagesByGift(UUID giftId) throws Exception;
+    public List<Image> getAllImagesByGift(UUID giftId);
 
 }

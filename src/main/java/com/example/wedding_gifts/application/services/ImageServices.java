@@ -35,7 +35,7 @@ public class ImageServices implements IImageUseCase {
     private IImageRepository repository;
 
     @Override
-    public Image saveImage(ImageDTO image) throws Exception {
+    public Image createImage(ImageDTO image) throws Exception {
         try{
             if(
                 image.image().getContentType() == null || 
@@ -58,6 +58,43 @@ public class ImageServices implements IImageUseCase {
 
             throw e;
         }
+    }
+
+    @Override
+    public void cropImageAndSave(byte[] bytesOfImage, String extention, Path path) throws Exception {
+        BufferedImage buffer = ImageIO.read(new ByteArrayInputStream(bytesOfImage));
+    
+        int width = buffer.getWidth();
+        int height = buffer.getHeight();
+
+        if(extention.equals("jpeg")) {
+            Metadata m = ImageMetadataReader.readMetadata(new ByteArrayInputStream(bytesOfImage));
+            ExifIFD0Directory e = m.getFirstDirectoryOfType(ExifIFD0Directory.class);
+            int o = e.getInt(ExifIFD0Directory.TAG_ORIENTATION);
+
+            buffer = buffer.getSubimage(width/2-height/2, 0, height, height);
+
+            if(o == 6){
+                BufferedImage rotateI = new BufferedImage(height, height, buffer.getType());
+                Graphics2D graphics = rotateI.createGraphics();
+
+                graphics.rotate(Math.toRadians(90), height/2, height/2);
+                graphics.drawImage(buffer, null, 0, 0);
+
+                buffer = rotateI;
+            }
+        } else if(extention.equals("png")) {
+            buffer = width > height
+            ? buffer.getSubimage(width/2-height/2, 0, height, height)
+            : width < height
+                ? buffer.getSubimage(0, height/2-width/2, width, width)
+                : buffer;
+        } else {
+            throw new Exception("Image is not accepted");
+        }
+        
+        ImageIO.write(buffer, extention, path.toFile());
+
     }
 
     @Override
@@ -97,45 +134,8 @@ public class ImageServices implements IImageUseCase {
     }
 
     @Override
-    public List<Image> getAllByGift(UUID giftId) throws Exception {
+    public List<Image> getAllByGift(UUID giftId) {
         return repository.getAllImagesByGift(giftId);
-    }
-
-    @Override
-    public void cropImageAndSave(byte[] bytesOfImage, String extention, Path path) throws Exception {
-        BufferedImage buffer = ImageIO.read(new ByteArrayInputStream(bytesOfImage));
-    
-        int width = buffer.getWidth();
-        int height = buffer.getHeight();
-
-        if(extention.equals("jpeg")) {
-            Metadata m = ImageMetadataReader.readMetadata(new ByteArrayInputStream(bytesOfImage));
-            ExifIFD0Directory e = m.getFirstDirectoryOfType(ExifIFD0Directory.class);
-            int o = e.getInt(ExifIFD0Directory.TAG_ORIENTATION);
-
-            buffer = buffer.getSubimage(width/2-height/2, 0, height, height);
-
-            if(o == 6){
-                BufferedImage rotateI = new BufferedImage(height, height, buffer.getType());
-                Graphics2D graphics = rotateI.createGraphics();
-
-                graphics.rotate(Math.toRadians(90), height/2, height/2);
-                graphics.drawImage(buffer, null, 0, 0);
-
-                buffer = rotateI;
-            }
-        } else if(extention.equals("png")) {
-            buffer = width > height
-            ? buffer.getSubimage(width/2-height/2, 0, height, height)
-            : width < height
-                ? buffer.getSubimage(0, height/2-width/2, width, width)
-                : buffer;
-        } else {
-            throw new Exception("Image is not accepted");
-        }
-        
-        ImageIO.write(buffer, extention, path.toFile());
-
     }
 
     private Path generateImagePath(ImageDTO image, String extention) throws Exception {
