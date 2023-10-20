@@ -36,22 +36,32 @@ public class ImageServices implements IImageUseCase {
 
     @Override
     public Image saveImage(ImageDTO image) throws Exception {
+        try{
+            if(
+                image.image().getContentType() == null || 
+                (!image.image().getContentType().endsWith("jpeg") && !image.image().getContentType().endsWith("png"))
+            ) throw new Exception(image.image().getOriginalFilename() + " is not valid. Only JPEG or PNG");
 
-        if(
-            image.image().getContentType() == null || 
-            (!image.image().getContentType().endsWith("jpeg") && !image.image().getContentType().endsWith("png"))
-        ) throw new Exception(image.image().getOriginalFilename() + " is not valid. Only JPEG or PNG");
+            String extention = image.image().getContentType().replace("image/", "");
 
-        String extention = image.image().getContentType().replace("image/", "");
+            Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
+            if(!Files.exists(path)) 
+                Files.createDirectories(path);
 
-        Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
-        if(!Files.exists(path)) 
-            Files.createDirectories(path);
+            Path imagePath = Paths.get(generateImagePath(path, extention)); 
+            cropImageAndSave(image.image().getBytes(), extention, imagePath);
 
-        Path imagePath = Paths.get(generateImagePath(path, extention)); 
-        cropImageAndSave(image.image().getBytes(), extention, imagePath);
+            return repository.saveImage(new SaveImageDTO(imagePath.toString().replace('\\', '/'), image.giftId()));
+        } catch(Exception e){
+            String extention = image.image().getContentType().replace("image/", "");
 
-        return repository.saveImage(new SaveImageDTO(imagePath.toString().replace('\\', '/'), image.giftId()));
+            Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
+            Path imagePath = Paths.get(generateImagePath(path, extention));
+
+            Files.deleteIfExists(imagePath);
+
+            throw e;
+        }
     }
 
     @Override
