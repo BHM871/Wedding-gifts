@@ -84,12 +84,12 @@ public class Account implements UserDetails {
         if(account.password() != null && account.password().length() <= 8) throw new AccountInvalidValueException(String.format(message, "password"));
         if(account.pixKey() != null && account.pixKey().length() <= 10) throw new AccountInvalidValueException(String.format(message, "pixKey"));
 
-        this.brideGroom = account.brideGroom() != null ? account.brideGroom() : brideGroom;
-        this.weddingDate = account.weddingDate() != null ? account.weddingDate() : weddingDate;
-        this.firstName = account.firstName() != null ? account.firstName() : firstName;
-        this.lastName = account.lastName() != null ? account.lastName() : lastName;
-        this.password = account.password() != null ? account.password() : password;
-        this.pixKey = account.pixKey() != null ? account.pixKey() : pixKey;
+        if(account.brideGroom() != null) this.brideGroom = account.brideGroom() != null ? account.brideGroom() : brideGroom;
+        if(account.weddingDate() != null) this.weddingDate = account.weddingDate() != null ? account.weddingDate() : weddingDate;
+        if(account.firstName() != null) this.firstName = account.firstName() != null ? account.firstName() : firstName;
+        if(account.lastName() != null) this.lastName = account.lastName() != null ? account.lastName() : lastName;
+        if(account.password() != null) this.password = account.password() != null ? account.password() : password;
+        if(account.pixKey() != null) this.pixKey = account.pixKey() != null ? account.pixKey() : pixKey;
 
     }
 
