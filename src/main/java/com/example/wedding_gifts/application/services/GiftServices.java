@@ -159,7 +159,7 @@ public class GiftServices implements IGiftUseCase {
     private SearcherDTO searcherDTO(SearcherDTO searcher) {
         return new SearcherDTO(
             searcher.isBought() != null ? searcher.isBought() : null, 
-            searcher.title(), 
+            "%"+searcher.title()+"%", 
             searcher.startPrice() != null ? searcher.startPrice() : BigDecimal.ZERO, 
             searcher.endPrice() != null ? searcher.endPrice() : BigDecimal.valueOf(Double.MAX_VALUE),
             searcher.categories() 
@@ -168,7 +168,7 @@ public class GiftServices implements IGiftUseCase {
 
     private SearcherByTitleAndCategoriesDTO searcherByTitleAndCategoriesDTO(SearcherDTO searcher) {
         return new SearcherByTitleAndCategoriesDTO(
-            searcher.title(), 
+            "%"+searcher.title()+"%", 
             searcher.categories(), 
             searcher.isBought() != null ? searcher.isBought() : null
         );
@@ -176,7 +176,7 @@ public class GiftServices implements IGiftUseCase {
 
     private SearcherByTitleAndPriceDTO searcherByTitleAndPriceDTO(SearcherDTO searcher) {
         return new SearcherByTitleAndPriceDTO(
-            searcher.title(), 
+            "%"+searcher.title()+"%", 
             searcher.startPrice() != null ? searcher.startPrice() : BigDecimal.ZERO, 
             searcher.endPrice() != null ? searcher.endPrice() : BigDecimal.valueOf(Double.MAX_VALUE),
             searcher.isBought() != null ? searcher.isBought() : null 
@@ -185,7 +185,7 @@ public class GiftServices implements IGiftUseCase {
 
     private SearcherByTitleDTO searcherByTitleDTO(SearcherDTO searcher) {
         return new SearcherByTitleDTO(
-            searcher.title(), 
+            "%"+searcher.title()+"%", 
             searcher.isBought() != null ? searcher.isBought() : null
         );
     }
