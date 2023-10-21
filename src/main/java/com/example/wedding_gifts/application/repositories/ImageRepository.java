@@ -10,6 +10,7 @@ import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
@@ -56,7 +57,7 @@ public class ImageRepository implements IImageRepository {
         } catch(MyException e){
             throw e;
         } catch(Exception e){
-            throw new ImageExecutionException("Image can't be deleted");
+            throw new ImageExecutionException("Image can't be deleted", e);
         }
     }
 
@@ -71,13 +72,13 @@ public class ImageRepository implements IImageRepository {
         } catch(MyException e){
             throw e;
         } catch(Exception e){
-            throw new ImageExecutionException("Image can't be deleted");
+            throw new ImageExecutionException("Image can't be deleted", e);
         }
     }
 
     @Override
     public Image getById(UUID imageId) throws Exception {
-        return thisJpaRespository.findById(imageId).orElseThrow(() -> new Exception("Image not exists"));
+        return thisJpaRespository.findById(imageId).orElseThrow(() -> new ImageNotFoundException("Image not exists"));
     }
 
     @Override

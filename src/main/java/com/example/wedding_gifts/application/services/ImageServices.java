@@ -22,6 +22,7 @@ import com.drew.metadata.exif.ExifIFD0Directory;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
@@ -106,7 +107,7 @@ public class ImageServices implements IImageUseCase {
         boolean isDeleted = Files.deleteIfExists(Paths.get(image.getPathImage()));
 
         if(!isDeleted) {
-            throw new Exception(image.getPathImage().replace(
+            throw new ImageNotFoundException(image.getPathImage().replace(
                                                 "src/main/resources/db/images/"+deleteImage.accountId()+"/"+deleteImage.giftId()+"/", 
                                     " ") 
                                 + "not exists");       
@@ -124,7 +125,7 @@ public class ImageServices implements IImageUseCase {
                 Files.deleteIfExists(Paths.get(image.getPathImage()));
             }
         } catch (Exception e) {
-            throw new Exception("Some image not exists", e);
+            throw new ImageNotFoundException("Some image not exists", e);
         }
     }
 
