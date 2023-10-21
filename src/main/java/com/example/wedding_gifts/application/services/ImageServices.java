@@ -3,6 +3,7 @@ package com.example.wedding_gifts.application.services;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,6 +23,8 @@ import com.drew.metadata.exif.ExifIFD0Directory;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.image.ImageInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
@@ -41,7 +44,7 @@ public class ImageServices implements IImageUseCase {
             if(
                 image.image().getContentType() == null || 
                 (!image.image().getContentType().endsWith("jpeg") && !image.image().getContentType().endsWith("png"))
-            ) throw new Exception(image.image().getOriginalFilename() + " is not valid. Only JPEG or PNG");
+            ) throw new ImageInvalidValueException(image.image().getOriginalFilename() + " is not valid. Only JPEG or PNG");
 
             String extention = image.image().getContentType().replace("image/", "");
 
@@ -91,7 +94,7 @@ public class ImageServices implements IImageUseCase {
                 ? buffer.getSubimage(0, height/2-width/2, width, width)
                 : buffer;
         } else {
-            throw new Exception("Image is not accepted");
+            throw new ImageInvalidValueException("Image is not accepted");
         }
         
         ImageIO.write(buffer, extention, path.toFile());
@@ -140,15 +143,19 @@ public class ImageServices implements IImageUseCase {
     }
 
     private Path generateImagePath(ImageDTO image, String extention) throws Exception {
-        Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
-        if(!Files.exists(path)) 
-            Files.createDirectories(path);
+        try{
+            Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
+            if(!Files.exists(path)) 
+                Files.createDirectories(path);
 
-        return Paths.get(
-                    path.toString()+"/"+
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+
-                    "."+extention
-                );
+            return Paths.get(
+                        path.toString()+"/"+
+                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+
+                        "."+extention
+                    );
+        } catch (IOException e){
+            throw new ImageExecutionException("Some error in generated path", e);
+        }
     }
     
 }
