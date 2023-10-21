@@ -28,6 +28,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
+import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotNullableException;
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
@@ -139,7 +140,7 @@ public class GiftController implements IGiftController {
 
         if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
         if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "accountId"));
-        if(data.imagesId() == null && images == null) throw new GiftNotNullableException(String.format(isNull, "images").replace("is", "are"));
+        if(data.imagesId() == null && images == null) throw new ImageNotNullableException(String.format(isNull, "images").replace("is", "are"));
 
     }
 
