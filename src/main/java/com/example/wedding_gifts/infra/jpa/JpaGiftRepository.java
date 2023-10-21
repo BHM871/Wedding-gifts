@@ -26,13 +26,13 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
 
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                        "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND account_id = :account")
     public List<Gift> findByTitleAndAccount(String title, @Param("account") UUID account);
     
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                        "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND is_bought = :bought " + 
                                             "AND account_id = :account")
     public List<Gift> findByTitleAndIsBoughtAndAccount(String title, Boolean bought, @Param("account") UUID account);
@@ -67,14 +67,14 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
 
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                        "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND :categories = ANY(categories) " + 
                                             "AND account_id = :account")
     public List<Gift> findByTitleAndCategoriesAndAccount(String title, @Param("categories")String categories, @Param("account") UUID account);
 
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                        "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND :categories = ANY(categories) " + 
                                             "AND is_bought = :bought " + 
                                             "AND account_id = :account")
@@ -82,7 +82,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
 
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                        "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND price >= :start " + 
                                             "AND price <= :end " + 
                                             "AND account_id = :account")
@@ -90,7 +90,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
 
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                        "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND price >= :start " + 
                                             "AND price <= :end " + 
                                             "AND is_bought = :bought " + 
@@ -116,7 +116,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
     
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                        "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND :categories = ANY(categories) " + 
                                             "AND price >= :start " + 
                                             "AND price <= :end " + 
@@ -125,7 +125,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
     
     @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
-                                        "WHERE UPPER(title) = UPPER(:title) " + 
+                                        "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND :categories = ANY(categories) " + 
                                             "AND price >= :start " + 
                                             "AND price <= :end " + 

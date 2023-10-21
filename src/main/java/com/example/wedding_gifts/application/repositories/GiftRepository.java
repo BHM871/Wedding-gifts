@@ -124,11 +124,10 @@ public class GiftRepository implements IGiftRepository {
 
     @Override
     public List<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId) {
-
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndAccount(searcher.title(), accountId);
+            return thisJpaRepository.findByTitleAndAccount(searcher.title()+"%", accountId);
         } else {
-            return thisJpaRepository.findByTitleAndIsBoughtAndAccount(searcher.title(), searcher.isBought(), accountId);
+            return thisJpaRepository.findByTitleAndIsBoughtAndAccount(searcher.title()+"%", searcher.isBought(), accountId);
         }
 
     }
@@ -175,9 +174,9 @@ public class GiftRepository implements IGiftRepository {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndAccount(searcher.title(), cat.toString(), accountId));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndAccount(searcher.title()+"%", cat.toString(), accountId));
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBoughtAndAccount(searcher.title(), cat.toString(), searcher.isBought(), accountId));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBoughtAndAccount(searcher.title()+"%", cat.toString(), searcher.isBought(), accountId));
         }
 
         return List.copyOf(out);
@@ -187,9 +186,9 @@ public class GiftRepository implements IGiftRepository {
     public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId) {
 
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndPriceBetweenAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), accountId);
+            return thisJpaRepository.findByTitleAndPriceBetweenAndAccount(searcher.title()+"%", searcher.startPrice(), searcher.endPrice(), accountId);
         } else {
-            return thisJpaRepository.findByTitleAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId);
+            return thisJpaRepository.findByTitleAndPriceBetweenAndIsBoughtAndAccount(searcher.title()+"%", searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId);
         }
 
     }
@@ -199,9 +198,9 @@ public class GiftRepository implements IGiftRepository {
         Set<Gift> out = new HashSet<Gift>();
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndAccount(searcher.title(), cat.toString(), searcher.startPrice(), searcher.endPrice(), accountId));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndAccount(searcher.title()+"%", cat.toString(), searcher.startPrice(), searcher.endPrice(), accountId));
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), cat.toString(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId));
+            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndIsBoughtAndAccount(searcher.title()+"%", cat.toString(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId));
         }
 
         return List.copyOf(out);
