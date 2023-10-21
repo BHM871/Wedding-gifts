@@ -9,8 +9,10 @@ import org.springframework.stereotype.Repository;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotYourException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotYourException;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
@@ -47,11 +49,11 @@ public class ImageRepository implements IImageRepository {
             
             int compared = image.getGift().getId()
                                 .compareTo(deleteImage.giftId());
-            if(compared != 0) throw new Exception("This image is not this gift");
+            if(compared != 0) throw new ImageNotYourException("This image is not this gift");
             
             compared = image.getGift().getAccount().getId()
                                 .compareTo(deleteImage.accountId());
-            if(compared != 0) throw new Exception("This gift is not your");
+            if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
             thisJpaRespository.delete(image);
         } catch(MyException e){
