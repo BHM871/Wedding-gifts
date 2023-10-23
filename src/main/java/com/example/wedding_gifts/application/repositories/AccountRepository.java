@@ -45,11 +45,7 @@ public class AccountRepository implements IAccountRepository {
 
     @Override
     public UserDetails getByEmail(String email) throws Exception {
-        UserDetails user = thisJpaRespository.findByEmail(email);
-
-        if(user == null) throw new AccountNotFoundException("Email not exists");
-
-        return user;
+        return thisJpaRespository.findByEmail(email);
     }
 
     @Override
