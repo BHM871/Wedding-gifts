@@ -7,7 +7,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,7 +33,6 @@ import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
 @RestController
 @RequestMapping("/gift")
-@CrossOrigin
 public class GiftController implements IGiftController {
 
     @Autowired
@@ -65,7 +63,7 @@ public class GiftController implements IGiftController {
     @Override
     @PutMapping("/update/image")
     public ResponseEntity<MessageDTO> updateGift(
-        @RequestPart(name = "update") UpdateImageDTO update,
+        @RequestPart UpdateImageDTO update,
         @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
         validData(update, images);
@@ -88,29 +86,29 @@ public class GiftController implements IGiftController {
     @Override
     @DeleteMapping("/delete/all{account}")
     public ResponseEntity<MessageDTO> deleteAllByAccount(
-        @RequestParam(name = "account") UUID accountId
+        @RequestParam UUID account
     ) throws Exception {
-        if(accountId == null) throw new Exception("Account id is null");
+        if(account == null) throw new Exception("Account id is null");
 
-        services.deleteAllByAccount(accountId);
+        services.deleteAllByAccount(account);
         return ResponseEntity.ok(new MessageDTO("successfully"));
     }
 
     @Override
     @GetMapping("/all{account}")
     public ResponseEntity<List<GiftResponseDTO>> getAllGifts(
-        @RequestParam(name = "account") UUID accountId
+        @RequestParam UUID account
     ) throws Exception {
-        return ResponseEntity.ok(services.getAllGifts(accountId));
+        return ResponseEntity.ok(services.getAllGifts(account));
     }
 
     @Override
     @GetMapping("/filter{account}")
     public ResponseEntity<List<GiftResponseDTO>> getWithFilter(
         @RequestBody SearcherDTO searcher,
-        @RequestParam(name = "account") UUID accountId
+        @RequestParam UUID account
     ) throws Exception {
-        return ResponseEntity.ok(services.getWithFilter(searcher, accountId));
+        return ResponseEntity.ok(services.getWithFilter(searcher, account));
     }
     
     private void validData(CreateGiftDTO data) throws Exception {
@@ -131,7 +129,7 @@ public class GiftController implements IGiftController {
         String isNull = "%s is null";
 
         if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "accountId"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
 
     }
 
@@ -139,7 +137,7 @@ public class GiftController implements IGiftController {
         String isNull = "%s is null";
 
         if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "accountId"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
         if(data.imagesId() == null && images == null) throw new ImageNotNullableException(String.format(isNull, "images").replace("is", "are"));
 
     }
@@ -148,7 +146,7 @@ public class GiftController implements IGiftController {
         String isNull = "%s is null";
 
         if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "accountId"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
 
     }
 

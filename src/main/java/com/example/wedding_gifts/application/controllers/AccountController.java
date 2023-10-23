@@ -78,7 +78,7 @@ public class AccountController implements IAccountController {
     @Override
     @DeleteMapping("/delete{id}")
     public ResponseEntity<MessageDTO> deleteAccount(
-        @RequestParam(name = "id", required = true) UUID id
+        @RequestParam UUID id
     ) throws Exception {
         services.deleteAccount(id);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("successfully"));    
