@@ -2,6 +2,7 @@ package com.example.wedding_gifts.core.domain.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,7 +61,7 @@ public class Gift implements Serializable {
         this.title = gift.title();
         this.giftDescription = gift.giftDescription();
         this.categories = gift.categories();
-        this.price = gift.price();
+        this.price = new BigDecimal(new DecimalFormat("0.00").format(gift.price()));
         this.isBought = false;
     }
 
