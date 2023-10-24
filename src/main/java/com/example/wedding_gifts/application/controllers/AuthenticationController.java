@@ -1,7 +1,5 @@
 package com.example.wedding_gifts.application.controllers;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.adapters.security.ITokenManager;
+import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
@@ -117,13 +116,12 @@ public class AuthenticationController implements IAuthenticationController {
         if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
         if(data.pixKey() == null || data.pixKey().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "pixKey"));
         
-        if(data.brideGroom().length() < 3) throw new AccountInvalidValueException(String.format(invalid, "brideGroom"));
-        if(data.weddingDate().getTime() < new Date().getTime()) throw new AccountInvalidValueException(String.format(invalid, "weddingDate"));
-        if(data.firstName().length() < 3) throw new AccountInvalidValueException(String.format(invalid, "firstName"));
-        if(data.lastName().length() < 3) throw new AccountInvalidValueException(String.format(invalid, "lastName"));
-        if(data.email().length() < 13) throw new AccountInvalidValueException(String.format(invalid, "email"));
-        if(data.password().length() < 8) throw new AccountInvalidValueException(String.format(invalid, "password"));
-        if(data.pixKey().length() < 10) throw new AccountInvalidValueException(String.format(invalid, "pisxKey"));
+        if(!Validation.brideGroom(data.brideGroom())) throw new AccountInvalidValueException(String.format(invalid, "brideGroom"));
+        if(!Validation.date(data.weddingDate())) throw new AccountInvalidValueException(String.format(invalid, "weddingDate"));
+        if(!Validation.name(data.firstName(), data.lastName())) throw new AccountInvalidValueException(String.format(invalid, "firstName", "and/or", "lastName").replace("is", "are"));
+        if(!Validation.email(data.email())) throw new AccountInvalidValueException(String.format(invalid, "email"));
+        if(!Validation.password(data.password())) throw new AccountInvalidValueException(String.format(invalid, "password"));
+        if(!Validation.pixKey(data.pixKey())) throw new AccountInvalidValueException(String.format(invalid, "pixKey"));
    
     }
 
@@ -134,8 +132,8 @@ public class AuthenticationController implements IAuthenticationController {
         if(data.email() == null || data.email().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "email"));
         if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
         
-        if(data.email().length() < 13) throw new Exception(String.format(invalid, "email"));
-        if(data.password().length() < 8) throw new Exception(String.format(invalid, "password"));
+        if(!Validation.email(data.email())) throw new AccountInvalidValueException(String.format(invalid, "email"));
+        if(!Validation.password(data.password())) throw new AccountInvalidValueException(String.format(invalid, "password"));
         
     }
     

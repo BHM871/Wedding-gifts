@@ -1,6 +1,5 @@
 package com.example.wedding_gifts.application.controllers;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
@@ -119,9 +119,9 @@ public class GiftController implements IGiftController {
         if(data.price() == null) throw new GiftNotNullableException(String.format(isNull, "price"));
         if(data.categories() == null || data.categories().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "categories"));
 
-        if(data.title().length() < 3) throw new GiftInvalidValueException(String.format(invalid, "title"));
-        if(data.giftDescription() != null && data.giftDescription().length() < 5) throw new GiftInvalidValueException(String.format(invalid, "description"));
-        if(data.price().doubleValue() < BigDecimal.TEN.doubleValue()) throw new GiftInvalidValueException(String.format(invalid, "price"));
+        if(!Validation.title(data.title())) throw new GiftInvalidValueException(String.format(invalid, "title"));
+        if(!Validation.description(data.giftDescription())) throw new GiftInvalidValueException(String.format(invalid, "description"));
+        if(!Validation.price(data.price())) throw new GiftInvalidValueException(String.format(invalid, "price"));
 
     }
 

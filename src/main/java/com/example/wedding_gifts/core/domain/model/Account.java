@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.wedding_gifts.common.LimitDateForAccount;
+import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
@@ -65,31 +66,34 @@ public class Account implements UserDetails {
     private String pixKey;
 
     public Account(CreateAccountDTO account){
-        this.brideGroom = account.brideGroom();
+        this.brideGroom = account.brideGroom().trim();
         this.weddingDate = account.weddingDate();
-        this.firstName = account.firstName();
-        this.lastName = account.lastName();
-        this.email = account.email();
-        this.password = account.password();
-        this.pixKey = account.pixKey();
+        this.firstName = account.firstName().trim();
+        this.lastName = account.lastName().trim();
+        this.email = account.email().trim();
+        this.password = account.password().trim();
+        this.pixKey = account.pixKey().trim().length() == 14 && account.pixKey().trim().charAt(11) == '-' 
+                        ? account.pixKey().trim().replace(".", "").replace("-", "") 
+                        : account.pixKey().trim();
     }
 
     public void update(UpdateAccountDTO account) throws Exception {
         String message = "Error in update. %s is invalid. ";
 
-        if(account.brideGroom() != null && account.brideGroom().length() <= 3) throw new AccountInvalidValueException(String.format(message, "brideGroom"));
-        if(account.weddingDate() != null && account.weddingDate().getTime() < new Date().getTime()) throw new AccountInvalidValueException(String.format(message, "weddingDate"));
-        if(account.firstName() != null && account.firstName().length() <= 3) throw new AccountInvalidValueException(String.format(message, "firstName"));
-        if(account.lastName() != null && account.lastName().length() <= 3) throw new AccountInvalidValueException(String.format(message, "lastName"));
-        if(account.password() != null && account.password().length() <= 8) throw new AccountInvalidValueException(String.format(message, "password"));
-        if(account.pixKey() != null && account.pixKey().length() <= 10) throw new AccountInvalidValueException(String.format(message, "pixKey"));
+        if(account.brideGroom() != null && !Validation.brideGroom(account.brideGroom())) throw new AccountInvalidValueException(String.format(message, "brideGroom"));
+        if(account.weddingDate() != null && !Validation.date(account.weddingDate())) throw new AccountInvalidValueException(String.format(message, "weddingDate"));
+        if((account.firstName() != null || account.lastName() != null) && !Validation.name(account.firstName(), account.lastName())) throw new AccountInvalidValueException(String.format(message, "firstName"));
+        if(account.password() != null && !Validation.password(account.password())) throw new AccountInvalidValueException(String.format(message, "password"));
+        if(account.pixKey() != null && !Validation.pixKey(account.pixKey())) throw new AccountInvalidValueException(String.format(message, "pixKey"));
 
-        if(account.brideGroom() != null) this.brideGroom = account.brideGroom() != null ? account.brideGroom() : brideGroom;
-        if(account.weddingDate() != null) this.weddingDate = account.weddingDate() != null ? account.weddingDate() : weddingDate;
-        if(account.firstName() != null) this.firstName = account.firstName() != null ? account.firstName() : firstName;
-        if(account.lastName() != null) this.lastName = account.lastName() != null ? account.lastName() : lastName;
-        if(account.password() != null) this.password = account.password() != null ? account.password() : password;
-        if(account.pixKey() != null) this.pixKey = account.pixKey() != null ? account.pixKey() : pixKey;
+        if(account.brideGroom() != null) this.brideGroom = account.brideGroom().trim();
+        if(account.weddingDate() != null) this.weddingDate = account.weddingDate();
+        if(account.firstName() != null) this.firstName = account.firstName().trim();
+        if(account.lastName() != null) this.lastName = account.lastName().trim();
+        if(account.password() != null) this.password = account.password().trim();
+        if(account.pixKey() != null) this.pixKey = account.pixKey().trim().length() == 14 && account.pixKey().trim().charAt(11) == '-' 
+                                                        ? account.pixKey().trim().replace(".", "").replace("-", "") 
+                                                        : account.pixKey().trim();
 
     }
 
