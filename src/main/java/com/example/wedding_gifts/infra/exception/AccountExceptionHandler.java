@@ -44,7 +44,13 @@ public class AccountExceptionHandler implements IExceptionResponse {
     @Override
     @ExceptionHandler(AccountNotNullableException.class)
     public ResponseEntity<ExceptionResponseDTO> notNullable(NotNullableException exception) {
-        return exception.getResponse();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponseDTO(
+            LocalDateTime.now(MyZone.zoneId()), 
+            400, 
+            "Bad Request", 
+            "MyException.class", 
+            "Exception", 
+            "Undefined"));
     }
 
     @Override
