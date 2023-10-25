@@ -21,4 +21,6 @@ public interface IExceptionResponse {
     
     public ResponseEntity<ExceptionResponseDTO> notYour(NotYourException exception);
 
+    public ResponseEntity<ExceptionResponseDTO> forbidden(Exception exception);
+
 }

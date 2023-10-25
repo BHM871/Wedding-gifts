@@ -18,5 +18,4 @@ public class AccountExecutionException extends ExecutionException {
         super(exception);
     }
 
-    
 }

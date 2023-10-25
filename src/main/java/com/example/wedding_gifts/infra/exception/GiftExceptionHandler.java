@@ -47,5 +47,10 @@ public class GiftExceptionHandler implements IExceptionResponse {
     public ResponseEntity<ExceptionResponseDTO> notYour(NotYourException exception) {
         return exception.getResponse();
     }
+
+    @Override
+    public ResponseEntity<ExceptionResponseDTO> forbidden(Exception exception) {
+        throw new UnsupportedOperationException("Unimplemented method 'forbidden'");
+    }
     
 }

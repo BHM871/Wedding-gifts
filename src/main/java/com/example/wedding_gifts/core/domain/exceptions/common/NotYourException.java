@@ -2,8 +2,8 @@ package com.example.wedding_gifts.core.domain.exceptions.common;
 
 public abstract class NotYourException extends MyException {
 
-    private static int statusCode = 403;
-    private static String error = "Forbidden";
+    private static int statusCode = 401;
+    private static String error = "Unauthorizated";
     private static String message = "Objec is not your";
 
     public NotYourException(String message, String exception, Throwable cause) {

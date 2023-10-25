@@ -25,5 +25,5 @@ public class AuthenticationServices implements IAuthenticationService {
             throw new UsernameNotFoundException("Account not found");
         }
     }
-    
+
 }

@@ -22,28 +22,27 @@ public class TokenExceptionHandler implements IExceptionResponse {
 
     @Override
     public ResponseEntity<ExceptionResponseDTO> invalidValue(InvalidValueException exception) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'invalidValue'");
     }
 
     @Override
     public ResponseEntity<ExceptionResponseDTO> notFound(NotFoundException exception) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'notFound'");
     }
 
     @Override
     public ResponseEntity<ExceptionResponseDTO> notNullable(NotNullableException exception) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'notNullable'");
     }
 
     @Override
     public ResponseEntity<ExceptionResponseDTO> notYour(NotYourException exception) {
-        // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'notYour'");
     }
 
-
+    @Override
+    public ResponseEntity<ExceptionResponseDTO> forbidden(Exception exception) {
+        throw new UnsupportedOperationException("Unimplemented method 'forbidden'");
+    }
     
 }

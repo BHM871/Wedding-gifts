@@ -1,11 +1,13 @@
 package com.example.wedding_gifts.infra.exception;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
@@ -46,6 +48,12 @@ public class AccountExceptionHandler implements IExceptionResponse {
     @Override
     public ResponseEntity<ExceptionResponseDTO> notYour(NotYourException exception) {
         throw new UnsupportedOperationException("Unimplemented method 'notYour'");
+    }
+
+    @Override
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionResponseDTO> forbidden(Exception exception) {
+        return new AccountForbiddenException("Unauthorizated", exception).getResponse();
     }
     
 }
