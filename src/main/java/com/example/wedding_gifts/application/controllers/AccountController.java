@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountController;
@@ -36,6 +38,8 @@ public class AccountController implements IAccountController {
         @RequestParam String brideGroom
     ) throws Exception {
         try{
+            validData(brideGroom);
+            
             UUID id = services.verificAccountForGifter(brideGroom);
             return ResponseEntity.ok(new AccountResponseIdDTO(id));
         } catch (MyException e){
@@ -103,6 +107,12 @@ public class AccountController implements IAccountController {
             e.setPath("/account/delete");
             throw e;
         }
+    }
+
+    private void validData(String data) throws Exception {
+        
+        if(!Validation.brideGroom(data)) throw new AccountInvalidValueException("brideGroom is invalid");
+
     }
     
 }

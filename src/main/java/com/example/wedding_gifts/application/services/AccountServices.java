@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
-import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
@@ -31,8 +30,6 @@ public class AccountServices implements IAccountUseCase {
 
     @Override
     public UUID verificAccountForGifter(String brideGroom) throws Exception {
-        if(brideGroom.length() < 3) throw new AccountInvalidValueException("brideGroom is invalid");
-
         return repository.verificForGifter(brideGroom);
     }
 
