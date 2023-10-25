@@ -2,50 +2,50 @@ package com.example.wedding_gifts.infra.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
-import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
-import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
-import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
-import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.ExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.common.InvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotFoundException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotYourException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotYourException;
 import com.example.wedding_gifts.core.usecases.exception.IExceptionResponse;
 
-@RestControllerAdvice
-public class AccountExceptionHandler implements IExceptionResponse {
+public class GiftExceptionHandler implements IExceptionResponse {
 
     @Override
-    @ExceptionHandler(AccountExecutionException.class)
+    @ExceptionHandler(GiftExecutionException.class)
     public ResponseEntity<ExceptionResponseDTO> execution(ExecutionException exception) {
         return exception.getResponse();
     }
 
     @Override
-    @ExceptionHandler(AccountInvalidValueException.class)
+    @ExceptionHandler(GiftInvalidValueException.class)
     public ResponseEntity<ExceptionResponseDTO> invalidValue(InvalidValueException exception) {
         return exception.getResponse();
     }
 
     @Override
-    @ExceptionHandler(AccountNotFoundException.class)
+    @ExceptionHandler(GiftNotFoundException.class)
     public ResponseEntity<ExceptionResponseDTO> notFound(NotFoundException exception) {
         return exception.getResponse();
     }
 
     @Override
-    @ExceptionHandler(AccountNotNullableException.class)
+    @ExceptionHandler(GiftNotNullableException.class)
     public ResponseEntity<ExceptionResponseDTO> notNullable(NotNullableException exception) {
         return exception.getResponse();
     }
 
     @Override
+    @ExceptionHandler(GiftNotYourException.class)
     public ResponseEntity<ExceptionResponseDTO> notYour(NotYourException exception) {
-        throw new UnsupportedOperationException("Unimplemented method 'notYour'");
+        return exception.getResponse();
     }
     
 }

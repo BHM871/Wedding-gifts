@@ -25,6 +25,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotNullableException;
@@ -44,9 +45,14 @@ public class GiftController implements IGiftController {
         @RequestPart CreateGiftDTO gift,
         @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
-        validData(gift);
+        try{
+            validData(gift);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(gift, images));
+            return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(gift, images));
+        } catch (MyException e){
+            e.setPath("/gift/create");
+            throw e;
+        }
     }
 
     @Override
@@ -54,10 +60,15 @@ public class GiftController implements IGiftController {
     public ResponseEntity<MessageDTO> updateGift(
         @RequestBody UpdateGiftDTO gift
     ) throws Exception {
-        validData(gift);
+        try{
+            validData(gift);
 
-        services.updateGift(gift);
-        return ResponseEntity.ok(new MessageDTO("successfully"));
+            services.updateGift(gift);
+            return ResponseEntity.ok(new MessageDTO("successfully"));
+        } catch (MyException e){
+            e.setPath("/gift/update");
+            throw e;
+        }
     }
 
     @Override
@@ -66,10 +77,15 @@ public class GiftController implements IGiftController {
         @RequestPart UpdateImageDTO update,
         @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
-        validData(update, images);
+        try{
+            validData(update, images);
 
-        services.updateGift(update, images);
-        return ResponseEntity.ok(new MessageDTO("successfully"));
+            services.updateGift(update, images);
+            return ResponseEntity.ok(new MessageDTO("successfully"));
+        } catch (MyException e){
+            e.setPath("/gift/update/image");
+            throw e;
+        }
     }
 
     @Override
@@ -77,10 +93,15 @@ public class GiftController implements IGiftController {
     public ResponseEntity<MessageDTO> deleteGift(
         @RequestBody DeleteGiftDTO ids
     ) throws Exception {
-        validData(ids);
+        try{
+            validData(ids);
 
-        services.deleteGift(ids);
-        return ResponseEntity.ok(new MessageDTO("successfully"));
+            services.deleteGift(ids);
+            return ResponseEntity.ok(new MessageDTO("successfully"));
+        } catch (MyException e){
+            e.setPath("/gift/delete");
+            throw e;
+        }
     }
 
     @Override
@@ -88,10 +109,15 @@ public class GiftController implements IGiftController {
     public ResponseEntity<MessageDTO> deleteAllByAccount(
         @RequestParam UUID account
     ) throws Exception {
-        if(account == null) throw new Exception("Account id is null");
+        try{
+            if(account == null) throw new Exception("Account id is null");
 
-        services.deleteAllByAccount(account);
-        return ResponseEntity.ok(new MessageDTO("successfully"));
+            services.deleteAllByAccount(account);
+            return ResponseEntity.ok(new MessageDTO("successfully"));
+        } catch (MyException e){
+            e.setPath("/gift/delete/all");
+            throw e;
+        }
     }
 
     @Override
@@ -99,8 +125,14 @@ public class GiftController implements IGiftController {
     public ResponseEntity<List<GiftResponseDTO>> getAllGifts(
         @RequestParam UUID account
     ) throws Exception {
-        return ResponseEntity.ok(services.getAllGifts(account));
+        try{
+            return ResponseEntity.ok(services.getAllGifts(account));
+        } catch (MyException e){
+            e.setPath("/gift/all");
+            throw e;
+        }
     }
+
 
     @Override
     @GetMapping("/filter{account}")
@@ -108,7 +140,12 @@ public class GiftController implements IGiftController {
         @RequestBody SearcherDTO searcher,
         @RequestParam UUID account
     ) throws Exception {
-        return ResponseEntity.ok(services.getWithFilter(searcher, account));
+        try{
+            return ResponseEntity.ok(services.getWithFilter(searcher, account));
+        } catch (MyException e){
+            e.setPath("/gift/filter");
+            throw e;
+        }
     }
     
     private void validData(CreateGiftDTO data) throws Exception {

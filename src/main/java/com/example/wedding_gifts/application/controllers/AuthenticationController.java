@@ -22,6 +22,7 @@ import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationR
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.IAuthenticationController;
@@ -47,34 +48,39 @@ public class AuthenticationController implements IAuthenticationController {
     public ResponseEntity<AccountResponseAccountDTO> register(
         @RequestBody CreateAccountDTO account
     ) throws Exception {
-        validData(account);
+        try{
+            validData(account);
 
-        if(repository.getByEmail(account.email()) != null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            if(repository.getByEmail(account.email()) != null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-        String encrypPassword = new BCryptPasswordEncoder().encode(account.password());
+            String encrypPassword = new BCryptPasswordEncoder().encode(account.password());
 
-        CreateAccountDTO createAccount = new CreateAccountDTO(
-            account.firstName(), 
-            account.lastName(), 
-            account.brideGroom(), 
-            account.weddingDate(), 
-            account.email(), 
-            encrypPassword, 
-            account.pixKey()
-        );
+            CreateAccountDTO createAccount = new CreateAccountDTO(
+                account.firstName(), 
+                account.lastName(), 
+                account.brideGroom(), 
+                account.weddingDate(), 
+                account.email(), 
+                encrypPassword, 
+                account.pixKey()
+            );
 
-        Account savedAccount = repository.createAccount(createAccount);
+            Account savedAccount = repository.createAccount(createAccount);
 
-        AccountResponseAccountDTO newAccount = new AccountResponseAccountDTO(
-            savedAccount.getId(), 
-            savedAccount.getBrideGroom(), 
-            savedAccount.getWeddingDate(), 
-            savedAccount.getFirstName(), 
-            savedAccount.getLastName(), 
-            savedAccount.getEmail());
+            AccountResponseAccountDTO newAccount = new AccountResponseAccountDTO(
+                savedAccount.getId(), 
+                savedAccount.getBrideGroom(), 
+                savedAccount.getWeddingDate(), 
+                savedAccount.getFirstName(), 
+                savedAccount.getLastName(), 
+                savedAccount.getEmail());
 
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
+            return ResponseEntity.status(HttpStatus.CREATED).body(newAccount);
+        } catch (MyException e){
+            e.setPath("/auth/register");
+            throw e;
+        }
     }
 
     @Override
@@ -82,23 +88,28 @@ public class AuthenticationController implements IAuthenticationController {
     public ResponseEntity<AuthenticationResponseDTO> login(
         @RequestBody LoginDTO login
     ) throws Exception {
-        validData(login);
+        try{
+            validData(login);
 
-        var usernamePassword = new UsernamePasswordAuthenticationToken(login.email(), login.password());
-        var auth = this.authenticationManager.authenticate(usernamePassword);
+            var usernamePassword = new UsernamePasswordAuthenticationToken(login.email(), login.password());
+            var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        String token = tokenManager.generatorToken((Account) auth.getPrincipal());
+            String token = tokenManager.generatorToken((Account) auth.getPrincipal());
 
-        if(auth.isAuthenticated()) return ResponseEntity.ok(new AuthenticationResponseDTO(token));
+            if(auth.isAuthenticated()) return ResponseEntity.ok(new AuthenticationResponseDTO(token));
 
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (MyException e){
+            e.setPath("/auth/login");
+            throw e;
+        }
     }
 
     @Override
     @PatchMapping("/logout")
     public ResponseEntity<MessageDTO> logout(
         @RequestParam String token
-    ) throws Exception {
+    ) {
         tokenService.deleteToken(token);
 
         return ResponseEntity.ok(new MessageDTO("successfully"));

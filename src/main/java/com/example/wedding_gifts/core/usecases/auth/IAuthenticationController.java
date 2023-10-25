@@ -12,7 +12,7 @@ public interface IAuthenticationController {
 
     public ResponseEntity<AuthenticationResponseDTO> login(LoginDTO login) throws Exception;
 
-    public ResponseEntity<MessageDTO> logout(String token) throws Exception;
+    public ResponseEntity<MessageDTO> logout(String token);
 
     public ResponseEntity<AccountResponseAccountDTO> register(CreateAccountDTO account) throws Exception;
     
