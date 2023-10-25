@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import org.springframework.http.ResponseEntity;
 
+import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 
 public abstract class MyException extends Exception {
@@ -39,7 +40,7 @@ public abstract class MyException extends Exception {
         String exception, 
         String message
     ) {
-        this(cause, statusCode, error, exception, message, null);    
+        this(cause, statusCode, error, exception, message, "Undefined");    
     }
 
     public MyException(
@@ -73,7 +74,7 @@ public abstract class MyException extends Exception {
         String exception,
         String message
     ) {
-        this(statusCode, error, exception, message, null);
+        this(statusCode, error, exception, message, "Undefined");
     }
 
     public MyException(
@@ -98,7 +99,7 @@ public abstract class MyException extends Exception {
     public ResponseEntity<ExceptionResponseDTO> getResponse() {
         return ResponseEntity.status(statusCode).body(
             new ExceptionResponseDTO(
-                LocalDateTime.now(), 
+                LocalDateTime.now(MyZone.zoneId()), 
                 statusCode,
                 error,
                 exception, 

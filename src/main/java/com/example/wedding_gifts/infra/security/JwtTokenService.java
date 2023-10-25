@@ -1,7 +1,6 @@
 package com.example.wedding_gifts.infra.security;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.wedding_gifts.adapters.security.ITokenManager;
 import com.example.wedding_gifts.common.LimitTimeForToken;
+import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
@@ -40,7 +40,7 @@ public class JwtTokenService implements ITokenManager {
                 .withExpiresAt(LimitTimeForToken.genExpirationInstant())
                 .sign(algorithm);
 
-            tokenService.saveToken(new SaveTokenDTO(token, LocalDateTime.ofInstant(LimitTimeForToken.genExpirationInstant(), ZoneId.of("-03:00")), account.getId()));
+            tokenService.saveToken(new SaveTokenDTO(token, LocalDateTime.ofInstant(LimitTimeForToken.genExpirationInstant(), MyZone.zoneId()), account.getId()));
 
             return token;
         } catch (JWTCreationException e) {

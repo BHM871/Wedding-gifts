@@ -3,7 +3,7 @@ package com.example.wedding_gifts.common;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 
-public final class MyZoneOffSet {
+public final class MyZone {
     
     public static ZoneId zoneId() {
         return ZoneId.of("-03:00");

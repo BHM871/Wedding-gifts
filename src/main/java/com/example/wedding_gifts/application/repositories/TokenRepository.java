@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 import com.example.wedding_gifts.core.domain.exceptions.token.TokenExecutionException;
 import com.example.wedding_gifts.core.domain.model.Account;
@@ -28,7 +29,7 @@ public class TokenRepository implements ITokenRepository {
         try{
             Optional<Token> oldToken = thisJpaRepository.findByAccount(tokenDto.accountId());
 
-            if(oldToken.isPresent() && oldToken.get().getLimitHour().isBefore(LocalDateTime.now())) 
+            if(oldToken.isPresent() && oldToken.get().getLimitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))) 
                 deleteToken(oldToken.get().getTokenValue());
             else if(oldToken.isPresent())
                 return oldToken.get().getTokenValue();
@@ -51,7 +52,7 @@ public class TokenRepository implements ITokenRepository {
 
             if(!oldToken.isPresent()) {
                 return null;
-            } else if(oldToken.get().getLimitHour().isBefore(LocalDateTime.now())) {
+            } else if(oldToken.get().getLimitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))) {
                 deleteToken(oldToken.get().getTokenValue());
                 return null;
             }
@@ -69,7 +70,7 @@ public class TokenRepository implements ITokenRepository {
 
             if(!token.isPresent()) {
                 return null;
-            } else if(token.get().getLimitHour().isBefore(LocalDateTime.now())) {
+            } else if(token.get().getLimitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))) {
                 deleteToken(token.get().getTokenValue());
                 return null;
             }

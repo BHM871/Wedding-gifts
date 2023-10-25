@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.wedding_gifts.common.MyZoneOffSet;
+import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
@@ -50,7 +50,7 @@ public class AccountExceptionHandler implements IExceptionResponse {
     @Override
     public ResponseEntity<ExceptionResponseDTO> notYour(NotYourException exception) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponseDTO(
-            LocalDateTime.now(MyZoneOffSet.zoneId()), 
+            LocalDateTime.now(MyZone.zoneId()), 
             400, 
             "Bad Request", 
             "MyException.class", 

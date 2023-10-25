@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
+import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
@@ -150,7 +151,7 @@ public class ImageServices implements IImageUseCase {
 
             return Paths.get(
                         path.toString()+"/"+
-                        LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+
+                        LocalDateTime.now(MyZone.zoneId()).format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss_SSSSSSSS")).toString()+
                         "."+extention
                     );
         } catch (IOException e){

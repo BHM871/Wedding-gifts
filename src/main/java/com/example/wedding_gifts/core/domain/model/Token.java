@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.lang.NonNull;
 
+import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 
 import jakarta.persistence.Entity;
@@ -47,7 +48,7 @@ public class Token {
         String message = "Some value is invalid";
 
         if(tokenDto.token() == null) throw new Exception(message);
-        if(tokenDto.limitHour() == null || tokenDto.limitHour().isBefore(LocalDateTime.now())) throw new Exception(message);
+        if(tokenDto.limitHour() == null || tokenDto.limitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))) throw new Exception(message);
 
         this.tokenValue = tokenDto.token();
         this.limitHour = tokenDto.limitHour();
