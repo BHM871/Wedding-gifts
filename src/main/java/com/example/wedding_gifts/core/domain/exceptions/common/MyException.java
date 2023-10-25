@@ -11,6 +11,7 @@ public abstract class MyException extends Exception {
     private Throwable cause;
 
     protected Integer statusCode;
+    protected String error;
     protected String exception;
     protected String message;
     protected String path;
@@ -18,12 +19,14 @@ public abstract class MyException extends Exception {
     public MyException(
         Throwable cause,
         Integer statusCode,
+        String error,
         String exception,
         String message,
         String path
     ) {
         this.cause = cause;
         this.statusCode = statusCode;
+        this.error = error;
         this.exception = exception;
         this.message = message;
         this.path = path;
@@ -31,67 +34,73 @@ public abstract class MyException extends Exception {
     
     public MyException(
         Throwable cause, 
-        Integer statusCode, 
+        Integer statusCode,
+        String error,
         String exception, 
         String message
     ) {
-        this(cause, 400, exception, "Exception", null);    
+        this(cause, statusCode, error, exception, message, null);    
+    }
+
+    public MyException(
+        Throwable cause,
+        String exception, 
+        String message
+    ) {
+        this(cause, 400, "Bad Request", exception, message);    
     }
 
     public MyException(
         Throwable cause, 
-        String exception, 
         String message
     ) {
-        this(cause, 400, exception, message);    
-    }
-
-    public MyException(
-        Throwable cause, 
-        String message
-    ) {
-        this(cause, 400, "MyException.class", message, null);  
+        this(cause, "MyException.class", message);  
     }
 
     public MyException(
         Integer statusCode,
+        String error,
         String exception,
         String message,
         String path
     ) {
-        this(new Throwable(), statusCode, exception, message, path);
+        this(new Throwable(), statusCode, error, exception, message, path);
     }
 
     public MyException(
         Integer statusCode,
+        String error,
         String exception,
         String message
     ) {
-        this(statusCode, exception, message, null);
+        this(statusCode, error, exception, message, null);
     }
 
     public MyException(
         Integer statusCode,
+        String error,
         String exception
     ) {
-        this(statusCode, exception, "Exception");
+        this(statusCode, error, exception, "Exception");
     }
 
     public MyException(
-        Integer statusCode
+        Integer statusCode,
+        String error
     ) {
-        this(statusCode, "MyException.class");
+        this(statusCode, error, "MyException.class");
     }
 
     public MyException() {
-        this(400);
+        this(400, "Bad Request");
     }
 
     public ResponseEntity<ExceptionResponseDTO> getResponse() {
         return ResponseEntity.status(statusCode).body(
             new ExceptionResponseDTO(
                 LocalDateTime.now(), 
-                statusCode, 
+                statusCode,
+                error,
                 exception, 
                 message, 
                 path

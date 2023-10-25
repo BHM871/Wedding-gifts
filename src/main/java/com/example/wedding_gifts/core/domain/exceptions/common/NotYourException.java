@@ -3,22 +3,23 @@ package com.example.wedding_gifts.core.domain.exceptions.common;
 public abstract class NotYourException extends MyException {
 
     private static int statusCode = 403;
-    private static String message = "Object is not your";
+    private static String error = "Forbidden";
+    private static String message = "Objec is not your";
 
     public NotYourException(String message, String exception, Throwable cause) {
-        super(cause, statusCode, exception, message);
+        super(cause, statusCode, error, exception, message);
     }
 
     public NotYourException(String message, String exception) {
-        super(statusCode, exception, message);
+        super(statusCode, error, exception, message);
     }
 
     public NotYourException(String exception) {
-        super(statusCode, exception, message);
+        super(statusCode, error, exception, message);
     }
 
     public NotYourException() {
-        super(statusCode, "NotYourException.class", message);
+        super(statusCode, error, "NotYourException.class", message);
     }
     
 }
