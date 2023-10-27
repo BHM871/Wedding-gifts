@@ -4,4 +4,4 @@
 
 <p>The project uses Clean Architecture with Spring Boot, Spring Data, Spring Security with JWT, PostgreSQL, etc. Microservices with API will also be implemented for creating PIX, sending email, documentation with Swagger, etc.</p>
 
-<h3 align="center"> :warning: I'm currently mapping the exceptions, and then adding the HandlerException, then I'll start the documentation with Swagger. :warning: </h3>
+<h3 align="center"> :warning: I added Swagger's dependences, I'll start better documentation. :warning: </h3>
