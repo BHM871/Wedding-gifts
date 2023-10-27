@@ -28,10 +28,12 @@ import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.IAuthenticationController;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.var;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(name = "Auth")
 public class AuthenticationController implements IAuthenticationController {
 
     @Autowired
