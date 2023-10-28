@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.common.Validation;
@@ -25,17 +25,20 @@ import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountController;
 import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/account")
+@Tag(name = "Account")
 public class AccountController implements IAccountController {
 
     @Autowired
     private IAccountUseCase services;
 
     @Override
-    @GetMapping("/begin{brideGroom}")
+    @GetMapping("/brideGroom/{brideGroom}")
     public ResponseEntity<AccountResponseIdDTO> gifterBegin(
-        @RequestParam String brideGroom
+        @PathVariable String brideGroom
     ) throws Exception {
         try{
             validData(brideGroom);
@@ -43,15 +46,15 @@ public class AccountController implements IAccountController {
             UUID id = services.verificAccountForGifter(brideGroom);
             return ResponseEntity.ok(new AccountResponseIdDTO(id));
         } catch (MyException e){
-            e.setPath("/account/begin");
+            e.setPath("/account/brideGroom");
             throw e;
         }
     }
 
     @Override
-    @GetMapping("/account{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<AccountResponseAccountDTO> getAccountById(
-        @RequestParam UUID id
+        @PathVariable UUID id
     ) throws Exception {
         try{
             Account account = services.getAccountById(id);
@@ -66,16 +69,16 @@ public class AccountController implements IAccountController {
 
             return ResponseEntity.ok(accountResponse);
         } catch (MyException e){
-            e.setPath("/account/account");
+            e.setPath("/account");
             throw e;
         }
     }
 
     @Override
-    @PutMapping("/update{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<AccountResponseAccountDTO> updateAccount(
         @RequestBody UpdateAccountDTO account,
-        @RequestParam UUID id
+        @PathVariable UUID id
     ) throws Exception {
         try{
             Account upAccount = services.updateAccount(account, id);
@@ -96,9 +99,9 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @DeleteMapping("/delete{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<MessageDTO> deleteAccount(
-        @RequestParam UUID id
+        @PathVariable UUID id
     ) throws Exception {
         try{
             services.deleteAccount(id);

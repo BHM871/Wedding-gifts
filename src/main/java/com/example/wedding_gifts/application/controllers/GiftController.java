@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -105,9 +106,9 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @DeleteMapping("/delete/all{account}")
+    @DeleteMapping("/delete/all/{account}")
     public ResponseEntity<MessageDTO> deleteAllByAccount(
-        @RequestParam UUID account
+        @PathVariable UUID account
     ) throws Exception {
         try{
             if(account == null) throw new Exception("Account id is null");
@@ -121,21 +122,21 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @GetMapping("/all{account}")
+    @GetMapping("/{account}")
     public ResponseEntity<List<GiftResponseDTO>> getAllGifts(
-        @RequestParam UUID account
+        @PathVariable UUID account
     ) throws Exception {
         try{
             return ResponseEntity.ok(services.getAllGifts(account));
         } catch (MyException e){
-            e.setPath("/gift/all");
+            e.setPath("/gift");
             throw e;
         }
     }
 
 
     @Override
-    @GetMapping("/filter{account}")
+    @GetMapping("/filter/{account}")
     public ResponseEntity<List<GiftResponseDTO>> getWithFilter(
         @RequestBody SearcherDTO searcher,
         @RequestParam UUID account
