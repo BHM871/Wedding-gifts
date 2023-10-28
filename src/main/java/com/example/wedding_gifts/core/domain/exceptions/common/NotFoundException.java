@@ -2,7 +2,7 @@ package com.example.wedding_gifts.core.domain.exceptions.common;
 
 public abstract class NotFoundException extends MyException {
 
-    private static int statusCode = 422;
+    private static int statusCode = 404;
     private static String error = "Unprocessable Entity";
     private static String message = "Not Found";
 

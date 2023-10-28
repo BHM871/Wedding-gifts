@@ -19,12 +19,18 @@ import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccount
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountController;
 import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -36,7 +42,13 @@ public class AccountController implements IAccountController {
     private IAccountUseCase services;
 
     @Override
-    @GetMapping("/brideGroom/{brideGroom}")
+    @GetMapping(value = "/brideGroom/{brideGroom}", produces = {"application/json"})
+    @Operation(summary = "Get Account Id by 'brideGroom'")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseIdDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<AccountResponseIdDTO> gifterBegin(
         @PathVariable String brideGroom
     ) throws Exception {
@@ -52,7 +64,13 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = {"application/json"})
+    @Operation(summary = "Get Account by ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseAccountDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<AccountResponseAccountDTO> getAccountById(
         @PathVariable UUID id
     ) throws Exception {
@@ -75,7 +93,19 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @PutMapping("/update/{id}")
+    @PutMapping(value = "/update/{id}", produces = {"application/json"}, consumes = {"application/json"})
+    @Operation(
+        summary = "Update Account by ID",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                content = @Content(schema = @Schema(
+                                type = "object", 
+                                implementation = UpdateAccountDTO.class))))
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseIdDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<AccountResponseAccountDTO> updateAccount(
         @RequestBody UpdateAccountDTO account,
         @PathVariable UUID id
@@ -99,7 +129,14 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping(value = "/delete/{id}", produces = {"application/json"})
+    @Operation(summary = "Delete Account by ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseIdDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Account, Gift or Image not found. Gift and Image are delete with Account", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<MessageDTO> deleteAccount(
         @PathVariable UUID id
     ) throws Exception {
