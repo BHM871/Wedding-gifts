@@ -1,11 +1,10 @@
 package com.example.wedding_gifts.core.domain.dtos.image;
 
+import java.awt.image.BufferedImage;
 import java.util.UUID;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public record ImageDTO(
-    MultipartFile image,
+    BufferedImage image,
     UUID giftId,
     UUID accountId
 ){}

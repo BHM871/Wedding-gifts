@@ -7,8 +7,6 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
@@ -22,10 +20,8 @@ import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitle
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
@@ -41,7 +37,7 @@ public class GiftServices implements IGiftUseCase {
     private IImageUseCase imageService;
     
     @Override
-    public GiftResponseDTO createGift(CreateGiftDTO gift, MultipartFile images[]) throws Exception {
+    public GiftResponseDTO createGift(CreateGiftDTO gift) throws Exception {
         Gift newGift = repository.createGift(gift);
 
         GiftDTO newGiftDto = new GiftDTO(
@@ -55,10 +51,10 @@ public class GiftServices implements IGiftUseCase {
         );
 
         List<ImageResponseDTO> imagesResponse = new ArrayList<ImageResponseDTO>();
-        if(images != null) {
-            for(MultipartFile image : images) {
+        if(gift.images() != null) {
+            for(String image : gift.images()) {
                 Image temp = imageService.createImage(
-                    new ImageDTO(image, newGift.getId(), newGift.getAccount().getId())
+                    new ImageDTO(imageService.toImage(image), newGift.getId(), newGift.getAccount().getId())
                 );
 
                 imagesResponse.add(
@@ -73,25 +69,6 @@ public class GiftServices implements IGiftUseCase {
     @Override
     public void updateGift(UpdateGiftDTO gift) throws Exception {
         repository.updateGift(gift);        
-    }
-
-    @Override
-    public void updateGift(UpdateImageDTO update, MultipartFile images[]) throws Exception {
-        if(update.imagesId() != null) {
-            for(UUID imageId : update.imagesId()) {
-                imageService.deleteImage(
-                    new DeleteImageDTO(imageId, update.giftId(), update.accountId())
-                );
-            }
-        }
-
-        if(images != null) {
-            for(MultipartFile image : images) {
-                imageService.createImage(
-                    new ImageDTO(image, update.giftId(), update.accountId())
-                );
-            }
-        }
     }
 
     @Override

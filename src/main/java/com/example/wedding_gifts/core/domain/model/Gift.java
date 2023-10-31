@@ -62,7 +62,7 @@ public class Gift implements Serializable {
         this.title = gift.title().trim();
         this.giftDescription = gift.giftDescription().trim();
         this.categories = gift.categories();
-        this.price = new BigDecimal(new DecimalFormat("0.00").format(gift.price()));
+        this.price = gift.price();
         this.isBought = false;
     }
 

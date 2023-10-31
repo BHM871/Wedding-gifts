@@ -3,12 +3,14 @@ package com.example.wedding_gifts.application.services;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,6 +18,7 @@ import javax.imageio.ImageIO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
@@ -24,6 +27,7 @@ import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
@@ -41,21 +45,30 @@ public class ImageServices implements IImageUseCase {
 
     @Override
     public Image createImage(ImageDTO image) throws Exception {
-        try{
-            if(
-                image.image().getContentType() == null || 
-                (!image.image().getContentType().endsWith("jpeg") && !image.image().getContentType().endsWith("png"))
-            ) throw new ImageInvalidValueException(image.image().getOriginalFilename() + " is not valid. Only JPEG or PNG");
+        String imageBase64 = "";
+        String imageData = "";
 
-            String extention = image.image().getContentType().replace("image/", "");
+        try{
+            imageBase64 = toBase64(image.image());
+            imageData = imageBase64.split(";")[0];
+
+            if(
+                imageData == null || 
+                (!imageData.endsWith("jpeg") && !imageData.endsWith("png"))
+            ) throw new ImageInvalidValueException("Image is not valid. Only JPEG or PNG");
+
+            String extention = imageData.replace("data:image/", "");
 
             Path path = generateImagePath(image, extention);
 
-            cropImageAndSave(image.image().getBytes(), extention, path);
+            cropImageAndSave(toBytes(image.image()), extention, path);
 
             return repository.saveImage(new SaveImageDTO(path.toString().replace('\\', '/'), image.giftId()));
         } catch(Exception e){
-            String extention = image.image().getContentType().replace("image/", "");
+            imageBase64 = toBase64(image.image());
+            imageData = imageBase64.split(";")[0];
+
+            String extention = imageData.replace("data:image/", "");
 
             Path path = generateImagePath(image, extention);
 
@@ -100,6 +113,25 @@ public class ImageServices implements IImageUseCase {
         
         ImageIO.write(buffer, extention, path.toFile());
 
+    }
+
+    @Override
+    public void updateImages(UpdateImageDTO update) throws Exception {
+        if(update.imagesId() != null) {
+            for(UUID imageId : update.imagesId()) {
+                deleteImage(
+                    new DeleteImageDTO(imageId, update.giftId(), update.accountId())
+                );
+            }
+        }
+
+        if(update.images() != null) {
+            for(String image : update.images()) {
+                createImage(
+                    new ImageDTO(toImage(image), update.giftId(), update.accountId())
+                );
+            }
+        }
     }
 
     @Override
@@ -156,6 +188,50 @@ public class ImageServices implements IImageUseCase {
                     );
         } catch (IOException e){
             throw new ImageExecutionException("Some error in generated path", e);
+        }
+    }
+
+    @Override
+    public String toBase64(MultipartFile image) throws Exception {
+        try{
+            return Base64.getEncoder().encodeToString(image.getBytes());
+        } catch (Exception e){
+            throw new ImageExecutionException("Image can't be conveted", e);
+        }
+    }
+
+    @Override
+    public String toBase64(BufferedImage image) throws Exception {
+        try{
+            byte[] bytes = toBytes(image);
+
+            return Base64.getEncoder().encodeToString(bytes);
+        } catch (Exception e){
+            throw new ImageExecutionException("Imge can't be converted", e);
+        }
+    }
+
+    @Override
+    public BufferedImage toImage(String base64) throws Exception {
+        try{
+            byte[] bytes = Base64.getDecoder().decode(base64);
+            
+            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+            return ImageIO.read(bais);
+        } catch (Exception e){
+            throw new ImageExecutionException("Image can't be conveted", e);
+        }
+    }
+
+    @Override
+    public byte[] toBytes(BufferedImage image) throws Exception {
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, "PNG", baos);
+            
+            return baos.toByteArray();
+        } catch (Exception e){
+            throw new ImageExecutionException("Imge can't be converted", e);
         }
     }
     

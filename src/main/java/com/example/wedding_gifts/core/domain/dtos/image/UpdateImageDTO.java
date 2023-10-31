@@ -6,5 +6,6 @@ import java.util.UUID;
 public record UpdateImageDTO(
     UUID giftId,
     UUID accountId,
-    List<UUID> imagesId
+    List<UUID> imagesId,
+    List<String> images
 ){}

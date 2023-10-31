@@ -4,23 +4,18 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 
 public interface IGiftController {
     
-    public ResponseEntity<GiftResponseDTO> createGift(CreateGiftDTO gift, MultipartFile images[]) throws Exception;
+    public ResponseEntity<GiftResponseDTO> createGift(CreateGiftDTO gift) throws Exception;
 
     public ResponseEntity<MessageDTO> updateGift(UpdateGiftDTO gift) throws Exception;
-
-    public ResponseEntity<MessageDTO> updateGift(UpdateImageDTO update, MultipartFile images[]) throws Exception;
 
     public ResponseEntity<MessageDTO> deleteGift(DeleteGiftDTO ids) throws Exception;
 
