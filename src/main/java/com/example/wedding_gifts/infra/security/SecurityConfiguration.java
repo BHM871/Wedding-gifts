@@ -25,6 +25,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
             .csrf(crsf -> crsf.disable())
+            .cors(cors -> cors.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.DELETE, "/account/delete").authenticated()
@@ -34,6 +35,11 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.PUT, "/gift/update").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/gift/update/image").authenticated()
                 .anyRequest().permitAll()
+            )
+            .logout(logou ->
+                logou.deleteCookies("remove")
+                    .invalidateHttpSession(false)
+                    .logoutUrl("/auth/logout")
             )
             .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
