@@ -13,19 +13,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
@@ -33,17 +34,36 @@ import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotNullableEx
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/gift")
+@Tag(name = "Gift")
 public class GiftController implements IGiftController {
 
     @Autowired
     private IGiftUseCase services;
 
     @Override
-    @PostMapping("/create")
+    @PostMapping(value = "/create", produces = {"application/json"}, consumes = {"multipart/form-data"})
+    @Operation(
+        summary = "Create a new gift",
+        description = "Authentication is necessary."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = GiftResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<GiftResponseDTO> createGift(
-        @RequestPart CreateGiftDTO gift,
+        CreateGiftDTO gift,
         @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
         try{
@@ -57,7 +77,19 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @PutMapping("/update")
+    @PutMapping(value = "/update", produces = {"application/json"}, consumes = {"application/json"})
+    @Operation(
+        summary = "Update a gift",
+        description = "Authentication is necessary, values can be null."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Unauthorizated", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Gift or Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<MessageDTO> updateGift(
         @RequestBody UpdateGiftDTO gift
     ) throws Exception {
@@ -73,9 +105,21 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @PutMapping("/update/image")
+    @PutMapping(value = "/update/image", produces = {"application/json"}, consumes = {"multipart/form-data"})
+    @Operation(
+        summary = "Update image of a gift",
+        description = "Authentication is necessary. 'imagesId' and 'images' can be null, but, not at the same time. The images in 'imagesId' will be deleted and 'images' will be added."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Unauthorizated", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Gift or Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<MessageDTO> updateGift(
-        @RequestPart UpdateImageDTO update,
+        UpdateImageDTO update,
         @RequestPart(required = false) MultipartFile images[]
     ) throws Exception {
         try{
@@ -90,7 +134,19 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @DeleteMapping("/delete")
+    @DeleteMapping(value = "/delete", produces = {"application/json"}, consumes = {"application/json"})
+    @Operation(
+        summary = "Delete a gift by ID",
+        description = "Authentication is necessary."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Unauthorizated", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Gift or Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<MessageDTO> deleteGift(
         @RequestBody DeleteGiftDTO ids
     ) throws Exception {
@@ -106,12 +162,24 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @DeleteMapping("/delete/all/{account}")
+    @DeleteMapping(value = "/delete/all/{account}", produces = {"application/json"})
+    @Operation(
+        summary = "Delete all gifts by Account ID",
+        description = "Authentication is necessary."
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Unauthorizated", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Gift or Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<MessageDTO> deleteAllByAccount(
         @PathVariable UUID account
     ) throws Exception {
         try{
-            if(account == null) throw new Exception("Account id is null");
+            if(account == null) throw new AccountNotNullableException("Account id is null");
 
             services.deleteAllByAccount(account);
             return ResponseEntity.ok(new MessageDTO("successfully"));
@@ -122,7 +190,12 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @GetMapping("/{account}")
+    @GetMapping(value = "/{account}", produces = {"application/json"})
+    @Operation(summary = "Get all gifts by Account ID")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = List.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<List<GiftResponseDTO>> getAllGifts(
         @PathVariable UUID account
     ) throws Exception {
@@ -136,10 +209,15 @@ public class GiftController implements IGiftController {
 
 
     @Override
-    @GetMapping("/filter/{account}")
+    @GetMapping(value = "/filter/{account}", produces = {"application/json"})
+    @Operation(summary = "Get all gifts by Account ID with filters")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = List.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+    })
     public ResponseEntity<List<GiftResponseDTO>> getWithFilter(
         @RequestBody SearcherDTO searcher,
-        @RequestParam UUID account
+        @PathVariable UUID account
     ) throws Exception {
         try{
             return ResponseEntity.ok(services.getWithFilter(searcher, account));

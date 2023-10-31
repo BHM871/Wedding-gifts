@@ -12,8 +12,8 @@ public final class Validation {
     private static String regexDate = "([a-zA-Z]{3})\\ (((Jan|Mar|May|Jul|Aug|Oct|Dec)\\ (0[1-9]|1[0-9]|2[0-9]|3[0-1]))|((Apr|Jun|Sep|Nov)\\ (0[1-9]|1[0-9]|2[0-9]|3[0]))|((Feb)\\ (0[1-9]|1[0-9]|2[0-9])))\\ ([0-9]{2}\\:[0-9]{2}\\:[0-9]{2})\\ ([a-zA-Z0-9]{3})?\\ ?([0-9]{4})";
     private static String regexName = "[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð][a-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšž,.'-]{2,13}\\ [A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð][a-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšž,.'-]{2,13}";
     private static String regexBrideGroom = "[a-zA-Z0-9_-]{3,25}";
-    private static String regexTitle = "\\S{5,30}";
-    private static String regexDescription = "\\S{10,300}";
+    private static String regexTitle = "[\\S\\s]{5,30}";
+    private static String regexDescription = "[\\S\\s]{10,300}";
 
     public static boolean email(String email) {
         Pattern pattern = Pattern.compile(regexEmail);
