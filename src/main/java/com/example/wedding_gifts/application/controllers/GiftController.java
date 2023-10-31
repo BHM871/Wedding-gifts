@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,7 +47,7 @@ public class GiftController implements IGiftController {
     private IGiftUseCase services;
 
     @Override
-    @PostMapping(value = "/create")
+    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Create a new gift",
         description = "Authentication is necessary."
@@ -72,7 +73,7 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @PutMapping(value = "/update", produces = {"application/json"}, consumes = {"application/json"})
+    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Update a gift",
         description = "Authentication is necessary, values can be null."
@@ -100,7 +101,7 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @DeleteMapping(value = "/delete", produces = {"application/json"}, consumes = {"application/json"})
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Delete a gift by ID",
         description = "Authentication is necessary."
@@ -128,7 +129,7 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @DeleteMapping(value = "/delete/all/{account}", produces = {"application/json"})
+    @DeleteMapping(value = "/delete/all/{account}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Delete all gifts by Account ID",
         description = "Authentication is necessary."
@@ -156,7 +157,7 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @GetMapping(value = "/{account}", produces = {"application/json"})
+    @GetMapping(value = "/{account}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all gifts by Account ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = List.class))),
@@ -175,7 +176,7 @@ public class GiftController implements IGiftController {
 
 
     @Override
-    @GetMapping(value = "/filter/{account}", produces = {"application/json"})
+    @GetMapping(value = "/filter/{account}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get all gifts by Account ID with filters")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = List.class))),

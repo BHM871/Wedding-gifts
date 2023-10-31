@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +43,7 @@ public class AccountController implements IAccountController {
     private IAccountUseCase services;
 
     @Override
-    @GetMapping(value = "/brideGroom/{brideGroom}", produces = {"application/json"})
+    @GetMapping(value = "/brideGroom/{brideGroom}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get Account Id by 'brideGroom'")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseIdDTO.class))),
@@ -64,7 +65,7 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @GetMapping(value = "/{id}", produces = {"application/json"})
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get Account by ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseAccountDTO.class))),
@@ -93,7 +94,7 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @PutMapping(value = "/update/{id}", produces = {"application/json"}, consumes = {"application/json"})
+    @PutMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Update Account by ID",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -130,7 +131,7 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @DeleteMapping(value = "/delete/{id}", produces = {"application/json"})
+    @DeleteMapping(value = "/delete/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Delete Account by ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseIdDTO.class))),
