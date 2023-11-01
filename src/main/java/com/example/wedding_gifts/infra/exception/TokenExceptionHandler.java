@@ -11,6 +11,7 @@ import com.example.wedding_gifts.core.domain.exceptions.common.NotFoundException
 import com.example.wedding_gifts.core.domain.exceptions.common.NotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotYourException;
 import com.example.wedding_gifts.core.domain.exceptions.token.TokenExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.token.TokenInvalidValueException;
 import com.example.wedding_gifts.core.usecases.exception.IExceptionResponse;
 
 @RestControllerAdvice
@@ -23,8 +24,9 @@ public class TokenExceptionHandler implements IExceptionResponse {
     }
 
     @Override
+    @ExceptionHandler(TokenInvalidValueException.class)
     public ResponseEntity<ExceptionResponseDTO> invalidValue(InvalidValueException exception) {
-        throw new UnsupportedOperationException("Unimplemented method 'invalidValue'");
+        return exception.getResponse();
     }
 
     @Override

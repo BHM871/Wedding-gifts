@@ -2,15 +2,16 @@ package com.example.wedding_gifts.application.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.adapters.security.ITokenManager;
@@ -20,14 +21,21 @@ import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
+import com.example.wedding_gifts.core.domain.exceptions.token.TokenInvalidValueException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.IAuthenticationController;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.var;
 
@@ -46,7 +54,15 @@ public class AuthenticationController implements IAuthenticationController {
     private ITokenUseCase tokenService;
 
     @Override
-    @PostMapping("/register")
+    @PostMapping(value = "/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Create a Account")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseAccountDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "409", description = "Already email"),
+        @ApiResponse(responseCode = "422", description = "Invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<AccountResponseAccountDTO> register(
         @RequestBody CreateAccountDTO account
     ) throws Exception {
@@ -86,7 +102,15 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     @Override
-    @PostMapping("/login")
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "To do login")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AuthenticationResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<AuthenticationResponseDTO> login(
         @RequestBody LoginDTO login
     ) throws Exception {
@@ -108,13 +132,25 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     @Override
-    @PatchMapping("/logout")
+    @PatchMapping(value = "/logout/{token}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "To do logout")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<MessageDTO> logout(
-        @RequestParam String token
-    ) {
-        tokenService.deleteToken(token);
+        @PathVariable String token
+    ) throws Exception {
+        try{
+            if(tokenManager.validateToken(token) == null ) throw new TokenInvalidValueException("Token is invalid");
+            
+            tokenService.deleteToken(token);
 
-        return ResponseEntity.ok(new MessageDTO("successfully"));
+            return ResponseEntity.ok(new MessageDTO("successfully"));
+        } catch (MyException e){
+            e.setPath("/auth/logout");
+            throw e;
+        }
     }
 
     private void validData(CreateAccountDTO data) throws Exception {
