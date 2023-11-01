@@ -9,7 +9,7 @@ import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 
 public interface IImageController {
 
-    public ResponseEntity<Base64ResponseDTO> toBase64(MultipartFile imagesFile) throws Exception;
+    public ResponseEntity<Base64ResponseDTO> toBase64(MultipartFile imageFile) throws Exception;
 
     public ResponseEntity<MessageDTO> updateImages(UpdateImageDTO update) throws Exception;
     

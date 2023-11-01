@@ -28,6 +28,7 @@ import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
@@ -50,7 +51,6 @@ public class ImageServices implements IImageUseCase {
 
         try{
             imageBase64 = toBase64(image.image());
-            imageData = imageBase64.split(";")[0];
 
             if(
                 imageData == null || 
@@ -175,6 +175,62 @@ public class ImageServices implements IImageUseCase {
         return repository.getAllImagesByGift(giftId);
     }
 
+    @Override
+    public String toBase64(MultipartFile image) throws Exception {
+        try{
+            if(
+                image.getContentType() == null ||
+                !image.getContentType().contains("image/") || 
+                (!image.getContentType().endsWith("jpeg") && !image.getContentType().endsWith("png"))
+            ){
+                throw new ImageInvalidValueException(image.getOriginalFilename() + " is not a image");
+            }
+
+            return "data:" + image.getContentType() + ";base64," + Base64.getEncoder().encodeToString(image.getBytes());
+        } catch (MyException e){
+            throw e; 
+        } catch (Exception e){
+            throw new ImageExecutionException("Image can't be conveted", e);
+        }
+    }
+
+    @Override
+    public String toBase64(BufferedImage image) throws Exception {
+        try{
+            byte[] bytes = toBytes(image);
+
+            return "data:" + getMIMEType(image) + ";base64," + Base64.getEncoder().encodeToString(bytes);
+        } catch (Exception e){
+            throw new ImageExecutionException("Imge can't be converted", e);
+        }
+    }
+
+    @Override
+    public BufferedImage toImage(String base64) throws Exception {
+        try{
+            base64 = base64.contains("data:") ? base64.split(",")[1] : base64;
+
+            byte[] bytes = Base64.getDecoder().decode(base64);
+            
+            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+            return ImageIO.read(bais);
+        } catch (Exception e){
+            throw new ImageExecutionException("Image can't be conveted", e);
+        }
+    }
+
+    @Override
+    public byte[] toBytes(BufferedImage image) throws Exception {
+        try{
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(image, getMIMEType(image).replace("image/", ""), baos);
+            
+            return baos.toByteArray();
+        } catch (Exception e){
+            throw new ImageExecutionException("Imge can't be converted", e);
+        }
+    }
+
     private Path generateImagePath(ImageDTO image, String extention) throws Exception {
         try{
             Path path = Paths.get(sourceImages+image.accountId()+"/"+image.giftId());
@@ -191,47 +247,16 @@ public class ImageServices implements IImageUseCase {
         }
     }
 
-    @Override
-    public String toBase64(MultipartFile image) throws Exception {
-        try{
-            return Base64.getEncoder().encodeToString(image.getBytes());
-        } catch (Exception e){
-            throw new ImageExecutionException("Image can't be conveted", e);
-        }
-    }
+    private String getMIMEType(BufferedImage image){
+        int type = image.getType();
 
-    @Override
-    public String toBase64(BufferedImage image) throws Exception {
-        try{
-            byte[] bytes = toBytes(image);
-
-            return Base64.getEncoder().encodeToString(bytes);
-        } catch (Exception e){
-            throw new ImageExecutionException("Imge can't be converted", e);
-        }
-    }
-
-    @Override
-    public BufferedImage toImage(String base64) throws Exception {
-        try{
-            byte[] bytes = Base64.getDecoder().decode(base64);
-            
-            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-            return ImageIO.read(bais);
-        } catch (Exception e){
-            throw new ImageExecutionException("Image can't be conveted", e);
-        }
-    }
-
-    @Override
-    public byte[] toBytes(BufferedImage image) throws Exception {
-        try{
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ImageIO.write(image, "PNG", baos);
-            
-            return baos.toByteArray();
-        } catch (Exception e){
-            throw new ImageExecutionException("Imge can't be converted", e);
+        switch (type) {
+            case BufferedImage.TYPE_3BYTE_BGR:
+                return "image/jpeg";
+            case BufferedImage.TYPE_4BYTE_ABGR:
+                return "image/png";
+            default:
+                return "image/png";
         }
     }
     

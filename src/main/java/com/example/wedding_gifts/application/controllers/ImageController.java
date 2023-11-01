@@ -45,11 +45,12 @@ public class ImageController implements IImageController {
         @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
     })
     public ResponseEntity<Base64ResponseDTO> toBase64(
-        @RequestPart(value = "images") MultipartFile imagesFile
+        @RequestPart(value = "image") MultipartFile imageFile
     ) throws Exception {
         try{
-            Base64ResponseDTO imagesReponse = new Base64ResponseDTO(services.toBase64(imagesFile));
-            
+            Base64ResponseDTO imagesReponse = new Base64ResponseDTO(services.toBase64(imageFile));
+            services.toBase64(services.toImage(imagesReponse.image()));
+
             return ResponseEntity.status(HttpStatus.OK).body(imagesReponse);
         } catch (MyException e){
             e.setPath("/image/base64");
@@ -58,7 +59,7 @@ public class ImageController implements IImageController {
     }
 
     @Override
-    @PutMapping(value = "/update/image", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Update image of a gift",
         description = "Authentication is necessary. 'imagesId' and 'images' can be null, but, not at the same time. The images in 'imagesId' will be deleted and 'images' will be added."

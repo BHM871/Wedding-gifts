@@ -31,9 +31,9 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.DELETE, "/account/delete").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/account/update").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/gift/delete").authenticated()
-                //.requestMatchers(HttpMethod.POST, "/gift/create").authenticated()
+                .requestMatchers(HttpMethod.POST, "/gift/create").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/gift/update").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/gift/update/image").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/image/update").authenticated()
                 .anyRequest().permitAll()
             )
             .logout(logou ->
