@@ -60,7 +60,7 @@ public class Gift implements Serializable {
 
     public Gift(CreateGiftDTO gift) {
         this.title = gift.title().trim();
-        this.giftDescription = gift.giftDescription().trim();
+        this.giftDescription = gift.giftDescription() != null ? gift.giftDescription().trim() : "";
         this.categories = gift.categories();
         this.price = gift.price();
         this.isBought = false;

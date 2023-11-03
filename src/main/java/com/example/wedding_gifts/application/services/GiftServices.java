@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
@@ -91,46 +94,46 @@ public class GiftServices implements IGiftUseCase {
     }
 
     @Override
-    public List<GiftResponseDTO> getAllGifts(UUID accountId) throws Exception {
-        List<Gift> gifts = repository.getAllGifts(accountId);
+    public Page<GiftResponseDTO> getAllGifts(UUID accountId, Pageable paging) throws Exception {
+        Page<Gift> gifts = repository.getAllGifts(accountId, paging);
 
-        return generatedGiftResponse(gifts);
+        return generatedGiftResponse(gifts, paging);
     }
 
     @Override
-    public List<GiftResponseDTO> getWithFilter(SearcherDTO searcher, UUID accountId) throws Exception {
-        List<Gift> gifts = new ArrayList<Gift>();
+    public Page<GiftResponseDTO> getWithFilter(SearcherDTO searcher, UUID accountId, Pageable paging) throws Exception {
+        Page<Gift> gifts = Page.empty();
         
         if(searcher.title() != null && searcher.categories() != null && (searcher.startPrice() != null || searcher.endPrice() != null)){ 
-            gifts.addAll(repository.getAllFilters(searcherDTO(searcher), accountId));
+            gifts = repository.getAllFilters(searcherDTO(searcher), accountId, paging);
         } else 
         if(searcher.title() != null){
             if(searcher.categories() != null) {
-                gifts.addAll(repository.getByTitleAndCategoriesOrBought(searcherByTitleAndCategoriesDTO(searcher), accountId));
+                gifts = repository.getByTitleAndCategoriesOrBought(searcherByTitleAndCategoriesDTO(searcher), accountId, paging);
             } else 
             if(searcher.startPrice() != null || searcher.endPrice() != null) {
-                gifts.addAll(repository.getByTitleAndPriceOrBought(searcherByTitleAndPriceDTO(searcher), accountId));
+                gifts = repository.getByTitleAndPriceOrBought(searcherByTitleAndPriceDTO(searcher), accountId, paging);
             } else {
-                gifts.addAll(repository.getByTitleOrBoutght(searcherByTitleDTO(searcher), accountId));
+                gifts = repository.getByTitleOrBoutght(searcherByTitleDTO(searcher), accountId, paging);
             }
 
         } else 
         if(searcher.categories() != null) {
             if(searcher.startPrice() != null || searcher.endPrice() != null) {
-                gifts.addAll(repository.getByCategoriesAndPriceOrBought(searcherByCategoriesAndPriceDTO(searcher), accountId));
+                gifts = repository.getByCategoriesAndPriceOrBought(searcherByCategoriesAndPriceDTO(searcher), accountId, paging);
             } else {
-                gifts.addAll(repository.getByCategoriesOrBought(searcherByCategoriesDTO(searcher), accountId));
+                gifts = repository.getByCategoriesOrBought(searcherByCategoriesDTO(searcher), accountId, paging);
             }
 
         } else 
         if(searcher.startPrice() != null || searcher.endPrice() != null) {
-            gifts.addAll(repository.getByPriceOrBought(searcherByPriceDTO(searcher), accountId));
+            gifts = repository.getByPriceOrBought(searcherByPriceDTO(searcher), accountId, paging);
         
         } else {
-            gifts.addAll(repository.getAllGifts(accountId));
+            gifts = repository.getAllGifts(accountId, paging);
         }
 
-        return generatedGiftResponse(gifts);
+        return generatedGiftResponse(gifts, gifts.getPageable());
     }
 
     private SearcherDTO searcherDTO(SearcherDTO searcher) {
@@ -191,7 +194,7 @@ public class GiftServices implements IGiftUseCase {
         );
     }
 
-    private List<GiftResponseDTO> generatedGiftResponse(List<Gift> gifts) throws Exception {
+    private Page<GiftResponseDTO> generatedGiftResponse(Page<Gift> gifts, Pageable paging) throws Exception {
 
         List<GiftDTO> giftsDto = gifts.stream().map( gift ->
             new GiftDTO(
@@ -213,7 +216,7 @@ public class GiftServices implements IGiftUseCase {
             giftResponseList.add(new GiftResponseDTO(gift, imageResponse));
         }
 
-        return giftResponseList;
+        return new PageImpl<GiftResponseDTO>(giftResponseList, paging, gifts.getTotalElements());
     }
     
 }

@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +29,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
@@ -36,7 +40,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tag; 
 
 @RestController
 @RequestMapping("/gift")
@@ -69,6 +73,10 @@ public class GiftController implements IGiftController {
         } catch (MyException e){
             e.setPath("/gift/create");
             throw e;
+        } catch (Exception e){
+            GiftExecutionException exception = new GiftExecutionException("Some error");
+            exception.setPath("/gift/create");
+            throw exception;
         }
     }
 
@@ -97,6 +105,10 @@ public class GiftController implements IGiftController {
         } catch (MyException e){
             e.setPath("/gift/update");
             throw e;
+        } catch (Exception e){
+            GiftExecutionException exception = new GiftExecutionException("Some error");
+            exception.setPath("/gift/update");
+            throw exception;
         }
     }
 
@@ -125,6 +137,10 @@ public class GiftController implements IGiftController {
         } catch (MyException e){
             e.setPath("/gift/delete");
             throw e;
+        } catch (Exception e){
+            GiftExecutionException exception = new GiftExecutionException("Some error");
+            exception.setPath("/gift/delete");
+            throw exception;
         }
     }
 
@@ -153,6 +169,10 @@ public class GiftController implements IGiftController {
         } catch (MyException e){
             e.setPath("/gift/delete/all");
             throw e;
+        } catch (Exception e){
+            GiftExecutionException exception = new GiftExecutionException("Some error");
+            exception.setPath("/gift/delete/all");
+            throw exception;
         }
     }
 
@@ -163,14 +183,19 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = List.class))),
         @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
-    public ResponseEntity<List<GiftResponseDTO>> getAllGifts(
-        @PathVariable UUID account
+    public ResponseEntity<Page<GiftResponseDTO>> getAllGifts(
+        @PathVariable UUID account,
+        @PageableDefault Pageable paging
     ) throws Exception {
         try{
-            return ResponseEntity.ok(services.getAllGifts(account));
+            return ResponseEntity.ok(services.getAllGifts(account, paging));
         } catch (MyException e){
             e.setPath("/gift");
             throw e;
+        } catch (Exception e){
+            GiftExecutionException exception = new GiftExecutionException("Some error");
+            exception.setPath("/gift");
+            throw exception;
         }
     }
 
@@ -182,15 +207,20 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = List.class))),
         @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
     })
-    public ResponseEntity<List<GiftResponseDTO>> getWithFilter(
+    public ResponseEntity<Page<GiftResponseDTO>> getWithFilter(
         @RequestBody SearcherDTO searcher,
-        @PathVariable UUID account
+        @PathVariable UUID account,
+        @PageableDefault Pageable paging
     ) throws Exception {
         try{
-            return ResponseEntity.ok(services.getWithFilter(searcher, account));
+            return ResponseEntity.ok(services.getWithFilter(searcher, account, paging));
         } catch (MyException e){
             e.setPath("/gift/filter");
             throw e;
+        } catch (Exception e){
+            GiftExecutionException exception = new GiftExecutionException("Some error");
+            exception.setPath("/gift/filter");
+            throw exception;
         }
     }
     
@@ -198,29 +228,30 @@ public class GiftController implements IGiftController {
         String invalid = "%s is invalid";
         String isNull = "%s is null";
         
-        if(data.title() == null || data.title().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "title"));
+        if(data.title() == null || data.title().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "'title'"));
         if(data.price() == null) throw new GiftNotNullableException(String.format(isNull, "price"));
-        if(data.categories() == null || data.categories().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "categories"));
+        if(data.categories() == null || data.categories().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "'categories'"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "'accountId'"));
 
-        if(!Validation.title(data.title())) throw new GiftInvalidValueException(String.format(invalid, "title"));
-        if(!Validation.description(data.giftDescription())) throw new GiftInvalidValueException(String.format(invalid, "description"));
-        if(!Validation.price(data.price())) throw new GiftInvalidValueException(String.format(invalid, "price"));
+        if(!Validation.title(data.title())) throw new GiftInvalidValueException(String.format(invalid, "'title'"));
+        if(data.giftDescription() != null && !Validation.description(data.giftDescription())) throw new GiftInvalidValueException(String.format(invalid, "'description'"));
+        if(!Validation.price(data.price())) throw new GiftInvalidValueException(String.format(invalid, "'price'"));
 
     }
 
     private void validData(UpdateGiftDTO data) throws Exception {
         String isNull = "%s is null";
 
-        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
+        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "'giftId'"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "'account'"));
 
     }
 
     private void validData(DeleteGiftDTO data) throws Exception {
         String isNull = "%s is null";
 
-        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
+        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "'giftId'"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "'account'"));
 
     }
 

@@ -3,6 +3,9 @@ package com.example.wedding_gifts.core.usecases.gift;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
@@ -31,18 +34,20 @@ public interface IGiftRepository {
 
     public List<Gift> getAllGifts(UUID accountId);
 
-    public List<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId);
+    public Page<Gift> getAllGifts(UUID accountId, Pageable page);
 
-    public List<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId);
+    public Page<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId, Pageable page);
 
-    public List<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId);
+    public Page<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId, Pageable page);
 
-    public List<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId);
+    public Page<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId, Pageable page);
 
-    public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId);
+    public Page<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId, Pageable page);
 
-    public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId);
+    public Page<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId, Pageable page);
 
-    public List<Gift> getAllFilters(SearcherDTO searcher, UUID accountId);
+    public Page<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId, Pageable page);
+
+    public Page<Gift> getAllFilters(SearcherDTO searcher, UUID accountId, Pageable page);
 
 }

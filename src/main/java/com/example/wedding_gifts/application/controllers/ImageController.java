@@ -18,6 +18,7 @@ import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO
 import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
+import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotNullableException;
 import com.example.wedding_gifts.core.usecases.image.IImageController;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
@@ -52,12 +53,15 @@ public class ImageController implements IImageController {
     ) throws Exception {
         try{
             Base64ResponseDTO imagesReponse = new Base64ResponseDTO(services.toBase64(imageFile));
-            services.toBase64(services.toImage(imagesReponse.image()));
 
             return ResponseEntity.status(HttpStatus.OK).body(imagesReponse);
         } catch (MyException e){
             e.setPath("/image/base64");
             throw e;
+        } catch (Exception e){
+            ImageExecutionException exception = new ImageExecutionException("Some error");
+            exception.setPath("/image/base64");
+            throw exception;
         }
     }
 
@@ -86,6 +90,10 @@ public class ImageController implements IImageController {
         } catch (MyException e){
             e.setPath("/image/update");
             throw e;
+        } catch (Exception e){
+            ImageExecutionException exception = new ImageExecutionException("Some error");
+            exception.setPath("/image/update");
+            throw exception;
         }
     }
 

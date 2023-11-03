@@ -1,11 +1,11 @@
 package com.example.wedding_gifts.application.repositories;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
@@ -50,7 +50,7 @@ public class GiftRepository implements IGiftRepository {
     public Gift createGift(CreateGiftDTO gift) throws Exception {
         try{
             Gift newGift = new Gift(gift);
-            Account account  = accountRepository.getAccountById(gift.accountId());
+            Account account = accountRepository.getAccountById(gift.accountId());
 
             newGift.setAccount(account);
 
@@ -123,87 +123,92 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public List<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId) {
+    public Page<Gift> getAllGifts(UUID accountId, Pageable paging) {
+        return thisJpaRepository.findAllByAccount(accountId, paging);
+    }
+
+    @Override
+    public Page<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId, Pageable paging) {
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndAccount(searcher.title(), accountId);
+            return thisJpaRepository.findByTitleAndAccount(searcher.title(), accountId, paging);
         } else {
-            return thisJpaRepository.findByTitleAndIsBoughtAndAccount(searcher.title(), searcher.isBought(), accountId);
+            return thisJpaRepository.findByTitleAndIsBoughtAndAccount(searcher.title(), searcher.isBought(), accountId, paging);
         }
 
     }
 
     @Override
-    public List<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId) {
-        Set<Gift> out = new HashSet<Gift>();
+    public Page<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId, Pageable paging) {
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndAccount(cat.toString(), accountId));
+            return thisJpaRepository.findByCategoriesAndAccount(generatedArray(searcher.categories()), accountId, paging);
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndIsBoughtAndAccount(cat.toString(), searcher.isBought(), accountId));
+            return thisJpaRepository.findByCategoriesAndIsBoughtAndAccount(generatedArray(searcher.categories()), searcher.isBought(), accountId, paging);
         }
 
-        return List.copyOf(out);
     }
 
     @Override
-    public List<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId) {
+    public Page<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId, Pageable paging) {
 
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByPriceBetweenAndAccount(searcher.startPrice(), searcher.endPrice(), accountId);
+            return thisJpaRepository.findByPriceBetweenAndAccount(searcher.startPrice(), searcher.endPrice(), accountId, paging);
         } else {
-            return thisJpaRepository.findByPriceBetweenAndIsBoughtAndAccount(searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId);
+            return thisJpaRepository.findByPriceBetweenAndIsBoughtAndAccount(searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
         }
 
     }
 
     @Override
-    public List<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId) {
-        Set<Gift> out = new HashSet<Gift>();
+    public Page<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId, Pageable paging) {
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetweenAndAccount(cat.toString(), searcher.startPrice(), searcher.endPrice(), accountId));
+            return thisJpaRepository.findByCategoriesAndPriceBetweenAndAccount(generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), accountId, paging);
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBoughtAndAccount(cat.toString(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId));
+            return thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBoughtAndAccount(generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
         }
 
-        return List.copyOf(out);
     }
 
     @Override
-    public List<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId) {
-        Set<Gift> out = new HashSet<Gift>();
+    public Page<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId, Pageable paging) {
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndAccount(searcher.title(), cat.toString(), accountId));
+            return thisJpaRepository.findByTitleAndCategoriesAndAccount(searcher.title(), generatedArray(searcher.categories()), accountId, paging);
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndIsBoughtAndAccount(searcher.title(), cat.toString(), searcher.isBought(), accountId));
+            return thisJpaRepository.findByTitleAndCategoriesAndIsBoughtAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.isBought(), accountId, paging);
         }
 
-        return List.copyOf(out);
     }
 
     @Override
-    public List<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId) {
+    public Page<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId, Pageable paging) {
 
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndPriceBetweenAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), accountId);
+            return thisJpaRepository.findByTitleAndPriceBetweenAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), accountId, paging);
         } else {
-            return thisJpaRepository.findByTitleAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId);
+            return thisJpaRepository.findByTitleAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
         }
 
     }
 
     @Override
-    public List<Gift> getAllFilters(SearcherDTO searcher, UUID accountId) {
-        Set<Gift> out = new HashSet<Gift>();
+    public Page<Gift> getAllFilters(SearcherDTO searcher, UUID accountId, Pageable paging) {
         
         if(searcher.isBought() == null) {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndAccount(searcher.title(), cat.toString(), searcher.startPrice(), searcher.endPrice(), accountId));
+            return thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), accountId, paging);
         } else {
-            for(CategoriesEnum cat : searcher.categories()) out.addAll(thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), cat.toString(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId));
+            return thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
         }
 
-        return List.copyOf(out);
     }    
+
+    private String[] generatedArray(List<CategoriesEnum> list){
+        String[] out = new String[list.size()];
+        for (int index = 0; index < list.size(); index++) {
+            out[index] = list.get(index).toString();
+        }
+        return out;
+    }
     
 }

@@ -1,5 +1,7 @@
 package com.example.wedding_gifts.application.controllers;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +24,7 @@ import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
 import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
@@ -98,6 +101,10 @@ public class AuthenticationController implements IAuthenticationController {
         } catch (MyException e){
             e.setPath("/auth/register");
             throw e;
+        } catch (Exception e){
+            AccountExecutionException exception = new AccountExecutionException("Some error");
+            exception.setPath("/auth/register");
+            throw exception;
         }
     }
 
@@ -128,6 +135,10 @@ public class AuthenticationController implements IAuthenticationController {
         } catch (MyException e){
             e.setPath("/auth/login");
             throw e;
+        } catch (Exception e){
+            AccountExecutionException exception = new AccountExecutionException("Some error");
+            exception.setPath("/auth/login");
+            throw exception;
         }
     }
 
@@ -150,6 +161,10 @@ public class AuthenticationController implements IAuthenticationController {
         } catch (MyException e){
             e.setPath("/auth/logout");
             throw e;
+        } catch (Exception e){
+            AccountExecutionException exception = new AccountExecutionException("Some error");
+            exception.setPath("/auth/logout");
+            throw exception;
         }
     }
 
@@ -166,7 +181,7 @@ public class AuthenticationController implements IAuthenticationController {
         if(data.pixKey() == null || data.pixKey().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "pixKey"));
         
         if(!Validation.brideGroom(data.brideGroom())) throw new AccountInvalidValueException(String.format(invalid, "brideGroom"));
-        if(!Validation.date(data.weddingDate())) throw new AccountInvalidValueException(String.format(invalid, "weddingDate"));
+        if(!Validation.date(data.weddingDate()) || data.weddingDate().before(new Date())) throw new AccountInvalidValueException(String.format(invalid, "weddingDate"));
         if(!Validation.name(data.firstName(), data.lastName())) throw new AccountInvalidValueException(String.format(invalid, "firstName", "and/or", "lastName").replace("is", "are"));
         if(!Validation.email(data.email())) throw new AccountInvalidValueException(String.format(invalid, "email"));
         if(!Validation.password(data.password())) throw new AccountInvalidValueException(String.format(invalid, "password"));

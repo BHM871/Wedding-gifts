@@ -1,6 +1,7 @@
 
 package com.example.wedding_gifts.application.controllers;
 
+import java.util.Date;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.model.Account;
@@ -61,6 +63,10 @@ public class AccountController implements IAccountController {
         } catch (MyException e){
             e.setPath("/account/brideGroom");
             throw e;
+        } catch (Exception e){
+            AccountExecutionException exception = new AccountExecutionException("Some error");
+            exception.setPath("/account/bridegroom");
+            throw exception;
         }
     }
 
@@ -90,6 +96,10 @@ public class AccountController implements IAccountController {
         } catch (MyException e){
             e.setPath("/account");
             throw e;
+        } catch (Exception e){
+            AccountExecutionException exception = new AccountExecutionException("Some error");
+            exception.setPath("/account");
+            throw exception;
         }
     }
 
@@ -113,6 +123,8 @@ public class AccountController implements IAccountController {
         @PathVariable UUID id
     ) throws Exception {
         try{
+            validData(account);
+
             Account upAccount = services.updateAccount(account, id);
 
             AccountResponseAccountDTO accountResponse = new AccountResponseAccountDTO(
@@ -127,6 +139,10 @@ public class AccountController implements IAccountController {
         } catch (MyException e){
             e.setPath("/account/update");
             throw e;
+        } catch (Exception e){
+            AccountExecutionException exception = new AccountExecutionException("Some error");
+            exception.setPath("/account/update");
+            throw exception;
         }
     }
 
@@ -149,6 +165,10 @@ public class AccountController implements IAccountController {
         } catch (MyException e){
             e.setPath("/account/delete");
             throw e;
+        } catch (Exception e){
+            AccountExecutionException exception = new AccountExecutionException("Some error");
+            exception.setPath("/account/delete");
+            throw exception;
         }
     }
 
@@ -156,6 +176,17 @@ public class AccountController implements IAccountController {
         
         if(!Validation.brideGroom(data)) throw new AccountInvalidValueException("brideGroom is invalid");
 
+    }
+
+    private void validData(UpdateAccountDTO data) throws Exception {
+        String isInvalid = "%s is invalid";
+        
+        if(data.brideGroom() != null && !Validation.brideGroom(data.brideGroom())) throw new AccountInvalidValueException(String.format(isInvalid, "brideGroom"));
+        if(data.weddingDate() != null && (!Validation.date(data.weddingDate()) || data.weddingDate().before(new Date()))) throw new AccountInvalidValueException(String.format(isInvalid, "weddingDate"));
+        if(data.firstName() != null && !Validation.name(data.firstName(), data.lastName())) throw new AccountInvalidValueException(String.format(isInvalid, "firstName"));
+        if(data.password() != null && !Validation.password(data.password())) throw new AccountInvalidValueException(String.format(isInvalid, "password"));
+        if(data.pixKey() != null && !Validation.pixKey(data.pixKey())) throw new AccountInvalidValueException(String.format(isInvalid, "pixKey"));
+        
     }
     
 }

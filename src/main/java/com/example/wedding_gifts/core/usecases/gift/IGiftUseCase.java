@@ -3,6 +3,9 @@ package com.example.wedding_gifts.core.usecases.gift;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
@@ -19,8 +22,8 @@ public interface IGiftUseCase {
 
     public void deleteAllByAccount(UUID accountId) throws Exception;
 
-    public List<GiftResponseDTO> getAllGifts(UUID accountId) throws Exception;
+    public Page<GiftResponseDTO> getAllGifts(UUID accountId, Pageable page) throws Exception;
 
-    public List<GiftResponseDTO> getWithFilter(SearcherDTO searcher, UUID accoountId) throws Exception;
+    public Page<GiftResponseDTO> getWithFilter(SearcherDTO searcher, UUID accoountId, Pageable page) throws Exception;
     
 }

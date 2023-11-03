@@ -17,7 +17,7 @@ public interface JpaImageRespository extends JpaRepository<Image, UUID> {
 
     public Optional<Image> findByPathImage(String pathImage);
 
-    @Query(nativeQuery = true, value = "SELECT * " +
+    @Query(nativeQuery = true, value = "SELECT DISTINC * " +
                                         "FROM tb_image " +
                                         "WHERE gift_id = :gift")
     public List<Image> findAllByGift(@Param("gift") UUID gift);

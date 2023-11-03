@@ -3,6 +3,8 @@ package com.example.wedding_gifts.core.usecases.gift;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
@@ -21,8 +23,8 @@ public interface IGiftController {
 
     public ResponseEntity<MessageDTO> deleteAllByAccount(UUID accountId) throws Exception;
 
-    public ResponseEntity<List<GiftResponseDTO>> getAllGifts(UUID accountId) throws Exception;
+    public ResponseEntity<Page<GiftResponseDTO>> getAllGifts(UUID accountId, Pageable page) throws Exception;
 
-    public ResponseEntity<List<GiftResponseDTO>> getWithFilter(SearcherDTO searcher, UUID accountId) throws Exception;
+    public ResponseEntity<Page<GiftResponseDTO>> getWithFilter(SearcherDTO searcher, UUID accountId, Pageable page) throws Exception;
 
 }
