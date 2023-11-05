@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.controllers;
+package com.example.wedding_gifts.application.auth;
 
 import java.util.Date;
 

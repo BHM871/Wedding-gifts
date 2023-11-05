@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.services;
+package com.example.wedding_gifts.application.image;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;

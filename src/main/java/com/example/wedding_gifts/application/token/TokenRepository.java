@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.repositories;
+package com.example.wedding_gifts.application.token;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

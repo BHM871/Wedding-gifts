@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.repositories;
+package com.example.wedding_gifts.application.image;
 
 import java.util.List;
 import java.util.UUID;
@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.example.wedding_gifts.application.gift.GiftRepository;
 import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;

@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.controllers;
+package com.example.wedding_gifts.application.image;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

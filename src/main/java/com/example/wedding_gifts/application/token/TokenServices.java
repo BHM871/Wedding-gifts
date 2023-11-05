@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.services;
+package com.example.wedding_gifts.application.token;
 
 import java.util.UUID;
 

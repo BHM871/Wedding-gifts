@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.services;
+package com.example.wedding_gifts.application.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

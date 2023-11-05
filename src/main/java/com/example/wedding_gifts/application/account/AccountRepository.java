@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.repositories;
+package com.example.wedding_gifts.application.account;
 
 import java.util.UUID;
 

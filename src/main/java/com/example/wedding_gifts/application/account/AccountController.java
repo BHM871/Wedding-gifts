@@ -1,5 +1,5 @@
 
-package com.example.wedding_gifts.application.controllers;
+package com.example.wedding_gifts.application.account;
 
 import java.util.Date;
 import java.util.UUID;

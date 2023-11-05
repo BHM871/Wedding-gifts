@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.services;
+package com.example.wedding_gifts.application.gift;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

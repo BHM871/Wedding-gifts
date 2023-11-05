@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.application.repositories;
+package com.example.wedding_gifts.application.gift;
 
 import java.util.List;
 import java.util.UUID;
