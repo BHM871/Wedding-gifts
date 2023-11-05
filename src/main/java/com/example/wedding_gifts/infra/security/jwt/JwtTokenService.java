@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.infra.security;
+package com.example.wedding_gifts.infra.security.jwt;
 
 import java.time.LocalDateTime;
 

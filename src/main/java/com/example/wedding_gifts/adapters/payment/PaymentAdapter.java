@@ -1,9 +1,14 @@
 package com.example.wedding_gifts.adapters.payment;
 
-public interface PaymentAdapter<T> {
+import java.util.UUID;
 
-    public T createPayment() throws Exception;
+import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatePixDTO;
+import com.example.wedding_gifts.core.domain.model.Payment;
 
-    public T checkPayment() throws Exception;
+public interface PaymentAdapter {
+
+    public Payment createPayment(CreatePixDTO payment) throws Exception;
+
+    public Payment checkPayment(UUID paymentId) throws Exception;
     
 }
