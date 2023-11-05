@@ -19,7 +19,7 @@ import okhttp3.Response;
 @Service
 public class PixServices implements PaymentAdapter {
 
-    private final String BASE_PIX_URL = "https://pix.example.com/api/cob/";
+    private final String BASE_PIX_URL = "https://pix.example.com/api/cob";
     
     private final String CREATE_PIX_CONTENT_TYPE = "application/json";
 
@@ -33,7 +33,7 @@ public class PixServices implements PaymentAdapter {
             RequestBody body = RequestBody.create(payment.toString(), mediaType);
 
             Request request = new Request.Builder()
-                .url(BASE_PIX_URL+payment.accountId())
+                .url(BASE_PIX_URL)
                 .put(body)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("User-Agent", "insomnia/2023.5.8")

@@ -1,9 +1,6 @@
 package com.example.wedding_gifts.core.domain.dtos.payment.pix;
 
-import java.util.UUID;
-
 public record CreatePixDTO(
-    UUID accountId,
     CalendarDTO calendario,
     PayerDTO devedor,
     ValueDTO valor,
