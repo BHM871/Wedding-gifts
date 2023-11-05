@@ -6,7 +6,7 @@ import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 
 public interface ITokenRepository {
 
-    public String saveToken(SaveTokenDTO tokenDto) throws Exception;
+    public String saveToken(SaveTokenDTO tokenDTO) throws Exception;
 
     public String getToken(String token) throws Exception;
 

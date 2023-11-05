@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.wedding_gifts.adapters.security.ITokenManager;
+import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
 
@@ -22,7 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired
-    private ITokenManager tokenManager;
+    private TokenManagerAdapter tokenManager;
     @Autowired
     private IAccountRepository accountRepository;
     @Autowired

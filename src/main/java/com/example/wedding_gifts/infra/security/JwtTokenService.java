@@ -10,7 +10,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.example.wedding_gifts.adapters.security.ITokenManager;
+import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts.common.LimitTimeForToken;
 import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
@@ -18,7 +18,7 @@ import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
 
 @Service
-public class JwtTokenService implements ITokenManager {
+public class JwtTokenService implements TokenManagerAdapter {
 
     @Value("${api.security.token.secret}")
     private String secret;

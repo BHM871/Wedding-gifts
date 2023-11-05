@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.wedding_gifts.adapters.security.ITokenManager;
+import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
@@ -52,7 +52,7 @@ public class AuthenticationController implements IAuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private ITokenManager tokenManager;
+    private TokenManagerAdapter tokenManager;
     @Autowired
     private ITokenUseCase tokenService;
 
