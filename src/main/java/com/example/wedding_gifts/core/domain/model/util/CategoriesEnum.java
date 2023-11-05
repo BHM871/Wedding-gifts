@@ -1,4 +1,4 @@
-package com.example.wedding_gifts.core.domain.model;
+package com.example.wedding_gifts.core.domain.model.util;
 
 public enum CategoriesEnum {
     

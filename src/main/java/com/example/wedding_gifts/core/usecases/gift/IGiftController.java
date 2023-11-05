@@ -1,6 +1,5 @@
 package com.example.wedding_gifts.core.usecases.gift;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;

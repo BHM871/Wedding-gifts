@@ -2,7 +2,6 @@ package com.example.wedding_gifts.core.domain.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,6 +11,7 @@ import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
+import com.example.wedding_gifts.core.domain.model.util.CategoriesEnum;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

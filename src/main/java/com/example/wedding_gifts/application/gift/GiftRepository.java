@@ -23,8 +23,8 @@ import com.example.wedding_gifts.core.domain.exceptions.gift.GiftExecutionExcept
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotFoundException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotYourException;
 import com.example.wedding_gifts.core.domain.model.Account;
-import com.example.wedding_gifts.core.domain.model.CategoriesEnum;
 import com.example.wedding_gifts.core.domain.model.Gift;
+import com.example.wedding_gifts.core.domain.model.util.CategoriesEnum;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
 import com.example.wedding_gifts.infra.jpa.JpaGiftRepository;
