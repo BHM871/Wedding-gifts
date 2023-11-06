@@ -94,6 +94,11 @@ public class GiftServices implements IGiftUseCase {
     }
 
     @Override
+    public Gift getById(UUID giftId) throws Exception {
+        return repository.getGiftById(giftId);
+    }
+
+    @Override
     public Page<GiftResponseDTO> getAllGifts(UUID accountId, Pageable paging) throws Exception {
         Page<Gift> gifts = repository.getAllGifts(accountId, paging);
 

@@ -10,6 +10,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
+import com.example.wedding_gifts.core.domain.model.Gift;
 
 public interface IGiftUseCase {
 
@@ -20,6 +21,8 @@ public interface IGiftUseCase {
     public void deleteGift(DeleteGiftDTO ids) throws Exception;
 
     public void deleteAllByAccount(UUID accountId) throws Exception;
+
+    public Gift getById(UUID giftId) throws Exception;
 
     public Page<GiftResponseDTO> getAllGifts(UUID accountId, Pageable page) throws Exception;
 

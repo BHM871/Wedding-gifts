@@ -5,7 +5,7 @@ public record ValueDTO(
 ){
 
     public String toString(){
-        return "\"valor\": {\"original\":" + this.original + "}";
+        return "\"valor\": {\"original\": " + this.original + "}";
     }
 
 }

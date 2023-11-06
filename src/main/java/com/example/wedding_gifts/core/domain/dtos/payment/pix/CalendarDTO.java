@@ -8,7 +8,7 @@ public record CalendarDTO(
 ){
 
     public String toString(){
-        return "\"calendario\": {\"expiracao\":" + this.expiracao + ",\n\"criacao\":" + this.criacao + "}";
+        return "\"calendario\": {\"expiracao\": " + this.expiracao + ", \"criacao\": " + this.criacao + "}";
     }
 
 }

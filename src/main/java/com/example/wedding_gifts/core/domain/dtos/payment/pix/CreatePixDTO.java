@@ -11,11 +11,11 @@ public record CreatePixDTO(
     public String toString(){
         String out = "{";
 
-        out += this.calendario.toString() + ",\n";
-        out += this.devedor.toString() + ",\n";
-        out += this.valor.toString() + ",\n";
-        out += "\"chave\":" + this.chave + ",\n";
-        out += "\"solicitacaoPagador\":" + this.solicitacaoPagador + "\n";
+        out += this.calendario.toString() + ", ";
+        out += this.devedor.toString() + ", ";
+        out += this.valor.toString() + ", ";
+        out += "\"chave\":" + this.chave + ", ";
+        out += "\"solicitacaoPagador\":" + this.solicitacaoPagador;
 
         out += "}";
 
