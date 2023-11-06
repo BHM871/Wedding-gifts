@@ -9,17 +9,15 @@ public record CreatePixDTO(
 ){
 
     public String toString(){
-        String out = "{";
-
-        out += this.calendario.toString() + ", ";
-        out += this.devedor.toString() + ", ";
-        out += this.valor.toString() + ", ";
-        out += "\"chave\":" + this.chave + ", ";
-        out += "\"solicitacaoPagador\":" + this.solicitacaoPagador;
-
-        out += "}";
-
-        return out;
+        String out = "{%s, %s, %s, \"chave\": %s, \"solicitacaoPagador\": %s}";
+        return String.format(
+            out, 
+            this.calendario.toString(),
+            this.devedor.toString(),
+            this.valor.toString(),
+            this.chave,
+            this.solicitacaoPagador
+        );
     }
 
 }

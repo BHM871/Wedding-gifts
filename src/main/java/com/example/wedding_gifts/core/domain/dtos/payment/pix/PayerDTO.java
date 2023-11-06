@@ -7,13 +7,13 @@ public record PayerDTO(
 ){
 
     public String toString(){
-        String out = "\"devedor\": {\"nome\": " + this.nome + ", ";
-
-        out += this.cpf != null 
-            ? "\"cpf\": " + this.cpf + "}"
-            : "\"cnpj\"?: " + this.cnpj + "}";
-
-        return out;
+        String out = "\"devedor\": {\"nome\": %s, \"cpf\": %s, \"cnpj\": %s}";
+        return String.format(
+            out, 
+            this.nome, 
+            this.cpf != null && !this.cpf.isEmpty() ? this.cpf : "", 
+            this.cnpj != null && !this.cnpj.isEmpty() ? this.cnpj : ""
+        );
     }
 
 }

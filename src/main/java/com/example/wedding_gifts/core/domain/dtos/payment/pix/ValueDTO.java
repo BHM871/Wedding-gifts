@@ -5,7 +5,11 @@ public record ValueDTO(
 ){
 
     public String toString(){
-        return "\"valor\": {\"original\": " + this.original + "}";
+        String out = "\"valor\": {\"original\": %d}";
+        return String.format(
+            out,
+            this.original
+        );
     }
 
 }
