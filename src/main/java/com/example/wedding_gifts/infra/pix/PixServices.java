@@ -47,7 +47,8 @@ public class PixServices implements PaymentAdapter {
                 ), 
                 new PayerDTO(
                     payment.name(), 
-                    payment.cpf()
+                    payment.cpf() != null ? payment.cpf() : null,
+                    payment.cnpj() != null ? payment.cnpj() : null
                 ), 
                 new ValueDTO(
                     gift.getPrice().toString()  
