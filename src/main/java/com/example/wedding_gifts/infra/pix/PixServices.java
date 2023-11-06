@@ -1,5 +1,7 @@
 package com.example.wedding_gifts.infra.pix;
 
+import java.util.concurrent.TimeUnit;
+
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
 import com.example.wedding_gifts.common.LimitTimeForPix;
 import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
@@ -31,6 +33,8 @@ public class PixServices implements PaymentAdapter {
     public PixServices(IGiftUseCase giftService){
         this.giftService = giftService;
     }
+
+    private final long TIMEOUT_SECONDS = 8L;
 
     private final String BASE_PIX_URL = "https://pix.example.com/api/cob";
     private final String PIX_CONTENT_TYPE = "application/json";
@@ -65,7 +69,11 @@ public class PixServices implements PaymentAdapter {
                 )
             );
 
-            OkHttpClient client = new OkHttpClient();
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build();
 
             MediaType mediaType = MediaType.parse(PIX_CONTENT_TYPE);
             RequestBody body = RequestBody.create(createPix.toString(), mediaType);
