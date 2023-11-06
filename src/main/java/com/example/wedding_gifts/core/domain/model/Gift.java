@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.context.annotation.Description;
 import org.springframework.lang.NonNull;
 
 import com.example.wedding_gifts.common.Validation;
@@ -13,6 +14,7 @@ import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
 import com.example.wedding_gifts.core.domain.model.util.CategoriesEnum;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;

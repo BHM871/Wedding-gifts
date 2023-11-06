@@ -1,7 +1,5 @@
 package com.example.wedding_gifts.infra.pix;
 
-import org.springframework.stereotype.Service;
-
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
 import com.example.wedding_gifts.common.LimitTimeForPix;
 import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
@@ -9,10 +7,15 @@ import com.example.wedding_gifts.core.domain.dtos.payment.pix.CalendarDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatePixDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatedPixDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.PayerDTO;
+import com.example.wedding_gifts.core.domain.dtos.payment.pix.ResponsePixError;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.ValueDTO;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
+import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentGatewayException;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import okhttp3.MediaType;
@@ -21,19 +24,18 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-@Service
 public class PixServices implements PaymentAdapter {
-
-    private final String BASE_PIX_URL = "https://pix.example.com/api/cob";
-    private final String PIX_CONTENT_TYPE = "application/json";
-    private final String CREATE_PIX_METHOD = "POST";
-    private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor %d";
 
     private IGiftUseCase giftService;
 
     public PixServices(IGiftUseCase giftService){
         this.giftService = giftService;
     }
+
+    private final String BASE_PIX_URL = "https://pix.example.com/api/cob";
+    private final String PIX_CONTENT_TYPE = "application/json";
+    private final String CREATE_PIX_METHOD = "POST";
+    private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor %d";
 
     @Override
     public Payment createPayment(CreatePaymentDTO payment) throws Exception {
@@ -77,22 +79,34 @@ public class PixServices implements PaymentAdapter {
 
             Response response = client.newCall(request).execute();
 
-            if(response.code() != 201) throw new Exception();
+            if(response.code() != 201) {
+                String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
+                ResponsePixError error = generatedClass(response.body().toString(), ResponsePixError.class);
 
-            ObjectMapper mapper = new ObjectMapper();
-            CreatedPixDTO createdPix = mapper.readValue(response.body().toString(), CreatedPixDTO.class);
+                throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
+            }
+
+            CreatedPixDTO createdPix = generatedClass(response.body().toString(), CreatedPixDTO.class);
 
             return new Payment(createdPix);
-        } catch (Exception e){
+        } catch (MyException e){
             throw e;
+        } catch (JsonProcessingException e){
+            throw new PaymentGatewayException("Error in map Gateway JSON response", e);
+        } catch (Exception e){
+            throw new PaymentGatewayException("Some error in request Gateway", e);
         }
-        
     }
 
     @Override
     public Payment checkPayment(Payment payment) throws Exception {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'checkPayment'");
+    }
+
+    private <T> T generatedClass(String json, Class<T> typeClass) throws JsonMappingException, JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readValue(json, typeClass);
     }
     
 }
