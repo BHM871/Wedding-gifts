@@ -1,0 +1,86 @@
+package com.example.wedding_gifts.application.payment;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
+import com.example.wedding_gifts.core.domain.model.Payment;
+import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
+import com.example.wedding_gifts.infra.jpa.JpaPaymentRepository;
+
+public class PaymentRepository implements IPaymentRepository {
+
+    @Autowired
+    private JpaPaymentRepository thisJpaRepository;
+
+    @Override
+    public Payment savePayment(Payment payment) throws Exception {
+        try {
+            return thisJpaRepository.save(payment);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public Payment createPayment(Payment payment) throws Exception {
+        try {
+            return savePayment(payment);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public Payment paid(UUID paymentId) throws Exception {
+        try {
+            Payment payment = getById(paymentId);
+
+            payment.setIsPaid(true);
+            payment.setPaid(LocalDateTime.now());
+
+            return savePayment(payment);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public void deletePayment(UUID paymentId) throws Exception {
+        try {
+            Payment payment = getById(paymentId);
+
+            thisJpaRepository.delete(payment);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public Payment getById(UUID paymentId) throws Exception {
+        return thisJpaRepository.findById(paymentId).orElseThrow(() -> new Exception());
+    }
+
+    @Override
+    public Page<Payment> getAllPayments(UUID accountId, Pageable paging) {
+        try {
+            return thisJpaRepository.findByAccountId(accountId, paging);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
+    @Override
+    public Page<Payment> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging) {
+        try {
+            return thisJpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), paidFilter.accountId(), paging);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+    
+}
