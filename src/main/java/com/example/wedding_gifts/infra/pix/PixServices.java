@@ -89,8 +89,8 @@ public class PixServices implements PaymentAdapter {
             CreatedPixDTO createdPix = generatedClass(response.body().toString(), CreatedPixDTO.class);
 
             Payment newPayment = new Payment(createdPix);
-            newPayment.setGiftId(gift.getId());
-            newPayment.setAccountId(gift.getAccount().getId());
+            newPayment.setGift(gift);
+            newPayment.setAccount(gift.getAccount());
 
             return newPayment;
         } catch (MyException e){
