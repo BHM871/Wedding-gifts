@@ -19,12 +19,12 @@ import com.example.wedding_gifts.infra.jpa.JpaAccountRespository;
 public class AccountRepository implements IAccountRepository {
 
     @Autowired
-    private JpaAccountRespository thisJpaRespository;
+    private JpaAccountRespository jpaRepository;
 
     @Override
     public Account save(Account account) throws Exception {
         try{
-            return thisJpaRespository.save(account);
+            return jpaRepository.save(account);
         } catch (Exception e) {
             throw new AccountExecutionException("Account can't be saved", e);
         }
@@ -45,12 +45,12 @@ public class AccountRepository implements IAccountRepository {
 
     @Override
     public UserDetails getByEmail(String email) throws Exception {
-        return thisJpaRespository.findByEmail(email);
+        return jpaRepository.findByEmail(email);
     }
 
     @Override
     public UUID verificForGifter(String brindAndGifter) throws Exception {
-        Account account = thisJpaRespository.findByBrideGroom(brindAndGifter)
+        Account account = jpaRepository.findByBrideGroom(brindAndGifter)
             .orElseThrow(() -> new AccountNotFoundException("Bride and groom not exists"));
         
         return account.getId();
@@ -58,7 +58,7 @@ public class AccountRepository implements IAccountRepository {
 
     @Override
     public Account getAccountById(UUID id) throws Exception {
-        return thisJpaRespository.findById(id)
+        return jpaRepository.findById(id)
             .orElseThrow(() -> new AccountNotFoundException("Account not exists"));
     }
 
@@ -83,7 +83,7 @@ public class AccountRepository implements IAccountRepository {
     public void deleteAccount(UUID id) throws Exception {
         try{
             Account account = getAccountById(id);
-            thisJpaRespository.delete(account);
+            jpaRepository.delete(account);
         } catch (AccountNotFoundException e){
             throw new AccountNotFoundException("ID shared not exists");
         } catch (Exception e){

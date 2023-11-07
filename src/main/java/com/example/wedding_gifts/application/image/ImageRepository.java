@@ -23,7 +23,7 @@ import com.example.wedding_gifts.infra.jpa.JpaImageRespository;
 public class ImageRepository implements IImageRepository {
 
     @Autowired
-    private JpaImageRespository thisJpaRespository;
+    private JpaImageRespository jpaRespository;
     @Autowired
     private GiftRepository giftRepository;
 
@@ -35,7 +35,7 @@ public class ImageRepository implements IImageRepository {
 
             newImage.setGift(gift);
 
-            return thisJpaRespository.save(newImage);
+            return jpaRespository.save(newImage);
         } catch(MyException e){
             throw e;
         } catch(Exception e){
@@ -56,7 +56,7 @@ public class ImageRepository implements IImageRepository {
                                 .compareTo(deleteImage.accountId());
             if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
-            thisJpaRespository.delete(image);
+            jpaRespository.delete(image);
         } catch(MyException e){
             throw e;
         } catch(Exception e){
@@ -71,7 +71,7 @@ public class ImageRepository implements IImageRepository {
             
             List<Image> images = getAllImagesByGift(giftId);
 
-            if(images != null && !images.isEmpty()) thisJpaRespository.deleteAll(images);
+            if(images != null && !images.isEmpty()) jpaRespository.deleteAll(images);
         } catch(MyException e){
             throw e;
         } catch(Exception e){
@@ -81,12 +81,12 @@ public class ImageRepository implements IImageRepository {
 
     @Override
     public Image getById(UUID imageId) throws Exception {
-        return thisJpaRespository.findById(imageId).orElseThrow(() -> new ImageNotFoundException("Image not exists"));
+        return jpaRespository.findById(imageId).orElseThrow(() -> new ImageNotFoundException("Image not exists"));
     }
 
     @Override
     public List<Image> getAllImagesByGift(UUID giftId) {
-        return thisJpaRespository.findAllByGift(giftId);
+        return jpaRespository.findAllByGift(giftId);
     }
     
 }

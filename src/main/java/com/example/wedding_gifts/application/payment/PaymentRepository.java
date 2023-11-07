@@ -15,12 +15,12 @@ import com.example.wedding_gifts.infra.jpa.JpaPaymentRepository;
 public class PaymentRepository implements IPaymentRepository {
 
     @Autowired
-    private JpaPaymentRepository thisJpaRepository;
+    private JpaPaymentRepository jpaRepository;
 
     @Override
     public Payment savePayment(Payment payment) throws Exception {
         try {
-            return thisJpaRepository.save(payment);
+            return jpaRepository.save(payment);
         } catch (Exception e) {
             throw e;
         }
@@ -54,7 +54,7 @@ public class PaymentRepository implements IPaymentRepository {
         try {
             Payment payment = getById(paymentId);
 
-            thisJpaRepository.delete(payment);
+            jpaRepository.delete(payment);
         } catch (Exception e) {
             throw e;
         }
@@ -62,13 +62,13 @@ public class PaymentRepository implements IPaymentRepository {
 
     @Override
     public Payment getById(UUID paymentId) throws Exception {
-        return thisJpaRepository.findById(paymentId).orElseThrow(() -> new Exception());
+        return jpaRepository.findById(paymentId).orElseThrow(() -> new Exception());
     }
 
     @Override
     public Page<Payment> getAllPayments(UUID accountId, Pageable paging) {
         try {
-            return thisJpaRepository.findByAccountId(accountId, paging);
+            return jpaRepository.findByAccountId(accountId, paging);
         } catch (Exception e) {
             throw e;
         }
@@ -77,7 +77,7 @@ public class PaymentRepository implements IPaymentRepository {
     @Override
     public Page<Payment> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging) {
         try {
-            return thisJpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), paidFilter.accountId(), paging);
+            return jpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), paidFilter.accountId(), paging);
         } catch (Exception e) {
             throw e;
         }

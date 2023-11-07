@@ -33,14 +33,14 @@ import com.example.wedding_gifts.infra.jpa.JpaGiftRepository;
 public class GiftRepository implements IGiftRepository {
 
     @Autowired
-    private JpaGiftRepository thisJpaRepository;
+    private JpaGiftRepository jpaRepository;
     @Autowired
     private IAccountRepository accountRepository;
 
     @Override
     public Gift save(Gift gift) throws Exception {
         try {
-            return thisJpaRepository.save(gift);
+            return jpaRepository.save(gift);
         } catch (Exception e){
             throw new GiftExecutionException("Gift can't be saved", e);
         }
@@ -90,7 +90,7 @@ public class GiftRepository implements IGiftRepository {
                             .compareTo(ids.accountId());
             if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
-            thisJpaRepository.delete(gift);
+            jpaRepository.delete(gift);
         } catch(MyException e){
             throw e;
         } catch (Exception e){
@@ -104,7 +104,7 @@ public class GiftRepository implements IGiftRepository {
             accountRepository.getAccountById(accountId);
             List<Gift> gifts = getAllGifts(accountId);
 
-            if(gifts != null && !gifts.isEmpty()) thisJpaRepository.deleteAll(gifts);
+            if(gifts != null && !gifts.isEmpty()) jpaRepository.deleteAll(gifts);
         } catch (MyException e){
             throw e;
         } catch (Exception e){
@@ -114,25 +114,25 @@ public class GiftRepository implements IGiftRepository {
 
     @Override
     public Gift getGiftById(UUID id) throws Exception {
-        return thisJpaRepository.findById(id).orElseThrow(() -> new GiftNotFoundException("Gift not exists"));
+        return jpaRepository.findById(id).orElseThrow(() -> new GiftNotFoundException("Gift not exists"));
     }
 
     @Override
     public List<Gift> getAllGifts(UUID accountId) {
-        return thisJpaRepository.findAllByAccount(accountId);
+        return jpaRepository.findAllByAccount(accountId);
     }
 
     @Override
     public Page<Gift> getAllGifts(UUID accountId, Pageable paging) {
-        return thisJpaRepository.findAllByAccount(accountId, paging);
+        return jpaRepository.findAllByAccount(accountId, paging);
     }
 
     @Override
     public Page<Gift> getByTitleOrBoutght(SearcherByTitleDTO searcher, UUID accountId, Pageable paging) {
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndAccount(searcher.title(), accountId, paging);
+            return jpaRepository.findByTitleAndAccount(searcher.title(), accountId, paging);
         } else {
-            return thisJpaRepository.findByTitleAndIsBoughtAndAccount(searcher.title(), searcher.isBought(), accountId, paging);
+            return jpaRepository.findByTitleAndIsBoughtAndAccount(searcher.title(), searcher.isBought(), accountId, paging);
         }
 
     }
@@ -141,9 +141,9 @@ public class GiftRepository implements IGiftRepository {
     public Page<Gift> getByCategoriesOrBought(SearcherByCategoriesDTO searcher, UUID accountId, Pageable paging) {
         
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByCategoriesAndAccount(generatedArray(searcher.categories()), accountId, paging);
+            return jpaRepository.findByCategoriesAndAccount(generatedArray(searcher.categories()), accountId, paging);
         } else {
-            return thisJpaRepository.findByCategoriesAndIsBoughtAndAccount(generatedArray(searcher.categories()), searcher.isBought(), accountId, paging);
+            return jpaRepository.findByCategoriesAndIsBoughtAndAccount(generatedArray(searcher.categories()), searcher.isBought(), accountId, paging);
         }
 
     }
@@ -152,9 +152,9 @@ public class GiftRepository implements IGiftRepository {
     public Page<Gift> getByPriceOrBought(SearcherByPriceDTO searcher, UUID accountId, Pageable paging) {
 
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByPriceBetweenAndAccount(searcher.startPrice(), searcher.endPrice(), accountId, paging);
+            return jpaRepository.findByPriceBetweenAndAccount(searcher.startPrice(), searcher.endPrice(), accountId, paging);
         } else {
-            return thisJpaRepository.findByPriceBetweenAndIsBoughtAndAccount(searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
+            return jpaRepository.findByPriceBetweenAndIsBoughtAndAccount(searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
         }
 
     }
@@ -163,9 +163,9 @@ public class GiftRepository implements IGiftRepository {
     public Page<Gift> getByCategoriesAndPriceOrBought(SearcherByCategoriesAndPriceDTO searcher, UUID accountId, Pageable paging) {
         
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByCategoriesAndPriceBetweenAndAccount(generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), accountId, paging);
+            return jpaRepository.findByCategoriesAndPriceBetweenAndAccount(generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), accountId, paging);
         } else {
-            return thisJpaRepository.findByCategoriesAndPriceBetweenAndIsBoughtAndAccount(generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
+            return jpaRepository.findByCategoriesAndPriceBetweenAndIsBoughtAndAccount(generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
         }
 
     }
@@ -174,9 +174,9 @@ public class GiftRepository implements IGiftRepository {
     public Page<Gift> getByTitleAndCategoriesOrBought(SearcherByTitleAndCategoriesDTO searcher, UUID accountId, Pageable paging) {
         
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndCategoriesAndAccount(searcher.title(), generatedArray(searcher.categories()), accountId, paging);
+            return jpaRepository.findByTitleAndCategoriesAndAccount(searcher.title(), generatedArray(searcher.categories()), accountId, paging);
         } else {
-            return thisJpaRepository.findByTitleAndCategoriesAndIsBoughtAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.isBought(), accountId, paging);
+            return jpaRepository.findByTitleAndCategoriesAndIsBoughtAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.isBought(), accountId, paging);
         }
 
     }
@@ -185,9 +185,9 @@ public class GiftRepository implements IGiftRepository {
     public Page<Gift> getByTitleAndPriceOrBought(SearcherByTitleAndPriceDTO searcher, UUID accountId, Pageable paging) {
 
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndPriceBetweenAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), accountId, paging);
+            return jpaRepository.findByTitleAndPriceBetweenAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), accountId, paging);
         } else {
-            return thisJpaRepository.findByTitleAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
+            return jpaRepository.findByTitleAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
         }
 
     }
@@ -196,9 +196,9 @@ public class GiftRepository implements IGiftRepository {
     public Page<Gift> getAllFilters(SearcherDTO searcher, UUID accountId, Pageable paging) {
         
         if(searcher.isBought() == null) {
-            return thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), accountId, paging);
+            return jpaRepository.findByTitleAndCategoriesAndPriceBetweenAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), accountId, paging);
         } else {
-            return thisJpaRepository.findByTitleAndCategoriesAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
+            return jpaRepository.findByTitleAndCategoriesAndPriceBetweenAndIsBoughtAndAccount(searcher.title(), generatedArray(searcher.categories()), searcher.startPrice(), searcher.endPrice(), searcher.isBought(), accountId, paging);
         }
 
     }    

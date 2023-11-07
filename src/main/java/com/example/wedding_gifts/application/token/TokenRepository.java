@@ -20,14 +20,14 @@ import com.example.wedding_gifts.infra.jpa.JpaTokenRepository;
 public class TokenRepository implements ITokenRepository {
 
     @Autowired
-    private JpaTokenRepository thisJpaRepository;
+    private JpaTokenRepository jpaRepository;
     @Autowired
     private IAccountRepository accountRepository;
 
     @Override
     public String saveToken(SaveTokenDTO tokenDto) throws Exception {
         try{
-            Optional<Token> oldToken = thisJpaRepository.findByAccount(tokenDto.accountId());
+            Optional<Token> oldToken = jpaRepository.findByAccount(tokenDto.accountId());
 
             if(oldToken.isPresent() && oldToken.get().getLimitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))) 
                 deleteToken(oldToken.get().getTokenValue());
@@ -39,7 +39,7 @@ public class TokenRepository implements ITokenRepository {
 
             newToken.setAccount(account);
 
-            return thisJpaRepository.save(newToken).getTokenValue();
+            return jpaRepository.save(newToken).getTokenValue();
         } catch (Exception e) {
             throw new TokenExecutionException("Token can't be saved", e);
         }
@@ -48,7 +48,7 @@ public class TokenRepository implements ITokenRepository {
     @Override
     public String getToken(String token) throws Exception {
         try{
-            Optional<Token> oldToken = thisJpaRepository.findByTokenValue(token);
+            Optional<Token> oldToken = jpaRepository.findByTokenValue(token);
 
             if(!oldToken.isPresent()) {
                 return null;
@@ -66,7 +66,7 @@ public class TokenRepository implements ITokenRepository {
     @Override
     public String getTokenByAccount(UUID accountId) throws Exception {
         try{
-            Optional<Token> token = thisJpaRepository.findByAccount(accountId);
+            Optional<Token> token = jpaRepository.findByAccount(accountId);
 
             if(!token.isPresent()) {
                 return null;
@@ -83,16 +83,16 @@ public class TokenRepository implements ITokenRepository {
 
     @Override
     public void deleteToken(String token) {
-        Optional<Token> tokenForDelete = thisJpaRepository.findByTokenValue(token);
+        Optional<Token> tokenForDelete = jpaRepository.findByTokenValue(token);
 
-        if(tokenForDelete.isPresent()) thisJpaRepository.delete(tokenForDelete.get());
+        if(tokenForDelete.isPresent()) jpaRepository.delete(tokenForDelete.get());
     }
 
     @Override
     public void deleteTokenByAccount(UUID accountId) {
-        Optional<Token> token = thisJpaRepository.findByAccount(accountId);
+        Optional<Token> token = jpaRepository.findByAccount(accountId);
 
-        if(token.isPresent()) thisJpaRepository.delete(token.get());
+        if(token.isPresent()) jpaRepository.delete(token.get());
     }
     
 }
