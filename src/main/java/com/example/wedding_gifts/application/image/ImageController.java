@@ -69,7 +69,7 @@ public class ImageController implements IImageController {
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Update image of a gift",
-        description = "Authentication is necessary. 'imagesId' and 'images' can be null, but, not at the same time. The images in 'imagesId' will be deleted and 'images' will be added."
+        description = "Authentication is necessary.  Send to image in base64 format. Limit image size is 5MB. 'imagesId' and 'images' can be null, but, not at the same time. The images in 'imagesId' will be deleted and 'images' will be added."
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),

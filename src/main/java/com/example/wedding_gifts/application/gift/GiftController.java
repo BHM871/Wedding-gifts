@@ -54,7 +54,7 @@ public class GiftController implements IGiftController {
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Create a new gift",
-        description = "Authentication is necessary."
+        description = "Authentication is necessary. Send to image in base64 format. Limit image size is 5MB"
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = GiftResponseDTO.class))),
