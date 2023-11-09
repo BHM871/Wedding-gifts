@@ -91,4 +91,18 @@ public class Payment {
         this.method = MethodOfPayment.PIX;
     }
 
+    public void update(CreatedPixDTO pix) {
+        this.transactionId = pix.txid();
+        this.payer = pix.devedor().nome();
+        this.payerCpf = pix.devedor().cpf() != null ? pix.devedor().cpf() : null;
+        this.paymentValue = new BigDecimal(pix.valor().original());
+        this.creation = pix.calendario().criacao();
+        this.expiration = LocalDateTime.of(pix.calendario().criacao().toLocalDate(), pix.calendario().criacao().toLocalTime())
+            .plusSeconds(pix.calendario().expiracao());
+        this.paid = pix.status() == PixStatus.CONCLUIDA ? LocalDateTime.now() : null;
+        this.isPaid = pix.status() == PixStatus.CONCLUIDA ? true : false;
+        this.paymentCode = pix.location();
+        this.method = MethodOfPayment.PIX;
+    }
+
 }

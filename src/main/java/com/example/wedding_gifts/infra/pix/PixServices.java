@@ -80,7 +80,6 @@ public class PixServices implements PaymentAdapter {
 
             Request request = new Request.Builder()
                 .url(BASE_PIX_URL)
-                .put(body)
                 .method(CREATE_PIX_METHOD, body)
                 .addHeader("Content-Type", PIX_CONTENT_TYPE)
                 .build();
@@ -112,8 +111,38 @@ public class PixServices implements PaymentAdapter {
 
     @Override
     public Payment checkPayment(Payment payment) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'checkPayment'");
+        try {
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build();
+
+            Request request = new Request.Builder()
+                .url(BASE_PIX_URL+"/"+payment.getTransactionId())
+                .get()
+                .addHeader("Content-Type", PIX_CONTENT_TYPE)
+                .build();
+
+            Response response = client.newCall(request).execute();
+
+            if(response.code() != 201) {
+                String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
+                ResponsePixError error = generatedClass(response.body().toString(), ResponsePixError.class);
+
+                throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
+            }
+
+            CreatedPixDTO createdPix = generatedClass(response.body().toString(), CreatedPixDTO.class);
+
+            payment.update(createdPix);
+
+            return payment;
+        } catch (MyException e){
+            throw e;
+        } catch (Exception e){
+            throw new PaymentGatewayException("Some error in request Gateway", e);
+        }
     }
 
     private <T> T generatedClass(String json, Class<T> typeClass) throws JsonMappingException, JsonProcessingException {
