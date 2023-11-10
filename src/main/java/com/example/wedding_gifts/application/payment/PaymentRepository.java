@@ -69,20 +69,12 @@ public class PaymentRepository implements IPaymentRepository {
 
     @Override
     public Page<Payment> getAllPayments(UUID accountId, Pageable paging) {
-        try {
-            return jpaRepository.findByAccountId(accountId, paging);
-        } catch (Exception e) {
-            throw e;
-        }
+        return jpaRepository.findByAccountId(accountId, paging);
     }
 
     @Override
     public Page<Payment> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging) {
-        try {
-            return jpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), paidFilter.accountId(), paging);
-        } catch (Exception e) {
-            throw e;
-        }
+        return jpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), paidFilter.accountId(), paging);
     }
     
 }

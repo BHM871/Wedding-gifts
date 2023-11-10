@@ -62,15 +62,19 @@ public class PaymentServices implements IPaymentUseCase {
 
     @Override
     public boolean isExpired(UUID paymentId) throws Exception {
-        Payment payment = repository.getById(paymentId);
-        paymentAdapter.checkPayment(payment);
+        try{
+            Payment payment = repository.getById(paymentId);
+            paymentAdapter.checkPayment(payment);
 
-        if(payment.getExpiration().isBefore(LocalDateTime.now())){
-            repository.deletePayment(paymentId);
+            if(payment.getExpiration().isBefore(LocalDateTime.now())){
+                repository.deletePayment(paymentId);
+                return true;
+            }
+
+            return false;
+        } catch (Exception e){
             return true;
         }
-
-        return false;
     }
 
     @Override
