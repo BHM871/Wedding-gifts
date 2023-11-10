@@ -20,6 +20,7 @@ import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.PaymentResponseDTO;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentController;
@@ -51,6 +52,9 @@ public class PaymentController implements IPaymentController {
             );
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responsePayment);
+        } catch (MyException e){
+            e.setPath("/payment/create");
+            throw e;
         } catch (Exception e) {
             PaymentExecutionException exception = new PaymentExecutionException("Some error", e);
             exception.setPath("/payment/create");
@@ -68,6 +72,9 @@ public class PaymentController implements IPaymentController {
             String message = service.isPaid(paymentId) ? "YES" : "NO";
 
             return ResponseEntity.ok(new MessageDTO(message));
+        } catch (MyException e){
+            e.setPath("/payment/isPaid");
+            throw e;
         } catch (Exception e) {
             PaymentExecutionException exception = new PaymentExecutionException("Some error", e);
             exception.setPath("/payment/isPaid");
@@ -82,6 +89,9 @@ public class PaymentController implements IPaymentController {
             String message = service.isExpired(paymentId) ? "YES" : "NO";
 
             return ResponseEntity.ok(new MessageDTO(message));
+        } catch (MyException e){
+            e.setPath("/payment/isExpired");
+            throw e;
         } catch (Exception e) {
             PaymentExecutionException exception = new PaymentExecutionException("Some error", e);
             exception.setPath("/payment/isExpired");
@@ -109,9 +119,12 @@ public class PaymentController implements IPaymentController {
             validData(paidFilter);
 
             return ResponseEntity.ok(service.getByIsPaid(paidFilter, paging));
+        } catch (MyException e){
+            e.setPath("/payment/paid");
+            throw e;
         } catch (Exception e) {
             PaymentExecutionException exception = new PaymentExecutionException("Some error", e);
-            exception.setPath(null);
+            exception.setPath("/payment/paid");
 
             throw exception;
         }

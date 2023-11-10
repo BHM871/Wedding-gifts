@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts.infra.jpa.JpaPaymentRepository;
@@ -70,7 +71,7 @@ public class PaymentRepository implements IPaymentRepository {
 
     @Override
     public Payment getById(UUID paymentId) throws Exception {
-        return jpaRepository.findById(paymentId).orElseThrow(() -> new Exception());
+        return jpaRepository.findById(paymentId).orElseThrow(() -> new PaymentNotFoundException(String.format("Payment with id %s not found", paymentId.toString())));
     }
 
     @Override
