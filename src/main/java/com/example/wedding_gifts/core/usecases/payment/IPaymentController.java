@@ -22,6 +22,6 @@ public interface IPaymentController {
 
     public ResponseEntity<Page<Payment>> getAll(UUID accountId, Pageable paging);
 
-    public ResponseEntity<Page<Payment>> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging);
+    public ResponseEntity<Page<Payment>> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging) throws Exception;
     
 }
