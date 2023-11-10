@@ -34,6 +34,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.POST, "/gift/create").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/gift/update").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/image/update").authenticated()
+                .requestMatchers(HttpMethod.GET, "/payment").authenticated()
+                .requestMatchers(HttpMethod.GET, "/payment/paid").authenticated()
                 .anyRequest().permitAll()
             )
             .logout(logou ->
