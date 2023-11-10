@@ -35,4 +35,9 @@ public class PaymentServiceInector implements PaymentAdapter {
         return paymentFactory(payment.getMethod()).checkPayment(payment);
     }
 
+    @Override
+    public String getPaymentCode(Payment payment) throws Exception {
+        return paymentFactory(payment.getMethod()).getPaymentCode(payment);
+    }
+
 }

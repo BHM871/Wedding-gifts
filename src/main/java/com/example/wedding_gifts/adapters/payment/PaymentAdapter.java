@@ -8,5 +8,7 @@ public interface PaymentAdapter {
     public Payment createPayment(CreatePaymentDTO payment) throws Exception;
 
     public Payment checkPayment(Payment payment) throws Exception;
+
+    public String getPaymentCode(Payment payment) throws Exception;
     
 }

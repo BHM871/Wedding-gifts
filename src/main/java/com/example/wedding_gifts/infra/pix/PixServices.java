@@ -96,6 +96,7 @@ public class PixServices implements PaymentAdapter {
             CreatedPixDTO createdPix = generatedClass(response.body().toString(), CreatedPixDTO.class);
 
             Payment newPayment = new Payment(createdPix);
+            newPayment.setPaymentCode(getPaymentCode(newPayment));
             newPayment.setGift(gift);
             newPayment.setAccount(gift.getAccount());
 
@@ -138,6 +139,38 @@ public class PixServices implements PaymentAdapter {
             payment.update(createdPix);
 
             return payment;
+        } catch (MyException e){
+            throw e;
+        } catch (Exception e){
+            throw new PaymentGatewayException("Some error in request Gateway", e);
+        }
+    }
+
+    @Override
+    public String getPaymentCode(Payment payment) throws Exception {
+        try {
+            OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build();
+
+            Request request = new Request.Builder()
+                .url("https://"+payment.getPaymentCode())
+                .get()
+                .addHeader("Content-Type", PIX_CONTENT_TYPE)
+                .build();
+
+            Response response = client.newCall(request).execute();
+
+            if(response.code() != 201) {
+                String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
+                ResponsePixError error = generatedClass(response.body().toString(), ResponsePixError.class);
+
+                throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
+            }
+
+            return response.body().toString();
         } catch (MyException e){
             throw e;
         } catch (Exception e){
