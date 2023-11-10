@@ -6,12 +6,14 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts.infra.jpa.JpaPaymentRepository;
 
+@Repository
 public class PaymentRepository implements IPaymentRepository {
 
     @Autowired

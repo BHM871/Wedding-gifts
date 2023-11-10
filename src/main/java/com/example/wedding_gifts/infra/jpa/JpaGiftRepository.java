@@ -15,56 +15,56 @@ import java.math.BigDecimal;
 
 public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
     
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE account_id = :account")
     public List<Gift> findAllByAccount(@Param("account") UUID account);
     
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE account_id = :account")
     public Page<Gift> findAllByAccount(@Param("account") UUID account, Pageable page);
     
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE is_bought = :bought " + 
                                             "AND account_id = :account")
     public Page<Gift> findByIsBoughtAndAccount(Boolean bought, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND account_id = :account")
     public Page<Gift> findByTitleAndAccount(String title, @Param("account") UUID account, Pageable page);
     
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND is_bought = :bought " + 
                                             "AND account_id = :account")
     public Page<Gift> findByTitleAndIsBoughtAndAccount(String title, Boolean bought, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE categories && ARRAY[:categories] " + 
                                             "AND account_id = :account")
     public Page<Gift> findByCategoriesAndAccount(@Param("categories") String[] categories, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE categories && ARRAY[:categories] " + 
                                             "AND is_bought = :bought " + 
                                             "AND account_id = :account")
     public Page<Gift> findByCategoriesAndIsBoughtAndAccount(@Param("categories") String[] categories, Boolean bought, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE price >= :start " +
                                             "AND price <= :end " + 
                                             "AND account_id = :account")
     public Page<Gift> findByPriceBetweenAndAccount(BigDecimal start, BigDecimal end, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE price >= :start " +
                                             "AND price <= :end " +
@@ -72,14 +72,14 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
                                             "AND account_id = :account")
     public Page<Gift> findByPriceBetweenAndIsBoughtAndAccount(BigDecimal start, BigDecimal end, Boolean bought, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND categories && ARRAY[:categories] " + 
                                             "AND account_id = :account")
     public Page<Gift> findByTitleAndCategoriesAndAccount(String title, @Param("categories")String[] categories, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND categories && ARRAY[:categories] " + 
@@ -87,7 +87,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
                                             "AND account_id = :account")
     public Page<Gift> findByTitleAndCategoriesAndIsBoughtAndAccount(String title, @Param("categories") String[] categories, Boolean bought, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND price >= :start " + 
@@ -95,7 +95,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
                                             "AND account_id = :account")
     public Page<Gift> findByTitleAndPriceBetweenAndAccount(String title, BigDecimal start, BigDecimal end, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND price >= :start " + 
@@ -104,7 +104,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
                                             "AND account_id = :account")
     public Page<Gift> findByTitleAndPriceBetweenAndIsBoughtAndAccount(String title, BigDecimal start, BigDecimal end, Boolean bought, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE categories && ARRAY[:categories] " + 
                                             "AND price >= :start " + 
@@ -112,7 +112,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
                                             "AND account_id = :account")
     public Page<Gift> findByCategoriesAndPriceBetweenAndAccount(@Param("categories") String[] categories, BigDecimal start, BigDecimal end, @Param("account") UUID account, Pageable page);
 
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE categories && ARRAY[:categories] " + 
                                             "AND price >= :start " + 
@@ -121,7 +121,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
                                             "AND account_id = :account")
     public Page<Gift> findByCategoriesAndPriceBetweenAndIsBoughtAndAccount(@Param("categories") String[] categories, BigDecimal start, BigDecimal end, Boolean bought, @Param("account") UUID account, Pageable page);
     
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND categories && ARRAY[:categories] " + 
@@ -130,7 +130,7 @@ public interface JpaGiftRepository extends JpaRepository<Gift, UUID> {
                                             "AND account_id = :account")
     public Page<Gift> findByTitleAndCategoriesAndPriceBetweenAndAccount(String title, @Param("categories") String[] categories, BigDecimal start, BigDecimal end, @Param("account") UUID account, Pageable page);
     
-    @Query(nativeQuery = true, value = "SELECT DISTINCT * " +
+    @Query(nativeQuery = true, value = "SELECT * " +
                                         "FROM tb_gift " +
                                         "WHERE UPPER(title) LIKE UPPER(:title) " + 
                                             "AND categories && ARRAY[:categories] " + 

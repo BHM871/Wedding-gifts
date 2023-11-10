@@ -10,7 +10,6 @@ import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatedPixDTO;
 import com.example.wedding_gifts.core.domain.model.util.MethodOfPayment;
 import com.example.wedding_gifts.core.domain.model.util.PixStatus;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -52,6 +51,9 @@ public class Payment {
     private BigDecimal paymentValue;
 
     @NonNull
+    private String paymentDescription;
+
+    @NonNull
     private LocalDateTime creation;
 
     @NonNull
@@ -62,7 +64,6 @@ public class Payment {
     @NonNull
     private Boolean isPaid;
 
-    @Column(unique = true)
     private String paymentCode;
 
     @NonNull

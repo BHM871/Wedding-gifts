@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
 import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
+import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Payment;
+import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentUseCase;
 
@@ -21,11 +23,20 @@ public class PaymentServices implements IPaymentUseCase {
     @Autowired
     private IPaymentRepository repository;
     @Autowired
+    private IGiftUseCase giftService;
+    @Autowired
     private PaymentAdapter paymentAdapter;
+
+    private final String DECRIPTION_PAYMENT = "Gift payment \"%s\", for bride and groom \"%s\", with value R$%d";
 
     @Override
     public Payment createPayment(CreatePaymentDTO payment) throws Exception {
-        return repository.createPayment(paymentAdapter.createPayment(payment));
+        Payment newPayment = paymentAdapter.createPayment(payment);
+
+        Gift gift = giftService.getById(payment.giftId());
+        newPayment.setPaymentDescription(String.format(DECRIPTION_PAYMENT, gift.getTitle(), gift.getAccount().getBrideGroom(), gift.getPrice().doubleValue()));
+
+        return repository.createPayment(newPayment);
     }
 
     @Override
