@@ -46,6 +46,8 @@ public class PaymentController implements IPaymentController {
             
             Payment newPayment = service.createPayment(payment);
             PaymentResponseDTO responsePayment = new PaymentResponseDTO(
+                newPayment.getId(),
+                newPayment.getTransactionId(),
                 newPayment.getPaymentDescription(), 
                 newPayment.getPaymentCode(), 
                 newPayment.getExpiration()
