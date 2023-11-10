@@ -9,6 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
+import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts.infra.jpa.JpaPaymentRepository;
@@ -24,7 +26,7 @@ public class PaymentRepository implements IPaymentRepository {
         try {
             return jpaRepository.save(payment);
         } catch (Exception e) {
-            throw e;
+            throw new PaymentExecutionException("Payment can't be saved", e);
         }
     }
 
@@ -32,7 +34,7 @@ public class PaymentRepository implements IPaymentRepository {
     public Payment createPayment(Payment payment) throws Exception {
         try {
             return savePayment(payment);
-        } catch (Exception e) {
+        } catch (MyException e) {
             throw e;
         }
     }
@@ -46,8 +48,10 @@ public class PaymentRepository implements IPaymentRepository {
             payment.setPaid(LocalDateTime.now());
 
             return savePayment(payment);
-        } catch (Exception e) {
+        } catch (MyException e){
             throw e;
+        } catch (Exception e) {
+            throw new PaymentExecutionException("Paided can't be confirmed", e);
         }
     }
 
@@ -57,8 +61,10 @@ public class PaymentRepository implements IPaymentRepository {
             Payment payment = getById(paymentId);
 
             jpaRepository.delete(payment);
-        } catch (Exception e) {
+        } catch (MyException e){
             throw e;
+        } catch (Exception e) {
+            throw new PaymentExecutionException("Payment can't be deleted", e);
         }
     }
 

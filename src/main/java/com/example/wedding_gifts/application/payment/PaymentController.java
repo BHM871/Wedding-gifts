@@ -20,6 +20,7 @@ import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.PaymentResponseDTO;
+import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentController;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentUseCase;
@@ -51,12 +52,15 @@ public class PaymentController implements IPaymentController {
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responsePayment);
         } catch (Exception e) {
-            throw e;
+            PaymentExecutionException exception = new PaymentExecutionException("Some error", e);
+            exception.setPath("/payment/create");
+            
+            throw exception;
         }
     }
 
     @Override
-    @GetMapping(value = "/is_paid{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/isPaid{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageDTO> isPaid(
         @PathVariable UUID paymentId
     ) throws Exception {
@@ -65,18 +69,24 @@ public class PaymentController implements IPaymentController {
 
             return ResponseEntity.ok(new MessageDTO(message));
         } catch (Exception e) {
-            throw e;
+            PaymentExecutionException exception = new PaymentExecutionException("Some error", e);
+            exception.setPath("/payment/isPaid");
+
+            throw exception;
         }
     }
 
     @Override
-    @GetMapping(value = "/is_expired{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/isExpired{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageDTO> isExpired(UUID paymentId) throws Exception {try {
             String message = service.isExpired(paymentId) ? "YES" : "NO";
 
             return ResponseEntity.ok(new MessageDTO(message));
         } catch (Exception e) {
-            throw e;
+            PaymentExecutionException exception = new PaymentExecutionException("Some error", e);
+            exception.setPath("/payment/isExpired");
+
+            throw exception;
         }
     }
 
@@ -86,11 +96,7 @@ public class PaymentController implements IPaymentController {
         @PathVariable UUID accountId, 
         Pageable paging
     ) {
-        try {
-            return ResponseEntity.ok(service.getAllPayments(accountId, paging));
-        } catch (Exception e) {
-            throw e;
-        }
+        return ResponseEntity.ok(service.getAllPayments(accountId, paging));
     }
 
     @Override
@@ -104,7 +110,10 @@ public class PaymentController implements IPaymentController {
 
             return ResponseEntity.ok(service.getByIsPaid(paidFilter, paging));
         } catch (Exception e) {
-            throw e;
+            PaymentExecutionException exception = new PaymentExecutionException("Some error", e);
+            exception.setPath(null);
+
+            throw exception;
         }
     }
 
