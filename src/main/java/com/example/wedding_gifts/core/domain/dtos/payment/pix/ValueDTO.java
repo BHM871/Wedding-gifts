@@ -5,7 +5,7 @@ public record ValueDTO(
 ){
 
     public String toString(){
-        String out = "\"valor\": {\"original\": %d}";
+        String out = "\"valor\": {\"original\": \"%s\"}";
         return String.format(
             out,
             this.original

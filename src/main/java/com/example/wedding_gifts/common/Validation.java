@@ -14,7 +14,7 @@ public final class Validation {
     private static String regexBrideGroom = "[a-zA-Z0-9_-]{3,25}";
     private static String regexTitle = "[\\S\\s]{5,30}";
     private static String regexDescription = "[\\S\\s]{10,300}";
-    private static String regexCpf = "\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2}";
+    private static String regexCpf = "\\d{11}";
     private static String regexCnpj = "\\d{14}";
 
     public static boolean email(String email) {

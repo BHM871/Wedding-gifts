@@ -12,7 +12,7 @@ public record CalendarDTO(
         return String.format(
             out, 
             this.expiracao, 
-            this.criacao != null ? this.criacao.toString() : ""
+            this.criacao != null ? "\""+this.criacao.toString()+"\"" : ""
         );
     }
 

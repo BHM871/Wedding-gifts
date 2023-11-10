@@ -11,8 +11,8 @@ public record PayerDTO(
         return String.format(
             out, 
             this.nome, 
-            this.cpf != null && !this.cpf.isEmpty() ? this.cpf : "", 
-            this.cnpj != null && !this.cnpj.isEmpty() ? this.cnpj : ""
+            this.cpf != null && !this.cpf.isEmpty() ? "\""+this.cpf+"\"" : "", 
+            this.cnpj != null && !this.cnpj.isEmpty() ? "\""+this.cnpj+"\"" : ""
         );
     }
 

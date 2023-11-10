@@ -1,5 +1,6 @@
 package com.example.wedding_gifts.infra.pix;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
@@ -25,6 +26,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class PixServices implements PaymentAdapter {
 
@@ -39,7 +41,7 @@ public class PixServices implements PaymentAdapter {
     private final String BASE_PIX_URL = "https://pix.example.com/api/cob";
     private final String PIX_CONTENT_TYPE = "application/json";
     private final String CREATE_PIX_METHOD = "POST";
-    private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor %d";
+    private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor .2%f";
 
     @Override
     public Payment createPayment(CreatePaymentDTO payment) throws Exception {
@@ -88,12 +90,12 @@ public class PixServices implements PaymentAdapter {
 
             if(response.code() != 201) {
                 String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
-                ResponsePixError error = generatedClass(response.body().toString(), ResponsePixError.class);
+                ResponsePixError error = generatedClass(response.body(), ResponsePixError.class);
 
                 throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
             }
 
-            CreatedPixDTO createdPix = generatedClass(response.body().toString(), CreatedPixDTO.class);
+            CreatedPixDTO createdPix = generatedClass(response.body(), CreatedPixDTO.class);
 
             Payment newPayment = new Payment(createdPix);
             newPayment.setPaymentCode(getPaymentCode(newPayment));
@@ -127,14 +129,14 @@ public class PixServices implements PaymentAdapter {
 
             Response response = client.newCall(request).execute();
 
-            if(response.code() != 201) {
+            if(response.code() != 200) {
                 String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
-                ResponsePixError error = generatedClass(response.body().toString(), ResponsePixError.class);
+                ResponsePixError error = generatedClass(response.body(), ResponsePixError.class);
 
                 throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
             }
 
-            CreatedPixDTO createdPix = generatedClass(response.body().toString(), CreatedPixDTO.class);
+            CreatedPixDTO createdPix = generatedClass(response.body(), CreatedPixDTO.class);
 
             payment.update(createdPix);
 
@@ -163,14 +165,14 @@ public class PixServices implements PaymentAdapter {
 
             Response response = client.newCall(request).execute();
 
-            if(response.code() != 201) {
+            if(response.code() != 200) {
                 String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
-                ResponsePixError error = generatedClass(response.body().toString(), ResponsePixError.class);
+                ResponsePixError error = generatedClass(response.body(), ResponsePixError.class);
 
                 throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
             }
 
-            return response.body().toString();
+            return new String(response.body().bytes());
         } catch (MyException e){
             throw e;
         } catch (Exception e){
@@ -178,9 +180,9 @@ public class PixServices implements PaymentAdapter {
         }
     }
 
-    private <T> T generatedClass(String json, Class<T> typeClass) throws JsonMappingException, JsonProcessingException {
+    private <T> T generatedClass(ResponseBody json, Class<T> typeClass) throws JsonMappingException, JsonProcessingException, IOException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(json, typeClass);
+        return mapper.readValue(new String(json.bytes()), typeClass);
     }
     
 }
