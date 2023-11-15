@@ -66,7 +66,7 @@ public class PaymentController implements IPaymentController {
     }
 
     @Override
-    @GetMapping(value = "/isPaid{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/isPaid/{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageDTO> isPaid(
         @PathVariable UUID paymentId
     ) throws Exception {
@@ -86,7 +86,7 @@ public class PaymentController implements IPaymentController {
     }
 
     @Override
-    @GetMapping(value = "/isExpired{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/isExpired/{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<MessageDTO> isExpired(UUID paymentId) throws Exception {try {
             String message = service.isExpired(paymentId) ? "YES" : "NO";
 
@@ -112,7 +112,7 @@ public class PaymentController implements IPaymentController {
     }
 
     @Override
-    @GetMapping(value = "/paid{account}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/paid/{account}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<Payment>> getByIsPaid(
         @RequestBody GetPaymentByPaidDTO paidFilter, 
         Pageable paging
