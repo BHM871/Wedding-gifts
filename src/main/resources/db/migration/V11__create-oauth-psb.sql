@@ -1,0 +1,5 @@
+CREATE TABLE tb_oauth_psb(
+    id UUID PRIMARY KEY NOT NULL UNIQUE,
+    auth_token TEXT NOT NULL UNIQUE,
+    expiration TIMESTAMP NOT NULL
+);
