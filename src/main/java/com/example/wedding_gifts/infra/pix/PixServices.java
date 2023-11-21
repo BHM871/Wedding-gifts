@@ -1,7 +1,10 @@
 package com.example.wedding_gifts.infra.pix;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.concurrent.TimeUnit;
+
+import org.springframework.beans.factory.annotation.Value;
 
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
 import com.example.wedding_gifts.common.LimitTimeForPix;
@@ -21,6 +24,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import okhttp3.ConnectionSpec;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -38,7 +42,13 @@ public class PixServices implements PaymentAdapter {
 
     private final long TIMEOUT_SECONDS = 8L;
 
-    private final String BASE_PIX_URL = "https://pix.example.com/api/cob";
+    @Value("${api.payment.pix.url}")
+    private static String BASE_PIX_URL;
+    @Value("${api.payment.pix.client-id}")
+    private static String CLIEND_ID;
+    @Value("${api.payment.pix.client-secret}")
+    private static String CLIENT_SECRET;
+
     private final String PIX_CONTENT_TYPE = "application/json";
     private final String CREATE_PIX_METHOD = "POST";
     private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor .2%f";
