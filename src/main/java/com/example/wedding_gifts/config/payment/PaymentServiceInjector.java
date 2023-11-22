@@ -8,18 +8,21 @@ import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.domain.model.util.MethodOfPayment;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
+import com.example.wedding_gifts.core.usecases.oauthpsb.IOAuthPsbUsecase;
 import com.example.wedding_gifts.infra.pix.PixServices;
 
 @Component
-public class PaymentServiceInector implements PaymentAdapter {
+public class PaymentServiceInjector implements PaymentAdapter {
 
     @Autowired
     private IGiftUseCase giftUseCase;
+    @Autowired
+    private IOAuthPsbUsecase oauthUsecase;
 
     private PaymentAdapter paymentFactory(MethodOfPayment methodOfPayment){
         switch (methodOfPayment) {
             case PIX:
-                return new PixServices(giftUseCase);
+                return new PixServices(giftUseCase, oauthUsecase);
             default:
                 return null;
         }
