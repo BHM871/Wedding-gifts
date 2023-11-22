@@ -8,7 +8,5 @@ import com.example.wedding_gifts.core.domain.model.OAuthPsb;
 
 
 public interface JpaOAuthPsbRepository extends JpaRepository<OAuthPsb, UUID>{
-
-    public OAuthPsb findByAuthToken(String authToken);
     
 }

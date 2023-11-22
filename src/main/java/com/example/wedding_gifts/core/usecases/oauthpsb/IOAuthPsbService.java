@@ -1,15 +1,16 @@
 package com.example.wedding_gifts.core.usecases.oauthpsb;
 
+import com.example.wedding_gifts.core.domain.dtos.oauthpsb.CreateOAuthPsb;
 import com.example.wedding_gifts.core.domain.model.OAuthPsb;
 
 public interface IOAuthPsbService {
     
-    public OAuthPsb createOAuth(String token) throws Exception;
+    public OAuthPsb createOAuth(CreateOAuthPsb oauth) throws Exception;
 
-    public OAuthPsb getOAuth();
+    public OAuthPsb getOAuth() throws Exception;
 
-    public OAuthPsb updateOAuth() throws Exception;
+    public OAuthPsb updateOAuth(CreateOAuthPsb oauth) throws Exception;
 
-    public void deleteOAuth();
+    public void deleteOAuth() throws Exception;
 
 }
