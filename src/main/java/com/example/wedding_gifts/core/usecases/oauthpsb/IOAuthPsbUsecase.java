@@ -3,7 +3,7 @@ package com.example.wedding_gifts.core.usecases.oauthpsb;
 import com.example.wedding_gifts.core.domain.dtos.oauthpsb.CreateOAuthPsb;
 import com.example.wedding_gifts.core.domain.model.OAuthPsb;
 
-public interface IOAuthPsbService {
+public interface IOAuthPsbUsecase {
     
     public OAuthPsb createOAuth(CreateOAuthPsb oauth) throws Exception;
 
