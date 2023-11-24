@@ -19,6 +19,7 @@ import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentGatewayEx
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
+import com.example.wedding_gifts.core.usecases.oauthpsb.IOAuthPsbUsecase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,9 +34,11 @@ import okhttp3.ResponseBody;
 public class PixServices implements PaymentAdapter {
 
     private IGiftUseCase giftService;
+    private IOAuthPsbUsecase oauthService;
 
-    public PixServices(IGiftUseCase giftService){
+    public PixServices(IGiftUseCase giftService, IOAuthPsbUsecase oauthService){
         this.giftService = giftService;
+        this.oauthService = oauthService;
     }
 
     private final long TIMEOUT_SECONDS = 8L;
