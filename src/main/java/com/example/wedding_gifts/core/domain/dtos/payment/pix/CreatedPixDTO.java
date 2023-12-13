@@ -9,5 +9,9 @@ public record CreatedPixDTO(
     PixStatus status,
     PayerDTO devedor,
     ValueDTO valor,
-    String chave
+    String chave,
+    int revisao,
+    String pixCopiaECola,
+    String solicitacaoPagador,
+    AdicionalInformationDTO[] infoAdicionais
 ){}

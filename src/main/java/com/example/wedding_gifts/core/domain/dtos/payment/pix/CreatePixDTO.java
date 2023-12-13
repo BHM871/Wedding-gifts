@@ -9,13 +9,13 @@ public record CreatePixDTO(
 ){
 
     public String toString(){
-        String out = "{%s, %s, %s, \"chave\": %s, \"solicitacaoPagador\": %s}";
+        String out = "{%s, %s, %s, \"chave\": \"%s\", \"solicitacaoPagador\": \"%s\"}";
         return String.format(
             out, 
             this.calendario.toString(),
             this.devedor.toString(),
             this.valor.toString(),
-            this.chave,
+            "07131121231",
             this.solicitacaoPagador
         );
     }

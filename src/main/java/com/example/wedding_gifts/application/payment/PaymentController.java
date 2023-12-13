@@ -136,20 +136,21 @@ public class PaymentController implements IPaymentController {
         String invalid = "%s is invalid";
         String isNull = "%s is null";
         
-        if((data.cpf() == null || data.cpf().isEmpty()) && (data.cnpj() == null || data.cnpj().isEmpty())) throw new Exception(isNull);
-        if(data.name() == null || data.name().isEmpty()) throw new Exception(isNull);
+        if((data.cpf() == null || data.cpf().isEmpty()) && (data.cnpj() == null || data.cnpj().isEmpty())) throw new Exception(String.format(isNull, "cpf and cnpj"));
+        if(data.name() == null || data.name().isEmpty()) throw new Exception(String.format(isNull, "name"));
 
-        if(data.cpf() != null && !Validation.cpf(data.cpf()))  throw new Exception(invalid);
-        if(data.cnpj() != null && !Validation.cnpj(data.cnpj()))  throw new Exception(invalid);
-        if(!Validation.name(data.name()))  throw new Exception(invalid);
+        if(data.cpf() != null && data.cnpj() != null) throw new Exception("cpf and cnpj can't be not null at same time");
+        if(data.cpf() != null && !Validation.cpf(data.cpf()))  throw new Exception(String.format(invalid, "cpf"));
+        if(data.cnpj() != null && !Validation.cnpj(data.cnpj()))  throw new Exception(String.format(invalid, "cnpj"));
+        if(!Validation.name(data.name()))  throw new Exception(String.format(invalid, "name"));
 
     }
 
     private void validData(GetPaymentByPaidDTO data) throws Exception {
         String isNull = "%s is null";
         
-        if(data.accountId() == null) throw new Exception(isNull);
-        if(data.isPaid() == null || data.isPaid()) throw new Exception(isNull);
+        if(data.accountId() == null) throw new Exception(String.format(isNull, "accountId"));
+        if(data.isPaid() == null || data.isPaid()) throw new Exception(String.format(isNull, "isPaid"));
 
     }
 

@@ -8,7 +8,7 @@ public final class Validation {
 
     private static String regexEmail = "([a-z0-9._]{3,64})(\\@)(gmail|hotmail|outlook)(\\.com)";
     private static String regexPassword = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$%^&-])(?=\\S+$).{8,80}$";
-    private static String regexPixKey = "(([a-z0-9._]{3,64})(\\@)(gmail|hotmail|outlook)(\\.com))|(\\d{3}\\.\\d{3}\\.\\d{3}\\-\\d{2})|(\\+\\d{1,3}\\d{2,3}\\d{8,9})|(\\d{14})|(([a-z0-9]){8}\\-([a-z0-9]){4}\\-([a-z0-9]){4}\\-([a-z0-9]){4}\\-\\d{12})";
+    private static String regexPixKey = "(\\+\\d{1,3}\\d{2,3}\\d{8,9})|(([a-z0-9]){8}\\-([a-z0-9]){4}\\-([a-z0-9]){4}\\-([a-z0-9]){4}\\-\\d{12})";
     private static String regexDate = "([a-zA-Z]{3})\\ (((Jan|Mar|May|Jul|Aug|Oct|Dec)\\ (0[1-9]|1[0-9]|2[0-9]|3[0-1]))|((Apr|Jun|Sep|Nov)\\ (0[1-9]|1[0-9]|2[0-9]|3[0]))|((Feb)\\ (0[1-9]|1[0-9]|2[0-9])))\\ ([0-9]{2}\\:[0-9]{2}\\:[0-9]{2})\\ ([a-zA-Z0-9]{3})?\\ ?([0-9]{4})";
     private static String regexName = "[A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð][a-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšž,.'-]{2,13}(\\ [A-ZÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð][a-zàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšž,.'-]{2,13})?";
     private static String regexBrideGroom = "[a-zA-Z0-9_-]{3,25}";
@@ -29,7 +29,7 @@ public final class Validation {
 
     public static boolean pixKey(String pixKey) {
         Pattern pattern = Pattern.compile(regexPixKey);
-        return pattern.matcher(pixKey).find();
+        return email(pixKey) || cpf(pixKey) || cnpj(pixKey) || pattern.matcher(pixKey).find();
     }
 
     public static boolean date(Date date) {
@@ -42,9 +42,9 @@ public final class Validation {
         return pattern.matcher(firstName + " " + lastName).find();
     }
 
-    public static boolean name(String firstName) {
-        Pattern pattern = Pattern.compile(regexName);
-        return pattern.matcher(firstName).find();
+    public static boolean name(String name) {
+        Pattern pattern = Pattern.compile(name);
+        return pattern.matcher(name).find();
     }
 
     public static boolean brideGroom(String brideGroom) {

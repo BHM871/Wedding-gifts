@@ -1,5 +1,6 @@
 package com.example.wedding_gifts.application.oauthpsb;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class OAuthPsbRepository implements IOAuthPsbRepository {
 
             if(oldOauth != null) deleteOAuth();
             
-            oldOauth = new OAuthPsb(oauth.token(), oauth.expiration());
+            oldOauth = new OAuthPsb(oauth.access_token(), oauth.expires_in(), oauth.scope());
 
             return saveOAuth(oldOauth);
         } catch (Exception e) {
@@ -46,6 +47,8 @@ public class OAuthPsbRepository implements IOAuthPsbRepository {
         try {
             List<OAuthPsb> allOauths = jpaRepository.findAll();
 
+            if(allOauths == null || allOauths.size() == 0) return null;
+
             OAuthPsb out = allOauths.get(0);
             if(allOauths.size() > 1) {
                 for(OAuthPsb oauth : allOauths){
@@ -53,6 +56,11 @@ public class OAuthPsbRepository implements IOAuthPsbRepository {
                         ? oauth 
                         : out;
                 }
+            }
+
+            if(out.getExpiration().isBefore(LocalDateTime.now())) {
+                deleteOAuth();
+                return null;
             }
 
             return out;

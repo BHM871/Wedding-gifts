@@ -1,58 +1,65 @@
 package com.example.wedding_gifts.infra.pix;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+import com.adobe.internal.xmp.impl.Base64;
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
 import com.example.wedding_gifts.common.LimitTimeForPix;
+import com.example.wedding_gifts.core.domain.dtos.oauthpsb.CreateOAuthPsb;
 import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.CalendarDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatePixDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatedPixDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.PayerDTO;
+import com.example.wedding_gifts.core.domain.dtos.payment.pix.ResponseBBOauthError;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.ResponsePixError;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.ValueDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentGatewayException;
 import com.example.wedding_gifts.core.domain.model.Gift;
+import com.example.wedding_gifts.core.domain.model.OAuthPsb;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.oauthpsb.IOAuthPsbUsecase;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-
+@Component
 public class PixServices implements PaymentAdapter {
 
+    @Autowired
     private IGiftUseCase giftService;
+    @Autowired
     private IOAuthPsbUsecase oauthService;
-
-    public PixServices(IGiftUseCase giftService, IOAuthPsbUsecase oauthService){
-        this.giftService = giftService;
-        this.oauthService = oauthService;
-    }
-
-    private final long TIMEOUT_SECONDS = 8L;
+    @Autowired
+    private PixHttpConfig httpConfig;
 
     @Value("${api.payment.pix.url}")
-    private static String BASE_PIX_URL;
-    @Value("${api.payment.pix.client-id}")
-    private static String CLIEND_ID;
-    @Value("${api.payment.pix.client-secret}")
-    private static String CLIENT_SECRET;
+    private String basePixUrl;
 
-    private final String PIX_CONTENT_TYPE = "application/json";
-    private final String CREATE_PIX_METHOD = "POST";
-    private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor .2%f";
+    @Value("${api.payment.oauth.url}") 
+    private String oauthTokenUrl;
+
+    @Value("${api.payment.pix.client-id}")
+    private String clientId;
+
+    @Value("${api.payment.pix.client-secret}")
+    private String clientSecret;
+
+    @Value("${api.payment.pix.scope}")
+    private String scope;
+
+    private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor %.2f";
+
+    private final String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
 
     @Override
     public Payment createPayment(CreatePaymentDTO payment) throws Exception {
@@ -70,7 +77,9 @@ public class PixServices implements PaymentAdapter {
                     payment.cnpj() != null ? payment.cnpj() : null
                 ), 
                 new ValueDTO(
-                    gift.getPrice().toString()  
+                    gift.getPrice().toString(),
+                    gift.getPrice(),
+                    0
                 ),
                 gift.getAccount().getPixKey(), 
                 String.format(
@@ -82,31 +91,20 @@ public class PixServices implements PaymentAdapter {
                 )
             );
 
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .build();
+            String token = getOauthToken();
 
-            MediaType mediaType = MediaType.parse(PIX_CONTENT_TYPE);
-            RequestBody body = RequestBody.create(createPix.toString(), mediaType);
+            HttpClient client = httpConfig.getClientWithCert();
 
-            Request request = new Request.Builder()
-                .url(BASE_PIX_URL)
-                .method(CREATE_PIX_METHOD, body)
-                .addHeader("Content-Type", PIX_CONTENT_TYPE)
-                .build();
+            HttpRequest request = httpConfig.getRequest(token, basePixUrl+"/cob", "POST", createPix.toString());
 
-            Response response = client.newCall(request).execute();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if(response.code() != 201) {
-                String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
-                ResponsePixError error = generatedClass(response.body(), ResponsePixError.class);
-
-                throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
+            if(response.statusCode() != 201) {
+                throw new PaymentGatewayException(response.body());
             }
 
-            CreatedPixDTO createdPix = generatedClass(response.body(), CreatedPixDTO.class);
+            String body = response.body().replaceFirst("(\\-|\\+)\\d{2}\\:\\d{2}", "");
+            CreatedPixDTO createdPix = generatedClass(body, CreatedPixDTO.class);
 
             Payment newPayment = new Payment(createdPix);
             newPayment.setPaymentCode(getPaymentCode(newPayment));
@@ -126,22 +124,16 @@ public class PixServices implements PaymentAdapter {
     @Override
     public Payment checkPayment(Payment payment) throws Exception {
         try {
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .build();
 
-            Request request = new Request.Builder()
-                .url(BASE_PIX_URL+"/"+payment.getTransactionId())
-                .get()
-                .addHeader("Content-Type", PIX_CONTENT_TYPE)
-                .build();
+            String token = getOauthToken();
 
-            Response response = client.newCall(request).execute();
+            HttpClient client = httpConfig.getClientWithCert();
 
-            if(response.code() != 200) {
-                String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
+            HttpRequest request = httpConfig.getRequest(token, basePixUrl+"/"+payment.getTransactionId(), "GET", "");
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if(response.statusCode() != 200) {
                 ResponsePixError error = generatedClass(response.body(), ResponsePixError.class);
 
                 throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
@@ -162,28 +154,21 @@ public class PixServices implements PaymentAdapter {
     @Override
     public String getPaymentCode(Payment payment) throws Exception {
         try {
-            OkHttpClient client = new OkHttpClient().newBuilder()
-                .connectTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .writeTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .readTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                .build();
+            String token = getOauthToken();
 
-            Request request = new Request.Builder()
-                .url("https://"+payment.getPaymentCode())
-                .get()
-                .addHeader("Content-Type", PIX_CONTENT_TYPE)
-                .build();
+            HttpClient client = httpConfig.getClientWithCert();
 
-            Response response = client.newCall(request).execute();
+            HttpRequest request = httpConfig.getRequest(token, "https://"+payment.getPaymentCode(), "GET", "");
 
-            if(response.code() != 200) {
-                String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if(response.statusCode() != 200) {
                 ResponsePixError error = generatedClass(response.body(), ResponsePixError.class);
 
                 throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
             }
 
-            return new String(response.body().bytes());
+            return response.body();
         } catch (MyException e){
             throw e;
         } catch (Exception e){
@@ -191,9 +176,44 @@ public class PixServices implements PaymentAdapter {
         }
     }
 
-    private <T> T generatedClass(ResponseBody json, Class<T> typeClass) throws JsonMappingException, JsonProcessingException, IOException {
+    private String getOauthToken() throws Exception {
+
+        OAuthPsb oauth = oauthService.getOAuth();
+
+        if(oauth != null) return oauth.getAuthToken();
+
+        try {
+
+            HttpClient client = httpConfig.getClient();
+
+            String body = "grant_type=client_credentials&scope="+scope;
+
+            HttpRequest request = httpConfig.getRequestForOauth(Base64.encode(clientId+":"+clientSecret), oauthTokenUrl, body);
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if(response.statusCode() != 200) {
+                String messageError = "\n\t\"error\": %s,\n\t\"error_description\": %s\n";
+                ResponseBBOauthError error = generatedClass(response.body(), ResponseBBOauthError.class);
+
+                throw new PaymentGatewayException(String.format(messageError, error.error(), error.error_description()));
+            }
+
+            CreateOAuthPsb oauthPsb = generatedClass(response.body(), CreateOAuthPsb.class);
+            oauthService.createOAuth(oauthPsb);
+
+            return oauthPsb.access_token();
+        } catch (MyException e){
+            throw e;
+        } catch (Exception e) {
+            throw new PaymentGatewayException("Some error in request Gateway", e);
+        }
+    }
+
+    private <T> T generatedClass(String json, Class<T> typeClass) throws JsonMappingException, JsonProcessingException, IOException {
         ObjectMapper mapper = new ObjectMapper();
-        return mapper.readValue(new String(json.bytes()), typeClass);
+        mapper.registerModule(new JavaTimeModule());
+        return mapper.readValue(json.getBytes(), typeClass);
     }
     
 }

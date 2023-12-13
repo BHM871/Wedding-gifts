@@ -102,7 +102,7 @@ public class AuthenticationController implements IAuthenticationController {
             e.setPath("/auth/register");
             throw e;
         } catch (Exception e){
-            AccountExecutionException exception = new AccountExecutionException("Some error");
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
             exception.setPath("/auth/register");
             throw exception;
         }
@@ -136,14 +136,14 @@ public class AuthenticationController implements IAuthenticationController {
             e.setPath("/auth/login");
             throw e;
         } catch (Exception e){
-            AccountExecutionException exception = new AccountExecutionException("Some error");
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
             exception.setPath("/auth/login");
             throw exception;
         }
     }
 
     @Override
-    @PatchMapping(value = "/logout/{token}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping(value = "/logout/{token}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "To do logout")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
@@ -162,7 +162,7 @@ public class AuthenticationController implements IAuthenticationController {
             e.setPath("/auth/logout");
             throw e;
         } catch (Exception e){
-            AccountExecutionException exception = new AccountExecutionException("Some error");
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
             exception.setPath("/auth/logout");
             throw exception;
         }

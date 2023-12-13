@@ -27,29 +27,36 @@ public class OAuthPsb {
 
     private LocalDateTime expiration;
 
+    private String scope;
+
     public OAuthPsb(
         String id,
         String token,
-        Long expiration
+        Long expiration,
+        String scope
     ) {
         this.id = generateId();
         this.authToken = token;
         this.expiration = LocalDateTime.now().plusSeconds(expiration);
+        this.scope = scope;
     }
 
     public OAuthPsb(
-        String token,
-        Long expiration
+        String token, 
+        Long expiration, 
+        String scope
     ) {
         this.id = generateId();
         this.authToken = token;
         this.expiration = LocalDateTime.now().plusSeconds(expiration);
+        this.scope = scope;
     }
 
     public OAuthPsb() {
         this.id = generateId();
         this.authToken = null;
         LocalDateTime.now();
+        this.scope = "";
     }
 
     private UUID generateId(){
