@@ -1,6 +1,6 @@
 spring:
     datasource:
-        url: jdbc:postgresql://localhost:5432/wedding-gifts
+        url: jdbc:postgresql://localhost:5432/wedding_gifts
         username: postgres
         password: password
     
@@ -28,10 +28,10 @@ api:
 
     payment:
         oauth:
-            url: ${OATUH_URL:https://oauth.hm.bb.com.br/oauth/token}
+            url: ${OATUH_URL:https://oauth.bb.com.br/oauth/token}
 
         pix:
-            url: ${BB_PIX_URL:https://api.hm.bb.com.br/pix/v2}
+            url: ${BB_PIX_URL:https://api-pix.hm.bb.com.br/pix/v2}
             developer-key: ${BB_DEVELOPER_KEY:93d733261d022cd3d4082365eade35ca}
             client-id: ${BB_CLIENT_ID:eyJpZCI6IjhiNGU5OGZlLWYzODItNDJlYy05ZjM5LWU3ZWIzNzVmMzUxOSIsImNvZGlnb1B1YmxpY2Fkb3IiOjAsImNvZGlnb1NvZnR3YXJlIjo3ODk3NSwic2VxdWVuY2lhbEluc3RhbGFjYW8iOjF9}
             client-secret: ${BB_CLIENT_SECRET:eyJpZCI6IjM4MDk5IiwiY29kaWdvUHVibGljYWRvciI6MCwiY29kaWdvU29mdHdhcmUiOjc4OTc1LCJzZXF1ZW5jaWFsSW5zdGFsYWNhbyI6MSwic2VxdWVuY2lhbENyZWRlbmNpYWwiOjEsImFtYmllbnRlIjoiaG9tb2xvZ2FjYW8iLCJpYXQiOjE2OTk4MjQ0MzYwMTN9}
@@ -43,8 +43,8 @@ server:
         alias: wedding-key
 
         enabled: true
-        key-store-type: PKCS12
-        key-store: src/main/resources/keystores/wedding-keystore.p12
+        key-store-type: JKS
+        key-store: src/main/resources/keystores/wedding-keystore
         key-store-password: wedding-pass
         
         protocol: TLS

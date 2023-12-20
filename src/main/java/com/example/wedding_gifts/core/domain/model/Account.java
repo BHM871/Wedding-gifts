@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,7 +15,6 @@ import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,34 +33,22 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Account implements UserDetails {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NonNull
-    @Column(unique = true)
     private String brideGroom;
 
-    @NonNull
     private Date weddingDate;
 
-    @NonNull
     private String firstName;
 
-    @NonNull
     private String lastName;
 
-    @NonNull
-    @Column(unique = true)
     private String email;
 
-    @NonNull
     private String password;
 
-    @NonNull
-    @Column(unique = true)
     private String pixKey;
 
     public Account(CreateAccountDTO account){

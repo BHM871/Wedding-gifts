@@ -8,13 +8,19 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.time.Duration;
 
 import javax.net.ssl.SSLContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
+import com.example.wedding_gifts.core.domain.model.OAuthPsb;
 
 @Component
 public class PixHttpConfig {
+
+    @Autowired
+    private PixSslConfig sslConfig;
 
     @Value("${api.payment.pix.developer-key}")
     private String developerKey;
@@ -28,30 +34,20 @@ public class PixHttpConfig {
             return HttpClient.newBuilder()
                 .connectTimeout(DURATION)
                 .sslContext(SSLContext.getDefault())
+                //.sslContext(sslConfig.createSslContext())
                 .build();    
         } catch (Exception e) {
             throw new PaymentExecutionException(" SSL protocol not alowed, error in generate java.net.http.HttpClient", e);
         }
     }
 
-    public HttpClient getClientWithCert() throws Exception {
-        try {
-            return HttpClient.newBuilder()
-                .connectTimeout(DURATION)
-                .sslContext(SSLContext.getDefault())
-                .build();    
-        } catch (Exception e) {
-            throw new PaymentExecutionException(" SSL protocol not alowed, error in generate java.net.http.HttpClient", e);
-        }
-    }
-
-    public HttpRequest getRequest(String token, String url, String method, String body) throws Exception {
+    public HttpRequest getRequest(OAuthPsb token, String url, String method, String body) throws Exception {
         try{
             return HttpRequest.newBuilder()
                 .uri(new URI(url+developerKeyParam+developerKey))
                 .method(method, BodyPublishers.ofString(body))
                 .header("Content-Type", "application/json")
-                .header("Authorization", "Bearer "+token)
+                .header("Authorization", token.getTokenType()+" "+token.getAuthToken())
                 .build();
         } catch (URISyntaxException e) {
             throw new PaymentExecutionException("HTTP URL is invalid", e);

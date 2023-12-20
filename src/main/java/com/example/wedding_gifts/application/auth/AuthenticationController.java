@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,6 +26,7 @@ import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationR
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
@@ -135,6 +137,10 @@ public class AuthenticationController implements IAuthenticationController {
         } catch (MyException e){
             e.setPath("/auth/login");
             throw e;
+        } catch (InternalAuthenticationServiceException e){
+            MyException exception = new AccountForbiddenException("Not authenticate", e);
+            exception.setPath("/auth/login");
+            throw exception;
         } catch (Exception e){
             AccountExecutionException exception = new AccountExecutionException("Some error", e);
             exception.setPath("/auth/login");

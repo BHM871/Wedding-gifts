@@ -5,8 +5,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.lang.NonNull;
-
 import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
 import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
@@ -35,13 +33,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Gift implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NonNull
     private String title;
 
     private String giftDescription;
@@ -49,7 +44,6 @@ public class Gift implements Serializable {
     @Enumerated(EnumType.STRING)
     private List<CategoriesEnum> categories;
 
-    @NonNull
     private BigDecimal price;
 
     private Boolean isBought;

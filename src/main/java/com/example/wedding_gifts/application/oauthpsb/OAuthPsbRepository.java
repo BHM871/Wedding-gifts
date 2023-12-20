@@ -34,7 +34,7 @@ public class OAuthPsbRepository implements IOAuthPsbRepository {
 
             if(oldOauth != null) deleteOAuth();
             
-            oldOauth = new OAuthPsb(oauth.access_token(), oauth.expires_in(), oauth.scope());
+            oldOauth = new OAuthPsb(oauth);
 
             return saveOAuth(oldOauth);
         } catch (Exception e) {

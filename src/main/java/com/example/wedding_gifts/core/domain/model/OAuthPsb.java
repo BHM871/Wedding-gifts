@@ -3,6 +3,8 @@ package com.example.wedding_gifts.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.example.wedding_gifts.core.domain.dtos.oauthpsb.CreateOAuthPsb;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,12 +24,14 @@ public class OAuthPsb {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
     
-    @Column(unique = true)
+    @Column(length = -1, unique = true)
     private String authToken;
 
     private LocalDateTime expiration;
 
     private String scope;
+
+    private String tokenType;
 
     public OAuthPsb(
         String id,
@@ -41,15 +45,13 @@ public class OAuthPsb {
         this.scope = scope;
     }
 
-    public OAuthPsb(
-        String token, 
-        Long expiration, 
-        String scope
-    ) {
-        this.id = generateId();
-        this.authToken = token;
-        this.expiration = LocalDateTime.now().plusSeconds(expiration);
-        this.scope = scope;
+    public OAuthPsb(CreateOAuthPsb oauth) {
+
+        authToken = oauth.access_token();
+        expiration = LocalDateTime.now().plusSeconds(oauth.expires_in());
+        scope = oauth.scope();
+        tokenType = oauth.token_type();
+
     }
 
     public OAuthPsb() {

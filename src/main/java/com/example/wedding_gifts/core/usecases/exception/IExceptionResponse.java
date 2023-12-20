@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.ExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.common.ForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.common.InvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotFoundException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotNullableException;
@@ -21,6 +22,6 @@ public interface IExceptionResponse {
     
     public ResponseEntity<ExceptionResponseDTO> notYour(NotYourException exception);
 
-    public ResponseEntity<ExceptionResponseDTO> forbidden(Exception exception);
+    public ResponseEntity<ExceptionResponseDTO> forbidden(ForbiddenException exception);
 
 }

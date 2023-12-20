@@ -11,13 +11,13 @@ import java.security.cert.CertificateFactory;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentGatewayException;
 
 @Component
@@ -49,7 +49,7 @@ public class PixSslConfig {
     @Value("${api.ssl.cert-api-pix}")
     private String certApiPixPath;
 
-    public SSLSocketFactory createSslSocketFactory() throws Exception {
+    public SSLContext createSslContext() throws Exception {
         InputStream keyStoreIs = null;
         InputStream trustStoreIs = null;
         KeyStore keyStore;
@@ -76,7 +76,8 @@ public class PixSslConfig {
             SSLContext sslContext = SSLContext.getInstance(sslProtocol);
             sslContext.init(keyManagers, trustManagers, null);
 
-            return sslContext.getSocketFactory();
+            return sslContext;
+
         } catch (FileNotFoundException e){
             throw new PaymentGatewayException(e.getMessage(), e);
         }catch (Exception e) {
@@ -98,6 +99,8 @@ public class PixSslConfig {
             tmf.init(store);
 
             return tmf.getTrustManagers()[0];
+        }  catch (MyException e){
+            throw e;
         } catch (FileNotFoundException e){
             throw new PaymentGatewayException(e.getMessage(), e);
         } catch (Exception e) {

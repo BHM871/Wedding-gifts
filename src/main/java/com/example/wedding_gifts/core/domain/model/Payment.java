@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.lang.NonNull;
-
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatedPixDTO;
 import com.example.wedding_gifts.core.domain.model.util.MethodOfPayment;
 import com.example.wedding_gifts.core.domain.model.util.PixStatus;
@@ -32,43 +30,35 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Payment {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NonNull
     private String transactionId;
 
-    @NonNull
     private String payer;
 
-    @NonNull
     private String payerCpf;
 
-    @NonNull
     private BigDecimal paymentValue;
 
-    @NonNull
     private String paymentDescription;
 
-    @NonNull
     private LocalDateTime creation;
 
-    @NonNull
     private LocalDateTime expiration;
 
     private LocalDateTime paid;
 
-    @NonNull
     private Boolean isPaid;
 
     private String paymentCode;
 
-    @NonNull
     @Enumerated(EnumType.STRING)
     private MethodOfPayment method;
+
+    @Enumerated(EnumType.STRING)
+    private PixStatus paymentStatus;
 
     @ManyToOne()
     @JoinColumn(name = "gift_id")
@@ -88,11 +78,12 @@ public class Payment {
             .plusSeconds(pix.calendario().expiracao());
         this.paid = pix.status() == PixStatus.CONCLUIDA ? LocalDateTime.now() : null;
         this.isPaid = pix.status() == PixStatus.CONCLUIDA ? true : false;
-        this.paymentCode = pix.location();
+        this.paymentCode = pix.pixCopiaECola();
         this.method = MethodOfPayment.PIX;
+        this.paymentStatus = pix.status();
     }
 
-    public void update(CreatedPixDTO pix) {
+    public Payment update(CreatedPixDTO pix) {
         this.transactionId = pix.txid();
         this.payer = pix.devedor().nome();
         this.payerCpf = pix.devedor().cpf() != null ? pix.devedor().cpf() : null;
@@ -102,8 +93,11 @@ public class Payment {
             .plusSeconds(pix.calendario().expiracao());
         this.paid = pix.status() == PixStatus.CONCLUIDA ? LocalDateTime.now() : null;
         this.isPaid = pix.status() == PixStatus.CONCLUIDA ? true : false;
-        this.paymentCode = pix.location();
+        this.paymentCode = pix.pixCopiaECola();
         this.method = MethodOfPayment.PIX;
+        this.paymentStatus = pix.status();
+
+        return this;
     }
 
 }

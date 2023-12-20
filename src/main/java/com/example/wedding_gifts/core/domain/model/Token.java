@@ -3,8 +3,6 @@ package com.example.wedding_gifts.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.springframework.lang.NonNull;
-
 import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 
@@ -27,19 +25,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Token {
 
-    private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @NonNull
     private String tokenValue;
 
-    @NonNull
     private LocalDateTime limitHour;
 
-    @NonNull
     @OneToOne
     private Account account;
     

@@ -17,8 +17,6 @@ import com.example.wedding_gifts.core.domain.dtos.payment.pix.CalendarDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatePixDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatedPixDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.PayerDTO;
-import com.example.wedding_gifts.core.domain.dtos.payment.pix.ResponseBBOauthError;
-import com.example.wedding_gifts.core.domain.dtos.payment.pix.ResponsePixError;
 import com.example.wedding_gifts.core.domain.dtos.payment.pix.ValueDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentGatewayException;
@@ -59,8 +57,6 @@ public class PixServices implements PaymentAdapter {
 
     private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor %.2f";
 
-    private final String MESSAGE_ERROR = "\n\t\"code\": %d,\n\t\"title\": %s,\n\t\"detail\": %s";
-
     @Override
     public Payment createPayment(CreatePaymentDTO payment) throws Exception {
         try{
@@ -91,15 +87,15 @@ public class PixServices implements PaymentAdapter {
                 )
             );
 
-            String token = getOauthToken();
+            OAuthPsb token = getOauthToken();
 
-            HttpClient client = httpConfig.getClientWithCert();
+            HttpClient client = httpConfig.getClient();
 
             HttpRequest request = httpConfig.getRequest(token, basePixUrl+"/cob", "POST", createPix.toString());
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if(response.statusCode() != 201) {
+            if(response.statusCode() != 200 && response.statusCode() != 201) {
                 throw new PaymentGatewayException(response.body());
             }
 
@@ -107,7 +103,7 @@ public class PixServices implements PaymentAdapter {
             CreatedPixDTO createdPix = generatedClass(body, CreatedPixDTO.class);
 
             Payment newPayment = new Payment(createdPix);
-            newPayment.setPaymentCode(getPaymentCode(newPayment));
+            newPayment.setPaymentCode(createdPix.pixCopiaECola());
             newPayment.setGift(gift);
             newPayment.setAccount(gift.getAccount());
 
@@ -125,25 +121,21 @@ public class PixServices implements PaymentAdapter {
     public Payment checkPayment(Payment payment) throws Exception {
         try {
 
-            String token = getOauthToken();
+            OAuthPsb token = getOauthToken();
 
-            HttpClient client = httpConfig.getClientWithCert();
+            HttpClient client = httpConfig.getClient();
 
             HttpRequest request = httpConfig.getRequest(token, basePixUrl+"/"+payment.getTransactionId(), "GET", "");
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if(response.statusCode() != 200) {
-                ResponsePixError error = generatedClass(response.body(), ResponsePixError.class);
-
-                throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
+            if(response.statusCode() != 200 && response.statusCode() != 201) {
+                throw new PaymentGatewayException(response.body());
             }
 
             CreatedPixDTO createdPix = generatedClass(response.body(), CreatedPixDTO.class);
 
-            payment.update(createdPix);
-
-            return payment;
+            return payment.update(createdPix);
         } catch (MyException e){
             throw e;
         } catch (Exception e){
@@ -154,18 +146,16 @@ public class PixServices implements PaymentAdapter {
     @Override
     public String getPaymentCode(Payment payment) throws Exception {
         try {
-            String token = getOauthToken();
+            OAuthPsb token = getOauthToken();
 
-            HttpClient client = httpConfig.getClientWithCert();
+            HttpClient client = httpConfig.getClient();
 
             HttpRequest request = httpConfig.getRequest(token, "https://"+payment.getPaymentCode(), "GET", "");
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if(response.statusCode() != 200) {
-                ResponsePixError error = generatedClass(response.body(), ResponsePixError.class);
-
-                throw new PaymentGatewayException(String.format(MESSAGE_ERROR, error.status(), error.title(), error.detail()));
+            if(response.statusCode() != 200 && response.statusCode() != 201) {
+                throw new PaymentGatewayException(response.body());
             }
 
             return response.body();
@@ -176,11 +166,11 @@ public class PixServices implements PaymentAdapter {
         }
     }
 
-    private String getOauthToken() throws Exception {
+    private OAuthPsb getOauthToken() throws Exception {
 
         OAuthPsb oauth = oauthService.getOAuth();
 
-        if(oauth != null) return oauth.getAuthToken();
+        if(oauth != null) return oauth;
 
         try {
 
@@ -192,17 +182,13 @@ public class PixServices implements PaymentAdapter {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            if(response.statusCode() != 200) {
-                String messageError = "\n\t\"error\": %s,\n\t\"error_description\": %s\n";
-                ResponseBBOauthError error = generatedClass(response.body(), ResponseBBOauthError.class);
-
-                throw new PaymentGatewayException(String.format(messageError, error.error(), error.error_description()));
+            if(response.statusCode() != 200 && response.statusCode() != 201) {
+                throw new PaymentGatewayException(response.body());
             }
 
             CreateOAuthPsb oauthPsb = generatedClass(response.body(), CreateOAuthPsb.class);
-            oauthService.createOAuth(oauthPsb);
 
-            return oauthPsb.access_token();
+            return oauthService.createOAuth(oauthPsb);
         } catch (MyException e){
             throw e;
         } catch (Exception e) {
