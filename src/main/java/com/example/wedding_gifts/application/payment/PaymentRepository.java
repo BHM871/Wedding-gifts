@@ -1,6 +1,7 @@
 package com.example.wedding_gifts.application.payment;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +65,15 @@ public class PaymentRepository implements IPaymentRepository {
             jpaRepository.delete(payment);
         } catch (MyException e){
             throw e;
+        } catch (Exception e) {
+            throw new PaymentExecutionException("Payment can't be deleted", e);
+        }
+    }
+
+    @Override
+    public void deleteAll(List<Payment> payments) throws Exception {
+        try {
+            jpaRepository.deleteAll(payments);
         } catch (Exception e) {
             throw new PaymentExecutionException("Payment can't be deleted", e);
         }

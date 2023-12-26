@@ -1,14 +1,18 @@
 package com.example.wedding_gifts.application.payment;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
+import com.example.wedding_gifts.common.MyZone;
 import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
@@ -69,7 +73,6 @@ public class PaymentServices implements IPaymentUseCase {
             paymentAdapter.checkPayment(payment);
 
             if(payment.getExpiration().isBefore(LocalDateTime.now())){
-                repository.deletePayment(paymentId);
                 return true;
             }
 
@@ -83,12 +86,38 @@ public class PaymentServices implements IPaymentUseCase {
 
     @Override
     public Page<Payment> getAllPayments(UUID accountI, Pageable paging) {
-        return repository.getAllPayments(accountI, paging);
+        Page<Payment> payments = repository.getAllPayments(accountI, paging);
+        List<Payment> paymentsList = payments.getContent();
+
+        List<Payment> paymentsForDelete = new ArrayList<>();
+        for(Payment p : paymentsList){
+            if(p.getExpiration().plusMonths(3).isBefore(LocalDateTime.now(MyZone.zoneId()))){
+                paymentsForDelete.add(p);
+            }
+        }
+        for(Payment p : paymentsForDelete){
+            paymentsList.remove(p);
+        }
+
+        return new PageImpl<Payment>(paymentsList, paging, payments.getTotalElements());
     }
 
     @Override
     public Page<Payment> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging) {
-        return repository.getByIsPaid(paidFilter, paging);
+        Page<Payment> payments = repository.getByIsPaid(paidFilter, paging);
+        List<Payment> paymentsList = payments.getContent();
+
+        List<Payment> paymentsForDelete = new ArrayList<>();
+        for(Payment p : paymentsList){
+            if(p.getExpiration().plusMonths(3).isBefore(LocalDateTime.now(MyZone.zoneId()))){
+                paymentsForDelete.add(p);
+            }
+        }
+        for(Payment p : paymentsForDelete){
+            paymentsList.remove(p);
+        }
+
+        return new PageImpl<Payment>(paymentsList, paging, payments.getTotalElements());
     }
     
 }

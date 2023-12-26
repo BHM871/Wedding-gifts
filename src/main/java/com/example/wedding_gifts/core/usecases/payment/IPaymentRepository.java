@@ -1,5 +1,6 @@
 package com.example.wedding_gifts.core.usecases.payment;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -17,6 +18,8 @@ public interface IPaymentRepository {
     public Payment paid(UUID paymentId) throws Exception;
 
     public void deletePayment(UUID paymentId) throws Exception;
+
+    public void deleteAll(List<Payment> payments) throws Exception;
 
     public Payment getById(UUID paymentId) throws Exception;
 
