@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.core.domain.dtos.payment.PaymentResponseDTO;
@@ -26,6 +27,11 @@ import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentController;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
@@ -38,6 +44,13 @@ public class PaymentController implements IPaymentController {
 
     @Override
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Generate a Payment")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = PaymentResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Gift ID sent not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "502", description = "Some error in processable request in a gateway", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+    })
     public ResponseEntity<PaymentResponseDTO> createPayment(
         @RequestBody CreatePaymentDTO payment
     ) throws Exception {
@@ -67,6 +80,13 @@ public class PaymentController implements IPaymentController {
 
     @Override
     @GetMapping(value = "/isPaid/{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Verific if a payment is paid")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Payment ID sent not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "502", description = "Some error in processable request in a gateway", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+    })
     public ResponseEntity<MessageDTO> isPaid(
         @PathVariable UUID paymentId
     ) throws Exception {
@@ -87,6 +107,13 @@ public class PaymentController implements IPaymentController {
 
     @Override
     @GetMapping(value = "/isExpired/{payment}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Verific if a payment is expired")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Payment ID sent not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "502", description = "Some error in processable request in a gateway", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+    })
     public ResponseEntity<MessageDTO> isExpired(UUID paymentId) throws Exception {try {
             String message = service.isExpired(paymentId) ? "YES" : "NO";
 
@@ -104,6 +131,10 @@ public class PaymentController implements IPaymentController {
 
     @Override
     @GetMapping(value = "/{account}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get all Payment's")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = PaymentResponseDTO.class))),
+    })
     public ResponseEntity<Page<Payment>> getAll(
         @PathVariable UUID accountId, 
         Pageable paging
@@ -113,6 +144,10 @@ public class PaymentController implements IPaymentController {
 
     @Override
     @GetMapping(value = "/paid/{account}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Get Payment's by 'isPaid' attribute")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = PaymentResponseDTO.class))),
+    })
     public ResponseEntity<Page<Payment>> getByIsPaid(
         @RequestBody GetPaymentByPaidDTO paidFilter, 
         Pageable paging
