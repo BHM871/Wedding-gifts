@@ -1,19 +1,16 @@
 package com.example.wedding_gifts.application.image;
 
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.application.gift.GiftRepository;
-import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
-import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotYourException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
-import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotYourException;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
@@ -44,19 +41,13 @@ public class ImageRepository implements IImageRepository {
     }
 
     @Override
-    public void deleteImage(DeleteImageDTO deleteImage) throws Exception {
+    public void deleteImages(Set<Image> images) throws Exception {
         try{
-            Image image = getById(deleteImage.imageId());
-            
-            int compared = image.getGift().getId()
-                                .compareTo(deleteImage.giftId());
-            if(compared != 0) throw new ImageNotYourException("This image is not this gift");
-            
-            compared = image.getGift().getAccount().getId()
-                                .compareTo(deleteImage.accountId());
-            if(compared != 0) throw new GiftNotYourException("This gift is not your");
+            if(images == null || images.isEmpty()){
+                throw new ImageNotFoundException("Some image was not found");
+            }
 
-            jpaRespository.delete(image);
+            jpaRespository.deleteAll(images);
         } catch(MyException e){
             throw e;
         } catch(Exception e){
@@ -67,13 +58,7 @@ public class ImageRepository implements IImageRepository {
     @Override
     public void deleteAllByGift(UUID giftId) throws Exception {
         try{
-            giftRepository.getGiftById(giftId);
-            
-            List<Image> images = getAllImagesByGift(giftId);
-
-            if(images != null && !images.isEmpty()) jpaRespository.deleteAll(images);
-        } catch(MyException e){
-            throw e;
+            jpaRespository.deleteAllByGift(giftId);
         } catch(Exception e){
             throw new ImageExecutionException("Image can't be deleted", e);
         }
@@ -85,8 +70,8 @@ public class ImageRepository implements IImageRepository {
     }
 
     @Override
-    public List<Image> getAllImagesByGift(UUID giftId) {
-        return jpaRespository.findAllByGift(giftId);
+    public Set<Image> getAllImagesByGift(UUID giftId) {
+        return Set.copyOf(jpaRespository.findAllByGift(giftId));
     }
     
 }

@@ -11,7 +11,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.imageio.ImageIO;
@@ -24,14 +25,16 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.example.wedding_gifts.common.MyZone;
-import com.example.wedding_gifts.core.domain.dtos.image.DeleteImageDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.DeleteImagesDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
 import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.InsertImagesDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
+import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotYourException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
+import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotYourException;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
@@ -65,6 +68,8 @@ public class ImageServices implements IImageUseCase {
             cropImageAndSave(toBytes(image.image()), extention, path);
 
             return repository.saveImage(new SaveImageDTO(path.toString().replace('\\', '/'), image.giftId()));
+        } catch(MyException e){
+            throw e;        
         } catch(Exception e){
             imageBase64 = toBase64(image.image());
             imageData = imageBase64.split(";")[0];
@@ -113,54 +118,60 @@ public class ImageServices implements IImageUseCase {
         }
         
         ImageIO.write(buffer, extention, path.toFile());
-
     }
 
     @Override
-    public void updateImages(UpdateImageDTO update) throws Exception {
-        if(update.imagesId() != null) {
-            for(UUID imageId : update.imagesId()) {
-                deleteImage(
-                    new DeleteImageDTO(imageId, update.giftId(), update.accountId())
-                );
-            }
-        }
-
-        if(update.images() != null) {
-            for(String image : update.images()) {
-                createImage(
-                    new ImageDTO(toImage(image), update.giftId(), update.accountId())
-                );
-            }
+    public void insertImages(InsertImagesDTO insert) throws Exception {
+        for(String image : insert.images()) {
+            createImage(
+                new ImageDTO(toImage(image), insert.giftId(), insert.accountId())
+            );
         }
     }
 
     @Override
-    public void deleteImage(DeleteImageDTO deleteImage) throws Exception {
-        Image image = getById(deleteImage.imageId());
-        
-        repository.deleteImage(deleteImage);
-        
-        boolean isDeleted = Files.deleteIfExists(Paths.get(image.getPathImage()));
+    public void deleteImage(DeleteImagesDTO deleteImages) throws Exception {
+        try{
+            Set<Image> images = Collections.emptySet();
+            for(UUID imgId : deleteImages.images()){
+                Image image = getById(imgId);
 
-        if(!isDeleted) {
-            throw new ImageNotFoundException(image.getPathImage().replace(
-                                                "src/main/resources/db/images/"+deleteImage.accountId()+"/"+deleteImage.giftId()+"/", 
-                                    " ") 
-                                + "not exists");       
+                
+                if(!Files.exists(Path.of(image.getPathImage()))){
+                    repository.deleteImages(Collections.singleton(image));
+
+                    throw new ImageNotFoundException(String.format("This %s image ID not exists", image.getId())); 
+                }
+
+                int compared = image.getGift().getId().compareTo(deleteImages.giftId());
+                if(compared != 0) throw new ImageNotYourException(String.format("This %s is not this gift", image.getId()));
+                
+                compared = image.getGift().getAccount().getId().compareTo(deleteImages.accountId());
+                if(compared != 0) throw new GiftNotYourException("Image of a gift that is not your");
+
+                images.add(image);
+            }
+
+            repository.deleteImages(images);
+        }catch(Exception e){
+            throw new ImageExecutionException("Some error in delete images");
         }
     }
 
     @Override
     public void deleteAllByGift(UUID giftId) throws Exception {
         try{
-            List<Image> images = getAllByGift(giftId);
+            Set<Image> images = getAllByGift(giftId);
+
+            for(Image image : images){
+                if(!Files.exists(Path.of(image.getPathImage()))){
+                    repository.deleteImages(Collections.singleton(image));
+
+                    throw new ImageNotFoundException(String.format("This %s image ID not exists", image.getId())); 
+                }
+            }
         
             repository.deleteAllByGift(giftId);
-        
-            for(Image image : images) {
-                Files.deleteIfExists(Paths.get(image.getPathImage()));
-            }
         } catch (Exception e) {
             throw new ImageNotFoundException("Some image not exists", e);
         }
@@ -172,7 +183,7 @@ public class ImageServices implements IImageUseCase {
     }
 
     @Override
-    public List<Image> getAllByGift(UUID giftId) {
+    public Set<Image> getAllByGift(UUID giftId) {
         return repository.getAllImagesByGift(giftId);
     }
 

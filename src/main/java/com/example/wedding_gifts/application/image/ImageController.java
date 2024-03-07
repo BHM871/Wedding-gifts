@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.wedding_gifts.core.domain.dtos.commun.Base64ResponseDTO;
 import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.UpdateImageDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.InsertImagesDTO;
+import com.example.wedding_gifts.core.domain.dtos.image.DeleteImagesDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
@@ -66,10 +68,10 @@ public class ImageController implements IImageController {
     }
 
     @Override
-    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/insert", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
-        summary = "Update image of a gift",
-        description = "Authentication is necessary.  Send to image in base64 format. Limit image size is 5MB. 'imagesId' and 'images' can be null, but, not at the same time. The images in 'imagesId' will be deleted and 'images' will be added."
+        summary = "Insert images on a gift",
+        description = "Authentication is necessary. Send to image in base64 format. Limit image size is 5MB."
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
@@ -79,13 +81,44 @@ public class ImageController implements IImageController {
         @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
-    public ResponseEntity<MessageDTO> updateImages(
-        @RequestBody UpdateImageDTO update
+    public ResponseEntity<MessageDTO> insert(
+        @RequestBody InsertImagesDTO insert
     ) throws Exception {
         try{
-            validData(update);
+            validData(insert);
 
-            services.updateImages(update);
+            services.insertImages(insert);
+            return ResponseEntity.ok(new MessageDTO("successfully"));
+        } catch (MyException e){
+            e.setPath("/image/insert");
+            throw e;
+        } catch (Exception e){
+            ImageExecutionException exception = new ImageExecutionException("Some error");
+            exception.setPath("/image/insert");
+            throw exception;
+        }
+    }
+
+    @Override
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Delete images of a gift",
+        description = "Authentication is necessary. Send to image UUID for delete"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processable request", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Unauthorizated", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Gift or Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
+    public ResponseEntity<MessageDTO> delete(
+        @RequestBody DeleteImagesDTO images
+    ) throws Exception {
+        try{
+            validData(images);
+            services.deleteImage(images);
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){
             e.setPath("/image/update");
@@ -97,13 +130,21 @@ public class ImageController implements IImageController {
         }
     }
 
-    private void validData(UpdateImageDTO data) throws Exception {
+    private void validData(InsertImagesDTO data) throws Exception {
         String isNull = "%s is null";
 
         if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
         if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
-        if(data.imagesId() == null && data.images() == null) throw new ImageNotNullableException(String.format(isNull, "images").replace("is", "are"));
+        if(data.images() == null || data.images().isEmpty()) throw new ImageNotNullableException(String.format(isNull, "images").replace("is", "are"));
 
     }
     
+    private void validData(DeleteImagesDTO data) throws Exception {
+        String isNull = "%s is null";
+
+        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
+        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
+        if(data.images() == null || data.images().isEmpty()) throw new ImageNotNullableException(String.format(isNull, "images").replace("is", "are"));
+
+    }
 }

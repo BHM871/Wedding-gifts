@@ -216,7 +216,7 @@ public class GiftServices implements IGiftUseCase {
         
         List<GiftResponseDTO> giftResponseList = new ArrayList<GiftResponseDTO>();
         for(GiftDTO gift : giftsDto) {
-            List<Image> images = imageService.getAllByGift(gift.id());
+            List<Image> images = List.copyOf(imageService.getAllByGift(gift.id()));
             List<ImageResponseDTO> imageResponse = images.stream().map(image -> new ImageResponseDTO(image.getId(), image.getPathImage())).toList(); 
             
             giftResponseList.add(new GiftResponseDTO(gift, imageResponse));
