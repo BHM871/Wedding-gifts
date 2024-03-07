@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.infra.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.infra.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.infra.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
@@ -16,9 +15,9 @@ public interface IGiftUseCase {
 
     public GiftResponseDTO createGift(CreateGiftDTO gift) throws Exception;
 
-    public void updateGift(UpdateGiftDTO gift) throws Exception;
+    public void updateGift(UUID accountId, UUID giftId, UpdateGiftDTO gift) throws Exception;
 
-    public void deleteGift(DeleteGiftDTO ids) throws Exception;
+    public void deleteGift(UUID accountId, UUID giftId) throws Exception;
 
     public void deleteAllByAccount(UUID accountId) throws Exception;
 

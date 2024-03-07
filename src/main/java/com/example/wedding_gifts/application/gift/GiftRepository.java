@@ -18,7 +18,6 @@ import com.example.wedding_gifts.core.domain.model.util.CategoriesEnum;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
 import com.example.wedding_gifts.infra.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.infra.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByCategoriesAndPriceDTO;
 import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByCategoriesDTO;
@@ -64,12 +63,12 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public void updateGift(UpdateGiftDTO upGift) throws Exception {
+    public void updateGift(UUID accountId, UUID giftId, UpdateGiftDTO upGift) throws Exception {
         try{
-            Gift updateGift = getGiftById(upGift.giftId());
+            Gift updateGift = getGiftById(giftId);
 
             int compared = updateGift.getAccount().getId()
-                                .compareTo(upGift.accountId());
+                                .compareTo(accountId);
             if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
             updateGift.update(upGift);
@@ -83,12 +82,12 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public void deleteGift(DeleteGiftDTO ids) throws Exception {
+    public void deleteGift(UUID accountId, UUID giftId) throws Exception {
         try{
-            Gift gift = getGiftById(ids.giftId());
+            Gift gift = getGiftById(giftId);
             
             int compared = gift.getAccount().getId()
-                            .compareTo(ids.accountId());
+                            .compareTo(accountId);
             if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
             jpaRepository.delete(gift);

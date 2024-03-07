@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 
 import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.infra.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.infra.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.infra.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
@@ -17,9 +16,9 @@ public interface IGiftController {
     
     public ResponseEntity<GiftResponseDTO> createGift(CreateGiftDTO gift) throws Exception;
 
-    public ResponseEntity<MessageDTO> updateGift(UpdateGiftDTO gift) throws Exception;
+    public ResponseEntity<MessageDTO> updateGift(UUID accountId, UUID giftId, UpdateGiftDTO gift) throws Exception;
 
-    public ResponseEntity<MessageDTO> deleteGift(DeleteGiftDTO ids) throws Exception;
+    public ResponseEntity<MessageDTO> deleteGift(UUID accountId, UUID giftId) throws Exception;
 
     public ResponseEntity<MessageDTO> deleteAllByAccount(UUID accountId) throws Exception;
 

@@ -1,11 +1,15 @@
 package com.example.wedding_gifts.application.image;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,7 +72,7 @@ public class ImageController implements IImageController {
     }
 
     @Override
-    @PutMapping(value = "/insert", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/insert/{account}/{gift}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Insert images on a gift",
         description = "Authentication is necessary. Send to image in base64 format. Limit image size is 5MB."
@@ -82,9 +86,12 @@ public class ImageController implements IImageController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> insert(
-        @RequestBody InsertImagesDTO insert
+        @PathVariable UUID accountId,
+        @PathVariable UUID giftId,
+        @RequestBody List<String> images
     ) throws Exception {
         try{
+            var insert = new InsertImagesDTO(giftId, accountId, images);
             validData(insert);
 
             services.insertImages(insert);
@@ -100,7 +107,7 @@ public class ImageController implements IImageController {
     }
 
     @Override
-    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete/{account}/{gift}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Delete images of a gift",
         description = "Authentication is necessary. Send to image UUID for delete"
@@ -114,10 +121,15 @@ public class ImageController implements IImageController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> delete(
-        @RequestBody DeleteImagesDTO images
+        @PathVariable UUID accountId,
+        @PathVariable UUID giftId,
+        @RequestBody List<UUID> imgs
     ) throws Exception {
         try{
+            var images = new DeleteImagesDTO(accountId, giftId, imgs);
+
             validData(images);
+            
             services.deleteImage(images);
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){

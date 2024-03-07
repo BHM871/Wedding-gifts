@@ -30,7 +30,6 @@ import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
 import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.infra.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.infra.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.infra.dtos.gift.UpdateGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
@@ -81,7 +80,7 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update/{account}/{gift}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Update a gift",
         description = "Authentication is necessary, values can be null."
@@ -95,12 +94,13 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> updateGift(
+        @PathVariable UUID accountId,
+        @PathVariable UUID giftId,
         @RequestBody UpdateGiftDTO gift
     ) throws Exception {
         try{
-            validData(gift);
+            services.updateGift(accountId, giftId, gift);
 
-            services.updateGift(gift);
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){
             e.setPath("/gift/update");
@@ -113,7 +113,7 @@ public class GiftController implements IGiftController {
     }
 
     @Override
-    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete/{account}/{gift}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Delete a gift by ID",
         description = "Authentication is necessary."
@@ -127,12 +127,12 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> deleteGift(
-        @RequestBody DeleteGiftDTO ids
+        @PathVariable UUID acountID,
+        @PathVariable UUID giftId
     ) throws Exception {
         try{
-            validData(ids);
-
-            services.deleteGift(ids);
+            services.deleteGift(acountID, giftId);
+            
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){
             e.setPath("/gift/delete");
@@ -238,21 +238,4 @@ public class GiftController implements IGiftController {
         if(!Validation.price(data.price())) throw new GiftInvalidValueException(String.format(invalid, "'price'"));
 
     }
-
-    private void validData(UpdateGiftDTO data) throws Exception {
-        String isNull = "%s is null";
-
-        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "'giftId'"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "'account'"));
-
-    }
-
-    private void validData(DeleteGiftDTO data) throws Exception {
-        String isNull = "%s is null";
-
-        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "'giftId'"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "'account'"));
-
-    }
-
 }

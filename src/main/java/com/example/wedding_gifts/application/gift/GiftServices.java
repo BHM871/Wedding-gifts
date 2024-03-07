@@ -18,7 +18,6 @@ import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
 import com.example.wedding_gifts.infra.dtos.account.AccountResponseIdDTO;
 import com.example.wedding_gifts.infra.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.infra.dtos.gift.DeleteGiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.GiftDTO;
 import com.example.wedding_gifts.infra.dtos.gift.GiftResponseDTO;
 import com.example.wedding_gifts.infra.dtos.gift.UpdateGiftDTO;
@@ -72,16 +71,16 @@ public class GiftServices implements IGiftUseCase {
     }
 
     @Override
-    public void updateGift(UpdateGiftDTO gift) throws Exception {
-        repository.updateGift(gift);        
+    public void updateGift(UUID accountId, UUID giftId, UpdateGiftDTO gift) throws Exception {
+        repository.updateGift(accountId, giftId, gift);        
     }
 
     @Override
-    public void deleteGift(DeleteGiftDTO deleteGift) throws Exception {
+    public void deleteGift(UUID accountId, UUID giftId) throws Exception {
 
-        imageService.deleteAllByGift(deleteGift.giftId());
+        imageService.deleteAllByGift(giftId);
 
-        repository.deleteGift(deleteGift);
+        repository.deleteGift(accountId, giftId);
     }
 
     @Override
