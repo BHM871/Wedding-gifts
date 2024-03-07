@@ -237,7 +237,7 @@ public class GiftController implements IGiftController {
             throw exception;
         }
     }
-    
+
     private void validData(CreateGiftDTO data) throws Exception {
         String invalid = "%s is invalid";
         String isNull = "%s is null";
