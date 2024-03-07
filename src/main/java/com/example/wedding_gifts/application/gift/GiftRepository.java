@@ -47,10 +47,10 @@ public class GiftRepository implements IGiftRepository {
     }
 
     @Override
-    public Gift createGift(CreateGiftDTO gift) throws Exception {
+    public Gift createGift(UUID accountId, CreateGiftDTO gift) throws Exception {
         try{
             Gift newGift = new Gift(gift);
-            Account account = accountRepository.getAccountById(gift.accountId());
+            Account account = accountRepository.getAccountById(accountId);
 
             newGift.setAccount(account);
 

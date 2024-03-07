@@ -14,7 +14,7 @@ import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
 
 public interface IGiftController {
     
-    public ResponseEntity<GiftResponseDTO> createGift(CreateGiftDTO gift) throws Exception;
+    public ResponseEntity<GiftResponseDTO> createGift(UUID accountId, CreateGiftDTO gift) throws Exception;
 
     public ResponseEntity<MessageDTO> updateGift(UUID accountId, UUID giftId, UpdateGiftDTO gift) throws Exception;
 

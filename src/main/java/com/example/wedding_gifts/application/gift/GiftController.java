@@ -50,7 +50,7 @@ public class GiftController implements IGiftController {
     private IGiftUseCase services;
 
     @Override
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create/{account}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Create a new gift",
         description = "Authentication is necessary. Send to image in base64 format. Limit image size is 5MB"
@@ -63,12 +63,13 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<GiftResponseDTO> createGift(
+        @PathVariable UUID accountId,
         @RequestBody CreateGiftDTO gift
     ) throws Exception {
         try{
             validData(gift);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(gift));
+            return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(accountId, gift));
         } catch (MyException e){
             e.setPath("/gift/create");
             throw e;
@@ -231,7 +232,6 @@ public class GiftController implements IGiftController {
         if(data.title() == null || data.title().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "'title'"));
         if(data.price() == null) throw new GiftNotNullableException(String.format(isNull, "price"));
         if(data.categories() == null || data.categories().isEmpty()) throw new GiftNotNullableException(String.format(isNull, "'categories'"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "'accountId'"));
 
         if(!Validation.title(data.title())) throw new GiftInvalidValueException(String.format(invalid, "'title'"));
         if(data.giftDescription() != null && !Validation.description(data.giftDescription())) throw new GiftInvalidValueException(String.format(invalid, "'description'"));

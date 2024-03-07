@@ -21,7 +21,7 @@ public interface IGiftRepository {
     
     public Gift save(Gift gift) throws Exception;
 
-    public Gift createGift(CreateGiftDTO gift) throws Exception;
+    public Gift createGift(UUID accountId, CreateGiftDTO gift) throws Exception;
 
     public void updateGift(UUID accountId, UUID giftId, UpdateGiftDTO gift) throws Exception;
 

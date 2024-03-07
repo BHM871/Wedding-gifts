@@ -13,7 +13,7 @@ import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
 
 public interface IGiftUseCase {
 
-    public GiftResponseDTO createGift(CreateGiftDTO gift) throws Exception;
+    public GiftResponseDTO createGift(UUID accountId, CreateGiftDTO gift) throws Exception;
 
     public void updateGift(UUID accountId, UUID giftId, UpdateGiftDTO gift) throws Exception;
 

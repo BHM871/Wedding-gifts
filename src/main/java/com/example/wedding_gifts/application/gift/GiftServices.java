@@ -41,8 +41,8 @@ public class GiftServices implements IGiftUseCase {
     private IImageUseCase imageService;
     
     @Override
-    public GiftResponseDTO createGift(CreateGiftDTO gift) throws Exception {
-        Gift newGift = repository.createGift(gift);
+    public GiftResponseDTO createGift(UUID accountId, CreateGiftDTO gift) throws Exception {
+        Gift newGift = repository.createGift(accountId, gift);
 
         GiftDTO newGiftDto = new GiftDTO(
             newGift.getId(), 
