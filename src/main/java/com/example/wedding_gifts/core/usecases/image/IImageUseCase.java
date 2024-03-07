@@ -7,10 +7,10 @@ import java.util.UUID;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.wedding_gifts.core.domain.dtos.image.DeleteImagesDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.InsertImagesDTO;
 import com.example.wedding_gifts.core.domain.model.Image;
+import com.example.wedding_gifts.infra.dtos.image.DeleteImagesDTO;
+import com.example.wedding_gifts.infra.dtos.image.ImageDTO;
+import com.example.wedding_gifts.infra.dtos.image.InsertImagesDTO;
 
 public interface IImageUseCase {
     

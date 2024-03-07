@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.common.MyZone;
-import com.example.wedding_gifts.core.domain.dtos.oauthpsb.CreateOAuthPsb;
 import com.example.wedding_gifts.core.domain.model.OAuthPsb;
 import com.example.wedding_gifts.core.usecases.oauthpsb.IOAuthPsbRepository;
+import com.example.wedding_gifts.infra.dtos.oauthpsb.CreateOAuthPsb;
 import com.example.wedding_gifts.infra.jpa.JpaOAuthPsbRepository;
 
 @Repository

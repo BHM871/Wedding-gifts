@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
@@ -17,6 +16,7 @@ import com.example.wedding_gifts.core.domain.exceptions.common.NotFoundException
 import com.example.wedding_gifts.core.domain.exceptions.common.NotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotYourException;
 import com.example.wedding_gifts.core.usecases.exception.IExceptionResponse;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
 
 @RestControllerAdvice
 public class AccountExceptionHandler implements IExceptionResponse {

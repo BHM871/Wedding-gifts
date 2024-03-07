@@ -4,10 +4,10 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 
-import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.infra.dtos.account.AccountResponseAccountDTO;
+import com.example.wedding_gifts.infra.dtos.account.AccountResponseIdDTO;
+import com.example.wedding_gifts.infra.dtos.account.UpdateAccountDTO;
+import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
 
 public interface IAccountController {
 

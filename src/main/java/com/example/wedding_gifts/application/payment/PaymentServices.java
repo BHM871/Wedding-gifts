@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
 import com.example.wedding_gifts.common.MyZone;
-import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
-import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Gift;
@@ -22,6 +20,8 @@ import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentUseCase;
+import com.example.wedding_gifts.infra.dtos.payment.CreatePaymentDTO;
+import com.example.wedding_gifts.infra.dtos.payment.GetPaymentByPaidDTO;
 
 @Service
 @SuppressWarnings("null")

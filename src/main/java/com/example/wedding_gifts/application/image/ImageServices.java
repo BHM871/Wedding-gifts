@@ -25,10 +25,6 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifIFD0Directory;
 import com.example.wedding_gifts.common.MyZone;
-import com.example.wedding_gifts.core.domain.dtos.image.DeleteImagesDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.InsertImagesDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotYourException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
@@ -38,6 +34,10 @@ import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotYourExcept
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
+import com.example.wedding_gifts.infra.dtos.image.DeleteImagesDTO;
+import com.example.wedding_gifts.infra.dtos.image.ImageDTO;
+import com.example.wedding_gifts.infra.dtos.image.InsertImagesDTO;
+import com.example.wedding_gifts.infra.dtos.image.SaveImageDTO;
 
 @Service
 @SuppressWarnings("null")

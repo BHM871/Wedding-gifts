@@ -2,9 +2,9 @@ package com.example.wedding_gifts.core.usecases.account;
 
 import java.util.UUID;
 
-import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
+import com.example.wedding_gifts.infra.dtos.account.CreateAccountDTO;
+import com.example.wedding_gifts.infra.dtos.account.UpdateAccountDTO;
 
 public interface IAccountUseCase {
 

@@ -2,7 +2,7 @@ package com.example.wedding_gifts.core.domain.model;
 
 import java.util.UUID;
 
-import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
+import com.example.wedding_gifts.infra.dtos.image.SaveImageDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

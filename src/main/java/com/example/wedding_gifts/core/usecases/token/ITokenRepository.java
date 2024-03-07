@@ -2,7 +2,7 @@ package com.example.wedding_gifts.core.usecases.token;
 
 import java.util.UUID;
 
-import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
+import com.example.wedding_gifts.infra.dtos.token.SaveTokenDTO;
 
 public interface ITokenRepository {
 

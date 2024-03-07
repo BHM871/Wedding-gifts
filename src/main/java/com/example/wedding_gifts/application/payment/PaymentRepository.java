@@ -9,12 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
+import com.example.wedding_gifts.infra.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts.infra.jpa.JpaPaymentRepository;
 
 @Repository

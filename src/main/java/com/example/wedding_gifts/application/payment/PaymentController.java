@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.common.Validation;
-import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
-import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
-import com.example.wedding_gifts.core.domain.dtos.payment.PaymentResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentController;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentUseCase;
+import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
+import com.example.wedding_gifts.infra.dtos.payment.CreatePaymentDTO;
+import com.example.wedding_gifts.infra.dtos.payment.GetPaymentByPaidDTO;
+import com.example.wedding_gifts.infra.dtos.payment.PaymentResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

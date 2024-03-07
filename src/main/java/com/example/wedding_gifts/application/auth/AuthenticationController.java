@@ -19,12 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts.common.Validation;
-import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.LoginDTO;
-import com.example.wedding_gifts.core.domain.dtos.authentication.AuthenticationResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
@@ -35,6 +29,12 @@ import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.auth.IAuthenticationController;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
+import com.example.wedding_gifts.infra.dtos.account.AccountResponseAccountDTO;
+import com.example.wedding_gifts.infra.dtos.account.CreateAccountDTO;
+import com.example.wedding_gifts.infra.dtos.account.LoginDTO;
+import com.example.wedding_gifts.infra.dtos.authentication.AuthenticationResponseDTO;
+import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

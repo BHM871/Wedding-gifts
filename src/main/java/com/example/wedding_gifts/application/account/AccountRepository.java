@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
 
-import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotFoundException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
+import com.example.wedding_gifts.infra.dtos.account.CreateAccountDTO;
+import com.example.wedding_gifts.infra.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.infra.jpa.JpaAccountRespository;
 
 @Repository

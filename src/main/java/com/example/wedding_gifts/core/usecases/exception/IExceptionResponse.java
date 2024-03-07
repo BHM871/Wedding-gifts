@@ -2,13 +2,13 @@ package com.example.wedding_gifts.core.usecases.exception;
 
 import org.springframework.http.ResponseEntity;
 
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.ExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.common.ForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.common.InvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotFoundException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.NotYourException;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
 
 public interface IExceptionResponse {
     

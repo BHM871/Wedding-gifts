@@ -4,9 +4,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.example.wedding_gifts.core.domain.dtos.payment.pix.CreatedPixDTO;
 import com.example.wedding_gifts.core.domain.model.util.MethodOfPayment;
 import com.example.wedding_gifts.core.domain.model.util.PixStatus;
+import com.example.wedding_gifts.infra.dtos.payment.pix.CreatedPixDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

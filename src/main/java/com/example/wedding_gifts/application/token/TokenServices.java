@@ -5,9 +5,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 import com.example.wedding_gifts.core.usecases.token.ITokenRepository;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
+import com.example.wedding_gifts.infra.dtos.token.SaveTokenDTO;
 
 @Service
 public class TokenServices implements ITokenUseCase {

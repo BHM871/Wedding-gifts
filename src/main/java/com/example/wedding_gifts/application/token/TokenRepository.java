@@ -8,12 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.common.MyZone;
-import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
 import com.example.wedding_gifts.core.domain.exceptions.token.TokenExecutionException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.domain.model.Token;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.token.ITokenRepository;
+import com.example.wedding_gifts.infra.dtos.token.SaveTokenDTO;
 import com.example.wedding_gifts.infra.jpa.JpaTokenRepository;
 
 @Repository

@@ -11,9 +11,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.example.wedding_gifts.common.LimitDateForAccount;
 import com.example.wedding_gifts.common.Validation;
-import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
+import com.example.wedding_gifts.infra.dtos.account.CreateAccountDTO;
+import com.example.wedding_gifts.infra.dtos.account.UpdateAccountDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

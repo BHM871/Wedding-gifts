@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.ExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.common.ForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.common.InvalidValueException;
@@ -17,6 +16,7 @@ import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundExcep
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotYourException;
 import com.example.wedding_gifts.core.usecases.exception.IExceptionResponse;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
 
 @RestControllerAdvice
 public class ImageExceptionHandler implements IExceptionResponse {

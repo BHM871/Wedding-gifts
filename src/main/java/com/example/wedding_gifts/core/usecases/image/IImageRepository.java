@@ -3,8 +3,8 @@ package com.example.wedding_gifts.core.usecases.image;
 import java.util.Set;
 import java.util.UUID;
 
-import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts.core.domain.model.Image;
+import com.example.wedding_gifts.infra.dtos.image.SaveImageDTO;
 
 public interface IImageRepository {
     

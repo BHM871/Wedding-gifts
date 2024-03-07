@@ -5,9 +5,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import com.example.wedding_gifts.adapters.payment.PaymentAdapter;
-import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.core.domain.model.Payment;
 import com.example.wedding_gifts.core.domain.model.util.MethodOfPayment;
+import com.example.wedding_gifts.infra.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts.infra.pix.PixServices;
 
 @Component

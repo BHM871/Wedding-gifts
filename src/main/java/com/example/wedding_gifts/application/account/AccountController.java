@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.common.Validation;
-import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountController;
 import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
+import com.example.wedding_gifts.infra.dtos.account.AccountResponseAccountDTO;
+import com.example.wedding_gifts.infra.dtos.account.AccountResponseIdDTO;
+import com.example.wedding_gifts.infra.dtos.account.UpdateAccountDTO;
+import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

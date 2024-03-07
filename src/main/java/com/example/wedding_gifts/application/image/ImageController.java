@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.wedding_gifts.core.domain.dtos.commun.Base64ResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.InsertImagesDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.DeleteImagesDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotNullableException;
 import com.example.wedding_gifts.core.usecases.image.IImageController;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
+import com.example.wedding_gifts.infra.dtos.commun.Base64ResponseDTO;
+import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
+import com.example.wedding_gifts.infra.dtos.image.DeleteImagesDTO;
+import com.example.wedding_gifts.infra.dtos.image.InsertImagesDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

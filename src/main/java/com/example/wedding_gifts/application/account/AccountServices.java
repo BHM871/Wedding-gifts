@@ -5,13 +5,13 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.wedding_gifts.core.domain.dtos.account.CreateAccountDTO;
-import com.example.wedding_gifts.core.domain.dtos.account.UpdateAccountDTO;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.core.usecases.account.IAccountUseCase;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
+import com.example.wedding_gifts.infra.dtos.account.CreateAccountDTO;
+import com.example.wedding_gifts.infra.dtos.account.UpdateAccountDTO;
 
 @Service
 public class AccountServices implements IAccountUseCase {

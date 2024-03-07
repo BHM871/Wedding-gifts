@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.example.wedding_gifts.common.MyZone;
-import com.example.wedding_gifts.core.domain.dtos.token.SaveTokenDTO;
+import com.example.wedding_gifts.infra.dtos.token.SaveTokenDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

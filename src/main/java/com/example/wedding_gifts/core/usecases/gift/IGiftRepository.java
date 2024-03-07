@@ -6,17 +6,17 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesAndPriceDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByPriceDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndCategoriesDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.model.Gift;
+import com.example.wedding_gifts.infra.dtos.gift.CreateGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.DeleteGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.UpdateGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByCategoriesAndPriceDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByCategoriesDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByPriceDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByTitleAndCategoriesDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByTitleDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
 
 public interface IGiftRepository {
     

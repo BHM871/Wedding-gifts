@@ -10,26 +10,27 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.example.wedding_gifts.core.domain.dtos.account.AccountResponseIdDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.GiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesAndPriceDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByCategoriesDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByPriceDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndCategoriesDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherByTitleDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.ImageDTO;
-import com.example.wedding_gifts.core.domain.dtos.image.ImageResponseDTO;
+
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
+import com.example.wedding_gifts.infra.dtos.account.AccountResponseIdDTO;
+import com.example.wedding_gifts.infra.dtos.gift.CreateGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.DeleteGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.GiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.GiftResponseDTO;
+import com.example.wedding_gifts.infra.dtos.gift.UpdateGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByCategoriesAndPriceDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByCategoriesDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByPriceDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByTitleAndCategoriesDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByTitleAndPriceDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherByTitleDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
+import com.example.wedding_gifts.infra.dtos.image.ImageDTO;
+import com.example.wedding_gifts.infra.dtos.image.ImageResponseDTO;
 
 @Service
 @SuppressWarnings("null")

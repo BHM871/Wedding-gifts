@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 
 import com.example.wedding_gifts.common.MyZone;
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
 
 public abstract class MyException extends Exception {
 

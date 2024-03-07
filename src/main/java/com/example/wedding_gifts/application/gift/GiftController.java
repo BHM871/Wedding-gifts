@@ -20,13 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.wedding_gifts.common.Validation;
-import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
-import com.example.wedding_gifts.core.domain.dtos.exception.ExceptionResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.CreateGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.DeleteGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.GiftResponseDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.UpdateGiftDTO;
-import com.example.wedding_gifts.core.domain.dtos.gift.searchers.SearcherDTO;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftExecutionException;
@@ -34,6 +27,13 @@ import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueExc
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts.core.usecases.gift.IGiftController;
 import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
+import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.infra.dtos.exception.ExceptionResponseDTO;
+import com.example.wedding_gifts.infra.dtos.gift.CreateGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.DeleteGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.GiftResponseDTO;
+import com.example.wedding_gifts.infra.dtos.gift.UpdateGiftDTO;
+import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts.application.gift.GiftRepository;
-import com.example.wedding_gifts.core.domain.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Image;
 import com.example.wedding_gifts.core.usecases.image.IImageRepository;
+import com.example.wedding_gifts.infra.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts.infra.jpa.JpaImageRespository;
 
 @Repository

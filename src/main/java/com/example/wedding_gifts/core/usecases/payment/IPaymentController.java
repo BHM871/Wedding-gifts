@@ -6,11 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import com.example.wedding_gifts.core.domain.dtos.commun.MessageDTO;
-import com.example.wedding_gifts.core.domain.dtos.payment.CreatePaymentDTO;
-import com.example.wedding_gifts.core.domain.dtos.payment.GetPaymentByPaidDTO;
-import com.example.wedding_gifts.core.domain.dtos.payment.PaymentResponseDTO;
 import com.example.wedding_gifts.core.domain.model.Payment;
+import com.example.wedding_gifts.infra.dtos.commun.MessageDTO;
+import com.example.wedding_gifts.infra.dtos.payment.CreatePaymentDTO;
+import com.example.wedding_gifts.infra.dtos.payment.GetPaymentByPaidDTO;
+import com.example.wedding_gifts.infra.dtos.payment.PaymentResponseDTO;
 
 public interface IPaymentController {
 

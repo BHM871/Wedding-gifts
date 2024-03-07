@@ -3,7 +3,7 @@ package com.example.wedding_gifts.core.domain.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import com.example.wedding_gifts.core.domain.dtos.oauthpsb.CreateOAuthPsb;
+import com.example.wedding_gifts.infra.dtos.oauthpsb.CreateOAuthPsb;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
