@@ -1,6 +1,7 @@
 package com.example.wedding_gifts.config.security.jwt;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts.common.LimitTimeForToken;
 import com.example.wedding_gifts.common.MyZone;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.model.Account;
 import com.example.wedding_gifts.core.usecases.token.ITokenUseCase;
 import com.example.wedding_gifts.infra.dtos.token.SaveTokenDTO;
@@ -36,7 +38,7 @@ public class JwtTokenService implements TokenManagerAdapter {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                 .withIssuer(issuer)
-                .withSubject(account.getEmail())
+                .withSubject(account.getId()+","+account.getEmail())
                 .withExpiresAt(LimitTimeForToken.genExpirationInstant())
                 .sign(algorithm);
 
@@ -61,5 +63,13 @@ public class JwtTokenService implements TokenManagerAdapter {
             return "";
         }
     }
-    
+
+    @Override
+    public void validateSessionId(String token, UUID pathVariableId) throws Exception {
+        String subject = validateToken(token);
+        String idToken = subject.split(",")[0];
+        if(UUID.fromString(idToken).compareTo(pathVariableId) != 0) {
+            throw new AccountForbiddenException("Account Id is not your");
+        }
+    }
 }

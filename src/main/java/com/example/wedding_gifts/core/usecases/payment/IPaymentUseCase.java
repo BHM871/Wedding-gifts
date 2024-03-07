@@ -21,6 +21,6 @@ public interface IPaymentUseCase {
 
     public Page<Payment> getAllPayments(UUID accountId, Pageable paging);
 
-    public Page<Payment> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging);
+    public Page<Payment> getByIsPaid(UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging);
 
 }

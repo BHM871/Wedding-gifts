@@ -15,7 +15,7 @@ public interface IAccountController {
 
     public ResponseEntity<AccountResponseAccountDTO> getAccountById(UUID id) throws Exception;
 
-    public ResponseEntity<AccountResponseAccountDTO> updateAccount(UpdateAccountDTO account, UUID id) throws Exception;
+    public ResponseEntity<AccountResponseAccountDTO> updateAccount(String token, UpdateAccountDTO account, UUID id) throws Exception;
 
-    public ResponseEntity<MessageDTO> deleteAccount(UUID id) throws Exception;
+    public ResponseEntity<MessageDTO> deleteAccount(String token, UUID id) throws Exception;
 }

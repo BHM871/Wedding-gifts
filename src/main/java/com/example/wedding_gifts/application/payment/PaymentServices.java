@@ -104,8 +104,8 @@ public class PaymentServices implements IPaymentUseCase {
     }
 
     @Override
-    public Page<Payment> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging) {
-        Page<Payment> payments = repository.getByIsPaid(paidFilter, paging);
+    public Page<Payment> getByIsPaid(UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging) {
+        Page<Payment> payments = repository.getByIsPaid(accountId, paidFilter, paging);
         List<Payment> paymentsList = payments.getContent();
 
         List<Payment> paymentsForDelete = new ArrayList<>();
