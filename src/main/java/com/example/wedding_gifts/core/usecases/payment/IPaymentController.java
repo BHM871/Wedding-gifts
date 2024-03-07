@@ -20,8 +20,8 @@ public interface IPaymentController {
 
     public ResponseEntity<MessageDTO> isExpired(UUID paymentId) throws Exception;
 
-    public ResponseEntity<Page<Payment>> getAll(UUID accountId, Pageable paging);
+    public ResponseEntity<Page<Payment>> getAll(String token, UUID accountId, Pageable paging) throws Exception;
 
-    public ResponseEntity<Page<Payment>> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging) throws Exception;
+    public ResponseEntity<Page<Payment>> getByIsPaid(String token, UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging) throws Exception;
     
 }

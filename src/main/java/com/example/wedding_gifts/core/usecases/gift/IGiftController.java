@@ -14,13 +14,13 @@ import com.example.wedding_gifts.infra.dtos.gift.searchers.SearcherDTO;
 
 public interface IGiftController {
     
-    public ResponseEntity<GiftResponseDTO> createGift(UUID accountId, CreateGiftDTO gift) throws Exception;
+    public ResponseEntity<GiftResponseDTO> createGift(String token, UUID accountId, CreateGiftDTO gift) throws Exception;
 
-    public ResponseEntity<MessageDTO> updateGift(UUID accountId, UUID giftId, UpdateGiftDTO gift) throws Exception;
+    public ResponseEntity<MessageDTO> updateGift(String token, UUID accountId, UUID giftId, UpdateGiftDTO gift) throws Exception;
 
-    public ResponseEntity<MessageDTO> deleteGift(UUID accountId, UUID giftId) throws Exception;
+    public ResponseEntity<MessageDTO> deleteGift(String token, UUID accountId, UUID giftId) throws Exception;
 
-    public ResponseEntity<MessageDTO> deleteAllByAccount(UUID accountId) throws Exception;
+    public ResponseEntity<MessageDTO> deleteAllByAccount(String token, UUID accountId) throws Exception;
 
     public ResponseEntity<Page<GiftResponseDTO>> getAllGifts(UUID accountId, Pageable page) throws Exception;
 

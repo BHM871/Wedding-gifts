@@ -36,8 +36,8 @@ public class SecurityConfiguration {
                 .requestMatchers(HttpMethod.GET, "/image/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/image/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/image/**").authenticated()
-                .requestMatchers(HttpMethod.GET, "/payment").authenticated()
-                .requestMatchers(HttpMethod.GET, "/payment/paid").authenticated()
+                .requestMatchers(HttpMethod.GET, "/payment/{}").authenticated()
+                .requestMatchers(HttpMethod.GET, "/payment/paid/**").authenticated()
                 .anyRequest().permitAll()
             )
             .logout(logou ->

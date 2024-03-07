@@ -12,10 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts.common.Validation;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
 import com.example.wedding_gifts.core.domain.model.Payment;
@@ -41,6 +44,8 @@ public class PaymentController implements IPaymentController {
 
     @Autowired
     private IPaymentUseCase service;
+    @Autowired
+    private TokenManagerAdapter tokenManager;
 
     @Override
     @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -136,10 +141,13 @@ public class PaymentController implements IPaymentController {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = PaymentResponseDTO.class))),
     })
     public ResponseEntity<Page<Payment>> getAll(
-        @PathVariable UUID accountId, 
+        @RequestHeader("Authorization") String token,
+        @PathVariable UUID account, 
         Pageable paging
-    ) {
-        return ResponseEntity.ok(service.getAllPayments(accountId, paging));
+    ) throws Exception {
+        validSessionId(token, account);
+
+        return ResponseEntity.ok(service.getAllPayments(account, paging));
     }
 
     @Override
@@ -149,13 +157,17 @@ public class PaymentController implements IPaymentController {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = PaymentResponseDTO.class))),
     })
     public ResponseEntity<Page<Payment>> getByIsPaid(
+        @RequestHeader("Authorization") String token,
+        @PathVariable UUID account,
         @RequestBody GetPaymentByPaidDTO paidFilter, 
         Pageable paging
     ) throws Exception {
         try {
+            validSessionId(token, account);
+
             validData(paidFilter);
 
-            return ResponseEntity.ok(service.getByIsPaid(paidFilter, paging));
+            return ResponseEntity.ok(service.getByIsPaid(account, paidFilter, paging));
         } catch (MyException e){
             e.setPath("/payment/paid");
             throw e;
@@ -164,6 +176,14 @@ public class PaymentController implements IPaymentController {
             exception.setPath("/payment/paid");
 
             throw exception;
+        }
+    }
+
+    private void validSessionId(String token, UUID pathVariableId) throws Exception {
+        String subject = tokenManager.validateToken(token);
+        String idToken = subject.split(",")[0];
+        if(UUID.fromString(idToken).compareTo(pathVariableId) != 0) {
+            throw new AccountForbiddenException("Account Id is not your");
         }
     }
 
@@ -184,7 +204,6 @@ public class PaymentController implements IPaymentController {
     private void validData(GetPaymentByPaidDTO data) throws Exception {
         String isNull = "%s is null";
         
-        if(data.accountId() == null) throw new Exception(String.format(isNull, "accountId"));
         if(data.isPaid() == null || data.isPaid()) throw new Exception(String.format(isNull, "isPaid"));
 
     }

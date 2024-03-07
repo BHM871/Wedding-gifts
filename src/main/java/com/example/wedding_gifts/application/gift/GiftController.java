@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts.common.Validation;
-import com.example.wedding_gifts.core.domain.exceptions.account.AccountNotNullableException;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftExecutionException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftInvalidValueException;
@@ -48,6 +50,8 @@ public class GiftController implements IGiftController {
 
     @Autowired
     private IGiftUseCase services;
+    @Autowired
+    private TokenManagerAdapter tokenManager;
 
     @Override
     @PostMapping(value = "/create/{account}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -63,13 +67,16 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<GiftResponseDTO> createGift(
-        @PathVariable UUID accountId,
+        @RequestHeader("Authorization") String token,
+        @PathVariable UUID account,
         @RequestBody CreateGiftDTO gift
     ) throws Exception {
         try{
+            validSessionId(token, account);
+
             validData(gift);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(accountId, gift));
+            return ResponseEntity.status(HttpStatus.CREATED).body(services.createGift(account, gift));
         } catch (MyException e){
             e.setPath("/gift/create");
             throw e;
@@ -95,12 +102,15 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> updateGift(
-        @PathVariable UUID accountId,
+        @RequestHeader("Authorization") String token,
+        @PathVariable UUID account,
         @PathVariable UUID giftId,
         @RequestBody UpdateGiftDTO gift
     ) throws Exception {
         try{
-            services.updateGift(accountId, giftId, gift);
+            validSessionId(token, account);
+
+            services.updateGift(account, giftId, gift);
 
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){
@@ -128,11 +138,14 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> deleteGift(
-        @PathVariable UUID acountID,
+        @RequestHeader("Authorization") String token,
+        @PathVariable UUID account,
         @PathVariable UUID giftId
     ) throws Exception {
         try{
-            services.deleteGift(acountID, giftId);
+            validSessionId(token, account);
+
+            services.deleteGift(account, giftId);
             
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){
@@ -160,10 +173,11 @@ public class GiftController implements IGiftController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> deleteAllByAccount(
+        @RequestHeader("Authorization") String token,
         @PathVariable UUID account
     ) throws Exception {
         try{
-            if(account == null) throw new AccountNotNullableException("Account id is null");
+            validSessionId(token, account);
 
             services.deleteAllByAccount(account);
             return ResponseEntity.ok(new MessageDTO("successfully"));
@@ -225,6 +239,14 @@ public class GiftController implements IGiftController {
         }
     }
     
+    private void validSessionId(String token, UUID pathVariableId) throws Exception {
+        String subject = tokenManager.validateToken(token);
+        String idToken = subject.split(",")[0];
+        if(UUID.fromString(idToken).compareTo(pathVariableId) != 0) {
+            throw new AccountForbiddenException("Account Id is not your");
+        }
+    }
+
     private void validData(CreateGiftDTO data) throws Exception {
         String invalid = "%s is invalid";
         String isNull = "%s is null";

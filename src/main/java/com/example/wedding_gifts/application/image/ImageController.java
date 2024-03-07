@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts.core.domain.exceptions.image.ImageExecutionException;
@@ -43,6 +46,8 @@ public class ImageController implements IImageController {
 
     @Autowired
     private IImageUseCase services;
+    @Autowired
+    private TokenManagerAdapter tokenManager;
 
     @Override
     @GetMapping(value = "/base64", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -86,12 +91,15 @@ public class ImageController implements IImageController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> insert(
-        @PathVariable UUID accountId,
-        @PathVariable UUID giftId,
+        @RequestHeader("Authorization") String token,
+        @PathVariable UUID account,
+        @PathVariable UUID gift,
         @RequestBody List<String> images
     ) throws Exception {
         try{
-            var insert = new InsertImagesDTO(giftId, accountId, images);
+            validSessionId(token, account);
+
+            var insert = new InsertImagesDTO(gift, account, images);
             validData(insert);
 
             services.insertImages(insert);
@@ -121,12 +129,15 @@ public class ImageController implements IImageController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> delete(
-        @PathVariable UUID accountId,
-        @PathVariable UUID giftId,
+        @RequestHeader("Authorization") String token,
+        @PathVariable UUID account,
+        @PathVariable UUID gift,
         @RequestBody List<UUID> imgs
     ) throws Exception {
         try{
-            var images = new DeleteImagesDTO(accountId, giftId, imgs);
+            validSessionId(token, account);
+
+            var images = new DeleteImagesDTO(account, gift, imgs);
 
             validData(images);
             
@@ -139,6 +150,14 @@ public class ImageController implements IImageController {
             ImageExecutionException exception = new ImageExecutionException("Some error");
             exception.setPath("/image/update");
             throw exception;
+        }
+    }
+
+    private void validSessionId(String token, UUID pathVariableId) throws Exception {
+        String subject = tokenManager.validateToken(token);
+        String idToken = subject.split(",")[0];
+        if(UUID.fromString(idToken).compareTo(pathVariableId) != 0) {
+            throw new AccountForbiddenException("Account Id is not your");
         }
     }
 

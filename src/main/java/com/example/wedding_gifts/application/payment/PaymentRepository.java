@@ -91,8 +91,8 @@ public class PaymentRepository implements IPaymentRepository {
     }
 
     @Override
-    public Page<Payment> getByIsPaid(GetPaymentByPaidDTO paidFilter, Pageable paging) {
-        return jpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), paidFilter.accountId(), paging);
+    public Page<Payment> getByIsPaid(UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging) {
+        return jpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), accountId, paging);
     }
     
 }

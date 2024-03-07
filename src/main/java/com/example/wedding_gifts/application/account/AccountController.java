@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.wedding_gifts.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts.common.Validation;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.model.Account;
@@ -43,6 +46,8 @@ public class AccountController implements IAccountController {
 
     @Autowired
     private IAccountUseCase services;
+    @Autowired
+    private TokenManagerAdapter tokenManager;
 
     @Override
     @GetMapping(value = "/brideGroom/{brideGroom}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -119,11 +124,13 @@ public class AccountController implements IAccountController {
         @ApiResponse(responseCode = "422", description = "Invalid param or invalid value in request body", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<AccountResponseAccountDTO> updateAccount(
+        @RequestHeader("Authorization") String token,
         @RequestBody UpdateAccountDTO account,
         @PathVariable UUID id
     ) throws Exception {
         try{
-            validData(account);
+            validSessionId(token, id);
+            validData(account);            
 
             Account upAccount = services.updateAccount(account, id);
 
@@ -157,9 +164,12 @@ public class AccountController implements IAccountController {
         @ApiResponse(responseCode = "422", description = "Invalid param", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
     })
     public ResponseEntity<MessageDTO> deleteAccount(
+        @RequestHeader("Authorization") String token,
         @PathVariable UUID id
     ) throws Exception {
         try{
+            validSessionId(token, id);
+            
             services.deleteAccount(id);
             return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO("successfully"));
         } catch (MyException e){
@@ -169,6 +179,14 @@ public class AccountController implements IAccountController {
             AccountExecutionException exception = new AccountExecutionException("Some error");
             exception.setPath("/account/delete");
             throw exception;
+        }
+    }
+
+    private void validSessionId(String token, UUID pathVariableId) throws Exception {
+        String subject = tokenManager.validateToken(token);
+        String idToken = subject.split(",")[0];
+        if(UUID.fromString(idToken).compareTo(pathVariableId) != 0) {
+            throw new AccountForbiddenException("Account Id is not your");
         }
     }
 

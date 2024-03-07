@@ -36,7 +36,7 @@ public class JwtTokenService implements TokenManagerAdapter {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             String token = JWT.create()
                 .withIssuer(issuer)
-                .withSubject(account.getEmail())
+                .withSubject(account.getId()+","+account.getEmail())
                 .withExpiresAt(LimitTimeForToken.genExpirationInstant())
                 .sign(algorithm);
 
