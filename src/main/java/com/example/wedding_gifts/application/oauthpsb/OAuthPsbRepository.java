@@ -13,6 +13,7 @@ import com.example.wedding_gifts.core.usecases.oauthpsb.IOAuthPsbRepository;
 import com.example.wedding_gifts.infra.jpa.JpaOAuthPsbRepository;
 
 @Repository
+@SuppressWarnings("null")
 public class OAuthPsbRepository implements IOAuthPsbRepository {
 
     @Autowired

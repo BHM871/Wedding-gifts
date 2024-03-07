@@ -16,6 +16,7 @@ import com.example.wedding_gifts.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts.infra.jpa.JpaAccountRespository;
 
 @Repository
+@SuppressWarnings("null")
 public class AccountRepository implements IAccountRepository {
 
     @Autowired

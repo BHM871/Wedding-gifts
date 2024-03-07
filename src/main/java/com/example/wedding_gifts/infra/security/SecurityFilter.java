@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
+@SuppressWarnings("null")
 public class SecurityFilter extends OncePerRequestFilter {
 
     @Autowired

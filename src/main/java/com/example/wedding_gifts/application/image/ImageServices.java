@@ -37,6 +37,7 @@ import com.example.wedding_gifts.core.usecases.image.IImageRepository;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
 
 @Service
+@SuppressWarnings("null")
 public class ImageServices implements IImageUseCase {
 
     private static final String sourceImages = "src/main/resources/db/images/";

@@ -32,6 +32,7 @@ import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.image.IImageUseCase;
 
 @Service
+@SuppressWarnings("null")
 public class GiftServices implements IGiftUseCase {
 
     @Autowired

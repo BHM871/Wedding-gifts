@@ -24,6 +24,7 @@ import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentUseCase;
 
 @Service
+@SuppressWarnings("null")
 public class PaymentServices implements IPaymentUseCase {
 
     @Autowired

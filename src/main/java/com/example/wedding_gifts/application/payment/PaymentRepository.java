@@ -18,6 +18,7 @@ import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts.infra.jpa.JpaPaymentRepository;
 
 @Repository
+@SuppressWarnings("null")
 public class PaymentRepository implements IPaymentRepository {
 
     @Autowired

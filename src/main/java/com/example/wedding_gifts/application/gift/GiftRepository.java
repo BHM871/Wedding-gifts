@@ -30,6 +30,7 @@ import com.example.wedding_gifts.core.usecases.gift.IGiftRepository;
 import com.example.wedding_gifts.infra.jpa.JpaGiftRepository;
 
 @Repository
+@SuppressWarnings("null")
 public class GiftRepository implements IGiftRepository {
 
     @Autowired

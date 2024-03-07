@@ -10,7 +10,7 @@ import com.example.wedding_gifts.core.domain.model.Image;
 import java.util.List;
 import java.util.Optional;
 
-
+@SuppressWarnings("null")
 public interface JpaImageRespository extends JpaRepository<Image, UUID> {
 
     public Optional<Image> findById(UUID id);

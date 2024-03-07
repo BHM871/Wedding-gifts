@@ -9,7 +9,6 @@ import java.time.Duration;
 
 import javax.net.ssl.SSLContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +17,6 @@ import com.example.wedding_gifts.core.domain.model.OAuthPsb;
 
 @Component
 public class PixHttpConfig {
-
-    @Autowired
-    private PixSslConfig sslConfig;
 
     @Value("${api.payment.pix.developer-key}")
     private String developerKey;

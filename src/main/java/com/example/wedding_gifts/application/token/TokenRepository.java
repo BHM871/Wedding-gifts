@@ -17,6 +17,7 @@ import com.example.wedding_gifts.core.usecases.token.ITokenRepository;
 import com.example.wedding_gifts.infra.jpa.JpaTokenRepository;
 
 @Repository
+@SuppressWarnings("null")
 public class TokenRepository implements ITokenRepository {
 
     @Autowired
