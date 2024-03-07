@@ -87,6 +87,9 @@ public class GiftServices implements IGiftUseCase {
     public void deleteAllByAccount(UUID accountId) throws Exception {
 
         List<Gift> gifts = repository.getAllGifts(accountId);
+
+        if(gifts.isEmpty()) return;
+
         for(Gift gift : gifts) {
             imageService.deleteAllByGift(gift.getId());
         }

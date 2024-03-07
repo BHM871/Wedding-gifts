@@ -132,7 +132,10 @@ public class ImageServices implements IImageUseCase {
     @Override
     public void deleteImage(DeleteImagesDTO deleteImages) throws Exception {
         try{
+            if(deleteImages.images().isEmpty()) return;
+
             Set<Image> images = Collections.emptySet();
+
             for(UUID imgId : deleteImages.images()){
                 Image image = getById(imgId);
 
@@ -153,7 +156,7 @@ public class ImageServices implements IImageUseCase {
             }
 
             repository.deleteImages(images);
-        }catch(Exception e){
+        } catch(Exception e){
             throw new ImageExecutionException("Some error in delete images");
         }
     }
@@ -162,6 +165,8 @@ public class ImageServices implements IImageUseCase {
     public void deleteAllByGift(UUID giftId) throws Exception {
         try{
             Set<Image> images = getAllByGift(giftId);
+
+            if(images.isEmpty()) return;
 
             for(Image image : images){
                 if(!Files.exists(Path.of(image.getPathImage()))){
