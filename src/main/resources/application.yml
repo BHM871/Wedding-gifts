@@ -20,7 +20,7 @@ api:
 
     payment:
         oauth:
-            url: ${OATUH_URL:https://oauth.bb.com.br/oauth/token}
+            url: ${OATUH_URL:https://oauth.hm.bb.com.br/oauth/token}
 
         pix:
             url: ${BB_PIX_URL:https://api-pix.hm.bb.com.br/pix/v2}

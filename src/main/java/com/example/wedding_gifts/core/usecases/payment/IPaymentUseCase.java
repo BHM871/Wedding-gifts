@@ -11,7 +11,7 @@ import com.example.wedding_gifts.infra.dtos.payment.GetPaymentByPaidDTO;
 
 public interface IPaymentUseCase {
 
-    public Payment createPayment(CreatePaymentDTO payment) throws Exception;
+    public Payment createPayment(UUID giftId, CreatePaymentDTO payment) throws Exception;
 
     public boolean isPaid(UUID paymentId) throws Exception;
 

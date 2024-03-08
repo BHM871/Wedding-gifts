@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -55,12 +57,12 @@ public class PixServices implements PaymentAdapter {
     @Value("${api.payment.pix.scope}")
     private String scope;
 
-    private final String MESSAGE_PIX = "Cobrança para %s, do presente %s para %s com o valor %.2f";
+    private final String MESSAGE_PIX = "Cobrança para %s, do presente %s de %s com o valor %.2f";
 
     @Override
-    public Payment createPayment(CreatePaymentDTO payment) throws Exception {
+    public Payment createPayment(UUID giftId, CreatePaymentDTO payment) throws Exception {
         try{
-            Gift gift = giftService.getById(payment.giftId());
+            Gift gift = giftService.getById(giftId);
 
             CreatePixDTO createPix = new CreatePixDTO(
                 new CalendarDTO(

@@ -14,7 +14,7 @@ import com.example.wedding_gifts.infra.dtos.payment.PaymentResponseDTO;
 
 public interface IPaymentController {
 
-    public ResponseEntity<PaymentResponseDTO> createPayment(CreatePaymentDTO payment) throws Exception;
+    public ResponseEntity<PaymentResponseDTO> createPayment(UUID giftId, CreatePaymentDTO payment) throws Exception;
 
     public ResponseEntity<MessageDTO> isPaid(UUID paymentId) throws Exception;
 

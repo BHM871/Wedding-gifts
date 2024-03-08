@@ -47,7 +47,7 @@ public class PaymentController implements IPaymentController {
     private TokenManagerAdapter tokenManager;
 
     @Override
-    @PostMapping(value = "/create", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/create/{gift}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Generate a Payment")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = PaymentResponseDTO.class))),
@@ -56,12 +56,13 @@ public class PaymentController implements IPaymentController {
         @ApiResponse(responseCode = "502", description = "Some error in processable request in a gateway", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
     })
     public ResponseEntity<PaymentResponseDTO> createPayment(
+        @PathVariable(name = "gift") UUID giftId,
         @RequestBody CreatePaymentDTO payment
     ) throws Exception {
         try {
             validData(payment);
             
-            Payment newPayment = service.createPayment(payment);
+            Payment newPayment = service.createPayment(giftId, payment);
             PaymentResponseDTO responsePayment = new PaymentResponseDTO(
                 newPayment.getId(),
                 newPayment.getTransactionId(),

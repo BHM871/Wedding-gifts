@@ -1,5 +1,7 @@
 package com.example.wedding_gifts.config.payment;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
@@ -27,8 +29,8 @@ public class PaymentServiceInjector implements PaymentAdapter {
     }
 
     @Override
-    public Payment createPayment(CreatePaymentDTO payment) throws Exception {
-        return paymentFactory(payment.method()).createPayment(payment);
+    public Payment createPayment(UUID giftId, CreatePaymentDTO payment) throws Exception {
+        return paymentFactory(payment.method()).createPayment(giftId, payment);
     }
 
     @Override

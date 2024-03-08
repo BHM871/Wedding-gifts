@@ -15,7 +15,7 @@ public record CreatePixDTO(
             this.calendario.toString(),
             this.devedor.toString(),
             this.valor.toString(),
-            "07131121231",
+            chave,
             this.solicitacaoPagador
         );
     }

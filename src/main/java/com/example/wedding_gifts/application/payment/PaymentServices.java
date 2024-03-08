@@ -17,7 +17,6 @@ import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentNotFoundException;
 import com.example.wedding_gifts.core.domain.model.Gift;
 import com.example.wedding_gifts.core.domain.model.Payment;
-import com.example.wedding_gifts.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts.core.usecases.payment.IPaymentUseCase;
 import com.example.wedding_gifts.infra.dtos.payment.CreatePaymentDTO;
@@ -30,17 +29,15 @@ public class PaymentServices implements IPaymentUseCase {
     @Autowired
     private IPaymentRepository repository;
     @Autowired
-    private IGiftUseCase giftService;
-    @Autowired
     private PaymentAdapter paymentAdapter;
 
     private final String DECRIPTION_PAYMENT = "Gift payment \"%s\", for bride and groom \"%s\", with value R$%d";
 
     @Override
-    public Payment createPayment(CreatePaymentDTO payment) throws Exception {
-        Payment newPayment = paymentAdapter.createPayment(payment);
+    public Payment createPayment(UUID giftId, CreatePaymentDTO payment) throws Exception {
+        Payment newPayment = paymentAdapter.createPayment(giftId, payment);
 
-        Gift gift = giftService.getById(payment.giftId());
+        Gift gift = newPayment.getGift();
         newPayment.setPaymentDescription(String.format(DECRIPTION_PAYMENT, gift.getTitle(), gift.getAccount().getBrideGroom(), gift.getPrice().doubleValue()));
 
         return repository.createPayment(newPayment);
