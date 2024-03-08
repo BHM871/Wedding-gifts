@@ -80,7 +80,7 @@ public class GiftController implements IGiftController {
             e.setPath("/gift/create");
             throw e;
         } catch (Exception e){
-            GiftExecutionException exception = new GiftExecutionException("Some error");
+            GiftExecutionException exception = new GiftExecutionException("Some error", e);
             exception.setPath("/gift/create");
             throw exception;
         }
@@ -116,7 +116,7 @@ public class GiftController implements IGiftController {
             e.setPath("/gift/update");
             throw e;
         } catch (Exception e){
-            GiftExecutionException exception = new GiftExecutionException("Some error");
+            GiftExecutionException exception = new GiftExecutionException("Some error", e);
             exception.setPath("/gift/update");
             throw exception;
         }
@@ -151,7 +151,7 @@ public class GiftController implements IGiftController {
             e.setPath("/gift/delete");
             throw e;
         } catch (Exception e){
-            GiftExecutionException exception = new GiftExecutionException("Some error");
+            GiftExecutionException exception = new GiftExecutionException("Some error", e);
             exception.setPath("/gift/delete");
             throw exception;
         }
@@ -184,7 +184,7 @@ public class GiftController implements IGiftController {
             e.setPath("/gift/delete/all");
             throw e;
         } catch (Exception e){
-            GiftExecutionException exception = new GiftExecutionException("Some error");
+            GiftExecutionException exception = new GiftExecutionException("Some error", e);
             exception.setPath("/gift/delete/all");
             throw exception;
         }
@@ -207,7 +207,7 @@ public class GiftController implements IGiftController {
             e.setPath("/gift");
             throw e;
         } catch (Exception e){
-            GiftExecutionException exception = new GiftExecutionException("Some error");
+            GiftExecutionException exception = new GiftExecutionException("Some error", e);
             exception.setPath("/gift");
             throw exception;
         }
@@ -232,7 +232,7 @@ public class GiftController implements IGiftController {
             e.setPath("/gift/filter");
             throw e;
         } catch (Exception e){
-            GiftExecutionException exception = new GiftExecutionException("Some error");
+            GiftExecutionException exception = new GiftExecutionException("Some error", e);
             exception.setPath("/gift/filter");
             throw exception;
         }

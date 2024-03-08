@@ -20,9 +20,9 @@ public class AuthenticationServices implements IAuthenticationService {
         try {
             return repository.getByEmail(username);
         } catch (AccountNotFoundException e) {
-            throw new UsernameNotFoundException(e.getMessage());
+            throw new UsernameNotFoundException(e.getMessage(), e);
         } catch (Exception e) {
-            throw new UsernameNotFoundException("Account not found");
+            throw new UsernameNotFoundException("Account not found", e);
         }
     }
 

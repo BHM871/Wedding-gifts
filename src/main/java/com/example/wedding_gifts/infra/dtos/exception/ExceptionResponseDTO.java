@@ -8,5 +8,6 @@ public record ExceptionResponseDTO(
     String error,
     String exception,
     String message,
+    String cause,
     String path
 ){}

@@ -69,7 +69,7 @@ public class ImageController implements IImageController {
             e.setPath("/image/base64");
             throw e;
         } catch (Exception e){
-            ImageExecutionException exception = new ImageExecutionException("Some error");
+            ImageExecutionException exception = new ImageExecutionException("Some error", e);
             exception.setPath("/image/base64");
             throw exception;
         }
@@ -107,7 +107,7 @@ public class ImageController implements IImageController {
             e.setPath("/image/insert");
             throw e;
         } catch (Exception e){
-            ImageExecutionException exception = new ImageExecutionException("Some error");
+            ImageExecutionException exception = new ImageExecutionException("Some error", e);
             exception.setPath("/image/insert");
             throw exception;
         }
@@ -146,7 +146,7 @@ public class ImageController implements IImageController {
             e.setPath("/image/update");
             throw e;
         } catch (Exception e){
-            ImageExecutionException exception = new ImageExecutionException("Some error");
+            ImageExecutionException exception = new ImageExecutionException("Some error", e);
             exception.setPath("/image/update");
             throw exception;
         }

@@ -78,7 +78,7 @@ public class TokenRepository implements ITokenRepository {
 
             return token.get().getTokenValue();
         } catch (Exception e){
-            throw new TokenExecutionException("Error in Token verification");
+            throw new TokenExecutionException("Error in Token verification", e);
         }
     }
 

@@ -68,7 +68,7 @@ public class AccountController implements IAccountController {
             e.setPath("/account/brideGroom");
             throw e;
         } catch (Exception e){
-            AccountExecutionException exception = new AccountExecutionException("Some error");
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
             exception.setPath("/account/bridegroom");
             throw exception;
         }
@@ -101,7 +101,7 @@ public class AccountController implements IAccountController {
             e.setPath("/account");
             throw e;
         } catch (Exception e){
-            AccountExecutionException exception = new AccountExecutionException("Some error");
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
             exception.setPath("/account");
             throw exception;
         }
@@ -146,7 +146,7 @@ public class AccountController implements IAccountController {
             e.setPath("/account/update");
             throw e;
         } catch (Exception e){
-            AccountExecutionException exception = new AccountExecutionException("Some error");
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
             exception.setPath("/account/update");
             throw exception;
         }
@@ -175,7 +175,7 @@ public class AccountController implements IAccountController {
             e.setPath("/account/delete");
             throw e;
         } catch (Exception e){
-            AccountExecutionException exception = new AccountExecutionException("Some error");
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
             exception.setPath("/account/delete");
             throw exception;
         }

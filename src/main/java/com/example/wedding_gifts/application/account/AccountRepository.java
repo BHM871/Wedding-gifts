@@ -40,7 +40,7 @@ public class AccountRepository implements IAccountRepository {
         } catch (MyException e) {
             throw e;
         } catch (Exception e) {
-            throw new AccountExecutionException("Account can't be created");
+            throw new AccountExecutionException("Account can't be created", e);
         }
     }
 
@@ -72,7 +72,7 @@ public class AccountRepository implements IAccountRepository {
 
             return save(upAccount);
         } catch (AccountNotFoundException e){
-            throw new AccountNotFoundException("ID shared not exists");
+            throw new AccountNotFoundException("ID shared not exists", e);
         } catch (MyException e){
             throw e;
         } catch (Exception e){
@@ -86,7 +86,7 @@ public class AccountRepository implements IAccountRepository {
             Account account = getAccountById(id);
             jpaRepository.delete(account);
         } catch (AccountNotFoundException e){
-            throw new AccountNotFoundException("ID shared not exists");
+            throw new AccountNotFoundException("ID shared not exists", e);
         } catch (Exception e){
             throw new AccountExecutionException("Account can't be deleted", e);
         }

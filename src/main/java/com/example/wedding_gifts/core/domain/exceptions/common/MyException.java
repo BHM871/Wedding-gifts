@@ -65,7 +65,7 @@ public abstract class MyException extends Exception {
         String message,
         String path
     ) {
-        this(new Throwable(), statusCode, error, exception, message, path);
+        this(null, statusCode, error, exception, message, path);
     }
 
     public MyException(
@@ -104,6 +104,7 @@ public abstract class MyException extends Exception {
                 error,
                 exception, 
                 message, 
+                cause != null ? cause.getMessage() : "",
                 path
             )
         );
