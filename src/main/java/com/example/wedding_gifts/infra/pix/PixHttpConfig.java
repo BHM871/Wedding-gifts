@@ -12,7 +12,7 @@ import javax.net.ssl.SSLContext;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentExecutionException;
+import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentHttpException;
 import com.example.wedding_gifts.core.domain.model.OAuthPsb;
 
 @Component
@@ -33,7 +33,7 @@ public class PixHttpConfig {
                 //.sslContext(sslConfig.createSslContext())
                 .build();    
         } catch (Exception e) {
-            throw new PaymentExecutionException(" SSL protocol not alowed, error in generate java.net.http.HttpClient", e);
+            throw new PaymentHttpException(" SSL protocol not alowed, error in generate java.net.http.HttpClient", e);
         }
     }
 
@@ -46,9 +46,9 @@ public class PixHttpConfig {
                 .header("Authorization", token.getTokenType()+" "+token.getAuthToken())
                 .build();
         } catch (URISyntaxException e) {
-            throw new PaymentExecutionException("HTTP URL is invalid", e);
+            throw new PaymentHttpException("HTTP URL is invalid", e);
         } catch (Exception e) {
-            throw new PaymentExecutionException("Some in generate java.net.http.HttpRequest", e);
+            throw new PaymentHttpException("Some in generate java.net.http.HttpRequest", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class PixHttpConfig {
                     .header("Authorization", "Basic " + basicToken)
                     .build();
         } catch (Exception e) {
-            throw new PaymentExecutionException("HTTP URL is invalid", e);
+            throw new PaymentHttpException("HTTP URL is invalid", e);
         }
     }
     

@@ -17,7 +17,7 @@ import javax.net.ssl.TrustManagerFactory;
 import org.springframework.stereotype.Component;
 
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
-import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentGatewayException;
+import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentCertificateException;
 
 @Component
 public class PixSslConfig {
@@ -67,9 +67,9 @@ public class PixSslConfig {
             return sslContext;
 
         } catch (FileNotFoundException e){
-            throw new PaymentGatewayException(e.getMessage(), e);
-        }catch (Exception e) {
-            throw new PaymentGatewayException("Some error in generated SSL Socket for Gateway request", e);
+            throw new PaymentCertificateException(e.getMessage(), e);
+        } catch (Exception e) {
+            throw new PaymentCertificateException("Some error in generated SSL Socket for Gateway request", e);
         } finally {
             if (keyStoreIs != null) keyStoreIs.close();
             if (trustStoreIs != null) trustStoreIs.close();
@@ -87,12 +87,12 @@ public class PixSslConfig {
             tmf.init(store);
 
             return tmf.getTrustManagers()[0];
-        }  catch (MyException e){
+        } catch (MyException e){
             throw e;
         } catch (FileNotFoundException e){
-            throw new PaymentGatewayException(e.getMessage(), e);
+            throw new PaymentCertificateException(e.getMessage(), e);
         } catch (Exception e) {
-            throw new PaymentGatewayException("Some error in searcher KeyStore or store", e);
+            throw new PaymentCertificateException("Some error in searcher KeyStore or store", e);
         }
     }
 
@@ -102,11 +102,11 @@ public class PixSslConfig {
 
             return CertificateFactory.getInstance(certType).generateCertificate(certIs);
         } catch (FileNotFoundException e) {
-            throw new PaymentGatewayException(e.getMessage(), e);
+            throw new PaymentCertificateException(e.getMessage(), e);
         } catch (CertificateException e) {
-            throw new PaymentGatewayException(e.getMessage(), e);
+            throw new PaymentCertificateException(e.getMessage(), e);
         } catch (Exception e) {
-            throw new PaymentGatewayException("Failure in load certificate " + path.split("/")[path.split("/").length-1], e);
+            throw new PaymentCertificateException("Failure in load certificate " + path.split("/")[path.split("/").length-1], e);
         }
     }
 
