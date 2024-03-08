@@ -14,7 +14,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.example.wedding_gifts.core.domain.exceptions.common.MyException;
@@ -23,30 +22,19 @@ import com.example.wedding_gifts.core.domain.exceptions.payment.PaymentGatewayEx
 @Component
 public class PixSslConfig {
 
-    @Value("${server.ssl.alias}")
     private String alias;
 
-    @Value("${server.ssl.enabled-protocols}")
     private String sslProtocol;
 
-    @Value("${server.ssl.key-store-type}")
     private String keyStoreType;
-    @Value("${api.ssl.trust-store-type}")
     private String trustStoreType;
-    @Value("${api.ssl.cert-type}")
     private String certType;
 
-    @Value("${server.ssl.key-store-password}")
     private String storePass;
 
-    @Value("${server.ssl.key-store}")
     private String keyStorePath;
-    @Value("${api.ssl.trust-store}")
     private String trustStoreAllPath;
     
-    @Value("${api.ssl.cert-oauth}")
-    private String certOauthPath;
-    @Value("${api.ssl.cert-api-pix}")
     private String certApiPixPath;
 
     public SSLContext createSslContext() throws Exception {

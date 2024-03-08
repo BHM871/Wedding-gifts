@@ -14,14 +14,6 @@ spring:
             max-request-size: 5MB
 
 api:
-    ssl:
-        trust-store-type: JKS
-        trust-store: src/main/resources/keystores/wedding-truststore-all.jks
-
-        cert-type: X.509
-        cert-oauth: src/certificates/oauth/hm/oauth_hm_ext_Balanceador_2023.pem
-        cert-api-pix: src/certificates/api-pix.bb.com.br.cer
-
     security:
         token:
             secret: ${JTW_SECRET:secret_default}
@@ -36,16 +28,3 @@ api:
             client-id: ${BB_CLIENT_ID:eyJpZCI6IjhiNGU5OGZlLWYzODItNDJlYy05ZjM5LWU3ZWIzNzVmMzUxOSIsImNvZGlnb1B1YmxpY2Fkb3IiOjAsImNvZGlnb1NvZnR3YXJlIjo3ODk3NSwic2VxdWVuY2lhbEluc3RhbGFjYW8iOjF9}
             client-secret: ${BB_CLIENT_SECRET:eyJpZCI6IjM4MDk5IiwiY29kaWdvUHVibGljYWRvciI6MCwiY29kaWdvU29mdHdhcmUiOjc4OTc1LCJzZXF1ZW5jaWFsSW5zdGFsYWNhbyI6MSwic2VxdWVuY2lhbENyZWRlbmNpYWwiOjEsImFtYmllbnRlIjoiaG9tb2xvZ2FjYW8iLCJpYXQiOjE2OTk4MjQ0MzYwMTN9}
             scope: cob.write cob.read cobv.write cobv.read pix.write pix.read webhook.write webhook.read payloadlocation.write payloadlocation.read
-
-
-server:
-    ssl:
-        alias: wedding-key
-
-        enabled: true
-        key-store-type: JKS
-        key-store: src/main/resources/keystores/wedding-keystore
-        key-store-password: wedding-pass
-        
-        protocol: TLS
-        enabled-protocols: TLSv1.2
