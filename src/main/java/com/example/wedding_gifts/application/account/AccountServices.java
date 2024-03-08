@@ -39,8 +39,8 @@ public class AccountServices implements IAccountUseCase {
     }
 
     @Override
-    public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
-        return repository.updateAccount(account, id);
+    public Account updateAccount(UUID account, UpdateAccountDTO update) throws Exception {
+        return repository.updateAccount(account, update);
     }
 
     @Override

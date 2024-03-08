@@ -13,8 +13,8 @@ public interface IImageController {
 
     public ResponseEntity<Base64ResponseDTO> toBase64(MultipartFile imageFile) throws Exception;
 
-    public ResponseEntity<MessageDTO> insert(String token, UUID accountId, UUID giftId, List<String> images) throws Exception;
+    public ResponseEntity<MessageDTO> insert(String token, UUID account, UUID gift, List<String> images) throws Exception;
 
-    public ResponseEntity<MessageDTO> delete(String token, UUID accountId, UUID giftId, List<UUID> images) throws Exception;
+    public ResponseEntity<MessageDTO> delete(String token, UUID account, UUID gift, List<UUID> images) throws Exception;
     
 }

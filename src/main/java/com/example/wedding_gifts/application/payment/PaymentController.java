@@ -56,13 +56,13 @@ public class PaymentController implements IPaymentController {
         @ApiResponse(responseCode = "502", description = "Some error in processable request in a gateway", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
     })
     public ResponseEntity<PaymentResponseDTO> createPayment(
-        @PathVariable(name = "gift") UUID giftId,
+        @PathVariable(name = "gift") UUID gift,
         @RequestBody CreatePaymentDTO payment
     ) throws Exception {
         try {
             validData(payment);
             
-            Payment newPayment = service.createPayment(giftId, payment);
+            Payment newPayment = service.createPayment(gift, payment);
             PaymentResponseDTO responsePayment = new PaymentResponseDTO(
                 newPayment.getId(),
                 newPayment.getTransactionId(),
@@ -93,10 +93,10 @@ public class PaymentController implements IPaymentController {
         @ApiResponse(responseCode = "502", description = "Some error in processable request in a gateway", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
     })
     public ResponseEntity<MessageDTO> isPaid(
-        @PathVariable UUID paymentId
+        @PathVariable UUID payment
     ) throws Exception {
         try {
-            String message = service.isPaid(paymentId) ? "YES" : "NO";
+            String message = service.isPaid(payment) ? "YES" : "NO";
 
             return ResponseEntity.ok(new MessageDTO(message));
         } catch (MyException e){
@@ -119,8 +119,8 @@ public class PaymentController implements IPaymentController {
         @ApiResponse(responseCode = "406", description = "Payment ID sent not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
         @ApiResponse(responseCode = "502", description = "Some error in processable request in a gateway", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
     })
-    public ResponseEntity<MessageDTO> isExpired(UUID paymentId) throws Exception {try {
-            String message = service.isExpired(paymentId) ? "YES" : "NO";
+    public ResponseEntity<MessageDTO> isExpired(UUID payment) throws Exception {try {
+            String message = service.isExpired(payment) ? "YES" : "NO";
 
             return ResponseEntity.ok(new MessageDTO(message));
         } catch (MyException e){

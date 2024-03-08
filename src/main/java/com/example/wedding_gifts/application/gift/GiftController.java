@@ -103,13 +103,13 @@ public class GiftController implements IGiftController {
     public ResponseEntity<MessageDTO> updateGift(
         @RequestHeader("Authorization") String token,
         @PathVariable UUID account,
-        @PathVariable UUID giftId,
-        @RequestBody UpdateGiftDTO gift
+        @PathVariable UUID gift,
+        @RequestBody UpdateGiftDTO update
     ) throws Exception {
         try{
             tokenManager.validateSessionId(token, account);
 
-            services.updateGift(account, giftId, gift);
+            services.updateGift(account, gift, update);
 
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){
@@ -139,12 +139,12 @@ public class GiftController implements IGiftController {
     public ResponseEntity<MessageDTO> deleteGift(
         @RequestHeader("Authorization") String token,
         @PathVariable UUID account,
-        @PathVariable UUID giftId
+        @PathVariable UUID gift
     ) throws Exception {
         try{
             tokenManager.validateSessionId(token, account);
 
-            services.deleteGift(account, giftId);
+            services.deleteGift(account, gift);
             
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){

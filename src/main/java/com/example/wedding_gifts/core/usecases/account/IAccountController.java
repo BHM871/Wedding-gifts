@@ -13,9 +13,9 @@ public interface IAccountController {
 
     public ResponseEntity<AccountResponseIdDTO> gifterBegin(String brideGroom) throws Exception;
 
-    public ResponseEntity<AccountResponseAccountDTO> getAccountById(UUID id) throws Exception;
+    public ResponseEntity<AccountResponseAccountDTO> getAccountById(UUID account) throws Exception;
 
-    public ResponseEntity<AccountResponseAccountDTO> updateAccount(String token, UpdateAccountDTO account, UUID id) throws Exception;
+    public ResponseEntity<AccountResponseAccountDTO> updateAccount(String token, UUID account, UpdateAccountDTO update) throws Exception;
 
-    public ResponseEntity<MessageDTO> deleteAccount(String token, UUID id) throws Exception;
+    public ResponseEntity<MessageDTO> deleteAccount(String token, UUID account) throws Exception;
 }

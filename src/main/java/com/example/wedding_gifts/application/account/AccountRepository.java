@@ -64,11 +64,11 @@ public class AccountRepository implements IAccountRepository {
     }
 
     @Override
-    public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception {
+    public Account updateAccount(UUID account, UpdateAccountDTO update) throws Exception {
         try{
-            Account upAccount = getAccountById(id);
+            Account upAccount = getAccountById(account);
         
-            upAccount.update(account);
+            upAccount.update(update);
 
             return save(upAccount);
         } catch (AccountNotFoundException e){

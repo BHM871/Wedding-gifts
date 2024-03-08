@@ -14,14 +14,14 @@ import com.example.wedding_gifts.infra.dtos.payment.PaymentResponseDTO;
 
 public interface IPaymentController {
 
-    public ResponseEntity<PaymentResponseDTO> createPayment(UUID giftId, CreatePaymentDTO payment) throws Exception;
+    public ResponseEntity<PaymentResponseDTO> createPayment(UUID gift, CreatePaymentDTO payment) throws Exception;
 
-    public ResponseEntity<MessageDTO> isPaid(UUID paymentId) throws Exception;
+    public ResponseEntity<MessageDTO> isPaid(UUID payment) throws Exception;
 
-    public ResponseEntity<MessageDTO> isExpired(UUID paymentId) throws Exception;
+    public ResponseEntity<MessageDTO> isExpired(UUID payment) throws Exception;
 
-    public ResponseEntity<Page<Payment>> getAll(String token, UUID accountId, Pageable paging) throws Exception;
+    public ResponseEntity<Page<Payment>> getAll(String token, UUID account, Pageable paging) throws Exception;
 
-    public ResponseEntity<Page<Payment>> getByIsPaid(String token, UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging) throws Exception;
+    public ResponseEntity<Page<Payment>> getByIsPaid(String token, UUID account, GetPaymentByPaidDTO paidFilter, Pageable paging) throws Exception;
     
 }

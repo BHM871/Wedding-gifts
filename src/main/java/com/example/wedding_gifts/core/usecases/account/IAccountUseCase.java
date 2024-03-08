@@ -14,8 +14,8 @@ public interface IAccountUseCase {
 
     public Account getAccountById(UUID id) throws Exception;
 
-    public Account updateAccount(UpdateAccountDTO account, UUID id) throws Exception;
+    public Account updateAccount(UUID id, UpdateAccountDTO account) throws Exception;
 
-    public void deleteAccount(UUID id) throws Exception;
+    public void deleteAccount(UUID account) throws Exception;
     
 }

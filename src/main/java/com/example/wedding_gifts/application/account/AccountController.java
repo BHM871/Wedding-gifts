@@ -75,7 +75,7 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{account}", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Get Account by ID")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = AccountResponseAccountDTO.class))),
@@ -108,7 +108,7 @@ public class AccountController implements IAccountController {
     }
 
     @Override
-    @PutMapping(value = "/update/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update/{account}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(
         summary = "Update Account by ID",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -124,14 +124,14 @@ public class AccountController implements IAccountController {
     })
     public ResponseEntity<AccountResponseAccountDTO> updateAccount(
         @RequestHeader("Authorization") String token,
-        @RequestBody UpdateAccountDTO account,
-        @PathVariable UUID id
+        @PathVariable UUID account,
+        @RequestBody UpdateAccountDTO update
     ) throws Exception {
         try{
-            tokenManager.validateSessionId(token, id);
-            validData(account);            
+            tokenManager.validateSessionId(token, account);
+            validData(update);            
 
-            Account upAccount = services.updateAccount(account, id);
+            Account upAccount = services.updateAccount(account, update);
 
             AccountResponseAccountDTO accountResponse = new AccountResponseAccountDTO(
                 upAccount.getId(), 
