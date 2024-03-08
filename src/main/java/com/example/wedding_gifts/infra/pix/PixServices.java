@@ -180,7 +180,7 @@ public class PixServices implements PaymentAdapter {
 
             String body = "grant_type=client_credentials&scope="+scope;
 
-            HttpRequest request = httpConfig.getRequestForOauth(Base64.encode(clientId+":"+clientSecret), oauthTokenUrl, body);
+            HttpRequest request = httpConfig.getRequestToOauth(Base64.encode(clientId+":"+clientSecret), oauthTokenUrl, body);
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 

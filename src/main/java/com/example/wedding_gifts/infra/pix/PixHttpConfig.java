@@ -52,7 +52,7 @@ public class PixHttpConfig {
         }
     }
 
-    public HttpRequest getRequestForOauth(String basicToken, String url, String body) throws Exception {
+    public HttpRequest getRequestToOauth(String basicToken, String url, String body) throws Exception {
         try{
             return HttpRequest.newBuilder()
                     .uri(new URI(url+developerKeyParam+developerKey))
