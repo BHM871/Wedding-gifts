@@ -98,7 +98,7 @@ public class ImageController implements IImageController {
         try{
             tokenManager.validateSessionId(token, account);
 
-            var insert = new InsertImagesDTO(gift, account, images);
+            InsertImagesDTO insert = new InsertImagesDTO(gift, account, images);
             validData(insert);
 
             services.insertImages(insert);
@@ -136,7 +136,7 @@ public class ImageController implements IImageController {
         try{
             tokenManager.validateSessionId(token, account);
 
-            var images = new DeleteImagesDTO(account, gift, imgs);
+            DeleteImagesDTO images = new DeleteImagesDTO(account, gift, imgs);
 
             validData(images);
             

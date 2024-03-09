@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>wedding_gifts</artifactId>
+	<artifactId>wedding-gifts-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>wedding_gifts</name>
+	<name>wedding-gifts-api</name>
 	<description> Project for manage the gifts buy for bride and groom</description>
 	<properties>
 		<java.version>21</java.version>
@@ -43,7 +43,8 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<optional>true</optional>
+			<version>1.18.30</version>
+			<optional>false</optional>
 		</dependency>
 
 		<dependency>
