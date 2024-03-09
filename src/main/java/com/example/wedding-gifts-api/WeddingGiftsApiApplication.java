@@ -17,10 +17,10 @@ import io.swagger.v3.oas.annotations.info.Info;
 		contact = @Contact(name = "Adrian Almeida - BHM", email = "adrianalmeida417@gmail.com")
 	)
 )
-public class WeddingGiftsApplication {
+public class WeddingGiftsApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WeddingGiftsApplication.class, args);
+		SpringApplication.run(WeddingGiftsApiApplication.class, args);
 		
 	}
 
