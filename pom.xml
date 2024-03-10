@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>wedding-gifts-api</artifactId>
+	<artifactId>wedding_gifts_api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>wedding-gifts-api</name>
+	<name>wedding_gifts_api</name>
 	<description> Project for manage the gifts buy for bride and groom</description>
 	<properties>
 		<java.version>21</java.version>
