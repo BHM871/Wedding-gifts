@@ -25,6 +25,7 @@ public abstract class MyException extends Exception {
         String message,
         String path
     ) {
+        super(message, cause);
         this.cause = cause;
         this.statusCode = statusCode;
         this.error = error;
