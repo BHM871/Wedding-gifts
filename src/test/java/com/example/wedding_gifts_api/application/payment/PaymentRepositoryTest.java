@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.example.wedding_gifts_api.common.MyZone;
 import com.example.wedding_gifts_api.core.domain.exceptions.payment.PaymentExecutionException;
+import com.example.wedding_gifts_api.core.domain.exceptions.payment.PaymentNotFoundException;
 import com.example.wedding_gifts_api.core.domain.model.Account;
 import com.example.wedding_gifts_api.core.domain.model.Gift;
 import com.example.wedding_gifts_api.core.domain.model.Payment;
@@ -29,8 +31,6 @@ import com.example.wedding_gifts_api.core.domain.model.util.CategoriesEnum;
 import com.example.wedding_gifts_api.core.domain.model.util.MethodOfPayment;
 import com.example.wedding_gifts_api.core.domain.model.util.PixStatus;
 import com.example.wedding_gifts_api.infra.jpa.JpaPaymentRepository;
-
-import java.lang.String;
 
 @ExtendWith(MockitoExtension.class)
 public class PaymentRepositoryTest {
@@ -89,7 +89,6 @@ public class PaymentRepositoryTest {
         );
     }
 
-    @SuppressWarnings("null")
     @Test
     void savedPaymentIsSuccess() throws Exception{
         when(jpaRepository.save(payment)).thenReturn(payment);
@@ -101,7 +100,6 @@ public class PaymentRepositoryTest {
         verifyNoMoreInteractions(jpaRepository);
     } 
 
-    @SuppressWarnings("null")
     @Test
     void savedPaymentIsFailure() throws Exception{
         when(jpaRepository.save(payment)).thenThrow(new RuntimeException("Falha"));
@@ -120,7 +118,6 @@ public class PaymentRepositoryTest {
         verifyNoMoreInteractions(jpaRepository);
     } 
 
-    @SuppressWarnings("null")
     @Test
     void createPayment() throws Exception{
         when(jpaRepository.save(payment)).thenReturn(payment);
@@ -132,7 +129,6 @@ public class PaymentRepositoryTest {
         verifyNoMoreInteractions(jpaRepository);
     } 
 
-    @SuppressWarnings("null")
     @Test
     void createPaymentIsFailure() throws Exception{
         when(jpaRepository.save(payment)).thenThrow(new RuntimeException("Falha"));
@@ -150,4 +146,64 @@ public class PaymentRepositoryTest {
         verify(jpaRepository).save(payment);
         verifyNoMoreInteractions(jpaRepository);
     } 
+
+    @Test
+    void paidIsSuccess() throws Exception {
+        when(jpaRepository.findById(payment.getId())).thenReturn(Optional.of(payment));
+
+        payment.setIsPaid(true);
+        payment.setPaid(LocalDateTime.now(MyZone.zoneId()));
+
+        when(jpaRepository.save(payment)).thenReturn(payment);
+
+        Payment pym = repository.paid(payment.getId());
+
+        assertEquals(pym, payment);
+
+        verify(jpaRepository).findById(payment.getId());
+        verify(jpaRepository).save(payment);
+        verifyNoMoreInteractions(jpaRepository);
+    }
+
+    @Test
+    void paisIsFailure1(){
+        when(jpaRepository.findById(payment.getId())).thenReturn(Optional.of(payment));
+
+        payment.setPaid(LocalDateTime.now(MyZone.zoneId()));
+        payment.setIsPaid(true);
+
+        when(jpaRepository.save(payment)).thenThrow(new RuntimeException("Falha"));
+
+        PaymentExecutionException e = assertThrows(PaymentExecutionException.class, () -> {
+            repository.paid(payment.getId());
+        });
+
+        assertNotNull(e);
+        assertEquals("Payment can't be saved", e.getMessage());
+
+        assertNotNull(e.getCause());
+        assertEquals("Falha", e.getCause().getMessage());
+
+        verify(jpaRepository).findById(payment.getId());
+        verify(jpaRepository).save(payment);
+        verifyNoMoreInteractions(jpaRepository);
+    }
+
+    @Test
+    void paisIsFailure2(){
+        when(jpaRepository.findById(payment.getId())).thenReturn(Optional.empty());
+
+        PaymentNotFoundException e = assertThrows(PaymentNotFoundException.class, () -> {
+            repository.paid(payment.getId());
+        });
+
+        assertNotNull(e);
+        assertEquals(
+            String.format("Payment with id %s not found", payment.getId().toString()), 
+            e.getMessage()
+        );
+
+        verify(jpaRepository).findById(payment.getId());
+        verifyNoMoreInteractions(jpaRepository);
+    }
 }
