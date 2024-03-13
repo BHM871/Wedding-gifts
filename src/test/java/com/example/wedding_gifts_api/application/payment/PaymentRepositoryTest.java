@@ -33,6 +33,7 @@ import com.example.wedding_gifts_api.core.domain.model.util.PixStatus;
 import com.example.wedding_gifts_api.infra.jpa.JpaPaymentRepository;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("null")
 public class PaymentRepositoryTest {
     
     Payment payment;
