@@ -23,6 +23,7 @@ import com.example.wedding_gifts_api.infra.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts_api.infra.dtos.payment.GetPaymentByPaidDTO;
 
 @Service
+@SuppressWarnings("null")
 public class PaymentServices implements IPaymentUseCase {
 
     @Autowired

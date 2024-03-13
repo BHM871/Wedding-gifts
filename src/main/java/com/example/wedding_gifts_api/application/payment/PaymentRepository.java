@@ -18,6 +18,7 @@ import com.example.wedding_gifts_api.infra.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts_api.infra.jpa.JpaPaymentRepository;
 
 @Repository
+@SuppressWarnings("null")
 public class PaymentRepository implements IPaymentRepository {
 
     @Autowired
