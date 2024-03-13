@@ -18,7 +18,6 @@ import com.example.wedding_gifts_api.infra.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts_api.infra.jpa.JpaPaymentRepository;
 
 @Repository
-@SuppressWarnings("null")
 public class PaymentRepository implements IPaymentRepository {
 
     @Autowired
@@ -43,9 +42,9 @@ public class PaymentRepository implements IPaymentRepository {
     }
 
     @Override
-    public Payment paid(UUID paymentId) throws Exception {
+    public Payment paid(UUID id) throws Exception {
         try {
-            Payment payment = getById(paymentId);
+            Payment payment = getById(id);
 
             payment.setIsPaid(true);
             payment.setPaid(LocalDateTime.now());
@@ -59,9 +58,9 @@ public class PaymentRepository implements IPaymentRepository {
     }
 
     @Override
-    public void deletePayment(UUID paymentId) throws Exception {
+    public void deletePayment(UUID id) throws Exception {
         try {
-            Payment payment = getById(paymentId);
+            Payment payment = getById(id);
 
             jpaRepository.delete(payment);
         } catch (MyException e){
@@ -81,18 +80,18 @@ public class PaymentRepository implements IPaymentRepository {
     }
 
     @Override
-    public Payment getById(UUID paymentId) throws Exception {
-        return jpaRepository.findById(paymentId).orElseThrow(() -> new PaymentNotFoundException(String.format("Payment with id %s not found", paymentId.toString())));
+    public Payment getById(UUID id) throws Exception {
+        return jpaRepository.findById(id).orElseThrow(() -> new PaymentNotFoundException(String.format("Payment with id %s not found", id.toString())));
     }
 
     @Override
-    public Page<Payment> getAllPayments(UUID accountId, Pageable paging) {
-        return jpaRepository.findByAccountId(accountId, paging);
+    public Page<Payment> getAllPayments(UUID account, Pageable paging) {
+        return jpaRepository.findByAccountId(account, paging);
     }
 
     @Override
-    public Page<Payment> getByIsPaid(UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging) {
-        return jpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), accountId, paging);
+    public Page<Payment> getByIsPaid(UUID account, GetPaymentByPaidDTO paidFilter, Pageable paging) {
+        return jpaRepository.findByIsPaidAndAccountId(paidFilter.isPaid(), account, paging);
     }
     
 }

@@ -23,7 +23,6 @@ import com.example.wedding_gifts_api.infra.dtos.payment.CreatePaymentDTO;
 import com.example.wedding_gifts_api.infra.dtos.payment.GetPaymentByPaidDTO;
 
 @Service
-@SuppressWarnings("null")
 public class PaymentServices implements IPaymentUseCase {
 
     @Autowired
@@ -44,15 +43,17 @@ public class PaymentServices implements IPaymentUseCase {
     }
 
     @Override
-    public boolean isPaid(UUID paymentId) throws Exception {
-        Payment payment = repository.getById(paymentId);
+    public boolean isPaid(UUID id) throws Exception {
+        Payment payment = repository.getById(id);
 
         if(payment.getIsPaid()) return true;
 
         payment = paymentAdapter.checkPayment(payment);
 
+        repository.savePayment(payment);
+
         if(payment.getIsPaid()){
-            paid(paymentId);
+            paid(id);
             return true;
         }
             
@@ -60,15 +61,17 @@ public class PaymentServices implements IPaymentUseCase {
     }
 
     @Override
-    public Payment paid(UUID paymentid) throws Exception {
-        return repository.paid(paymentid);
+    public Payment paid(UUID id) throws Exception {
+        return repository.paid(id);
     }
 
     @Override
-    public boolean isExpired(UUID paymentId) throws Exception {
+    public boolean isExpired(UUID id) throws Exception {
         try{
-            Payment payment = repository.getById(paymentId);
-            paymentAdapter.checkPayment(payment);
+            Payment payment = repository.getById(id);
+            payment = paymentAdapter.checkPayment(payment);
+
+            repository.savePayment(payment);
 
             if(payment.getExpiration().isBefore(LocalDateTime.now())){
                 return true;
@@ -83,8 +86,8 @@ public class PaymentServices implements IPaymentUseCase {
     }
 
     @Override
-    public Page<Payment> getAllPayments(UUID accountI, Pageable paging) {
-        Page<Payment> payments = repository.getAllPayments(accountI, paging);
+    public Page<Payment> getAllPayments(UUID account, Pageable paging) throws Exception {
+        Page<Payment> payments = repository.getAllPayments(account, paging);
         List<Payment> paymentsList = payments.getContent();
 
         List<Payment> paymentsForDelete = new ArrayList<>();
@@ -93,16 +96,14 @@ public class PaymentServices implements IPaymentUseCase {
                 paymentsForDelete.add(p);
             }
         }
-        for(Payment p : paymentsForDelete){
-            paymentsList.remove(p);
-        }
+        repository.deleteAll(paymentsForDelete);
 
         return new PageImpl<Payment>(paymentsList, paging, payments.getTotalElements());
     }
 
     @Override
-    public Page<Payment> getByIsPaid(UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging) {
-        Page<Payment> payments = repository.getByIsPaid(accountId, paidFilter, paging);
+    public Page<Payment> getByIsPaid(UUID account, GetPaymentByPaidDTO paidFilter, Pageable paging) throws Exception {
+        Page<Payment> payments = repository.getByIsPaid(account, paidFilter, paging);
         List<Payment> paymentsList = payments.getContent();
 
         List<Payment> paymentsForDelete = new ArrayList<>();
@@ -111,9 +112,7 @@ public class PaymentServices implements IPaymentUseCase {
                 paymentsForDelete.add(p);
             }
         }
-        for(Payment p : paymentsForDelete){
-            paymentsList.remove(p);
-        }
+        repository.deleteAll(paymentsForDelete);
 
         return new PageImpl<Payment>(paymentsList, paging, payments.getTotalElements());
     }

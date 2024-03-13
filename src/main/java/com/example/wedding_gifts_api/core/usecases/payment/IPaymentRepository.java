@@ -15,16 +15,16 @@ public interface IPaymentRepository {
 
     public Payment createPayment(Payment payment) throws Exception;
 
-    public Payment paid(UUID paymentId) throws Exception;
+    public Payment paid(UUID id) throws Exception;
 
-    public void deletePayment(UUID paymentId) throws Exception;
+    public void deletePayment(UUID id) throws Exception;
 
     public void deleteAll(List<Payment> payments) throws Exception;
 
-    public Payment getById(UUID paymentId) throws Exception;
+    public Payment getById(UUID id) throws Exception;
 
-    public Page<Payment> getAllPayments(UUID accountId, Pageable paging);
+    public Page<Payment> getAllPayments(UUID account, Pageable paging);
 
-    public Page<Payment> getByIsPaid(UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging);
+    public Page<Payment> getByIsPaid(UUID account, GetPaymentByPaidDTO paidFilter, Pageable paging);
 
 }

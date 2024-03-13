@@ -119,7 +119,9 @@ public class PaymentController implements IPaymentController {
         @ApiResponse(responseCode = "406", description = "Payment ID sent not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
         @ApiResponse(responseCode = "502", description = "Some error in processable request in a gateway", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
     })
-    public ResponseEntity<MessageDTO> isExpired(UUID payment) throws Exception {try {
+    public ResponseEntity<MessageDTO> isExpired(
+        @PathVariable UUID payment
+    ) throws Exception {try {
             String message = service.isExpired(payment) ? "YES" : "NO";
 
             return ResponseEntity.ok(new MessageDTO(message));
@@ -196,7 +198,7 @@ public class PaymentController implements IPaymentController {
     private void validData(GetPaymentByPaidDTO data) throws Exception {
         String isNull = "%s is null";
         
-        if(data.isPaid() == null || data.isPaid()) throw new Exception(String.format(isNull, "isPaid"));
+        if(data.isPaid() == null) throw new Exception(String.format(isNull, "isPaid"));
 
     }
 

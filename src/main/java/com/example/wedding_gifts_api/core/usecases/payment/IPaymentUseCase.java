@@ -13,14 +13,14 @@ public interface IPaymentUseCase {
 
     public Payment createPayment(UUID giftId, CreatePaymentDTO payment) throws Exception;
 
-    public boolean isPaid(UUID paymentId) throws Exception;
+    public boolean isPaid(UUID id) throws Exception;
 
-    public Payment paid(UUID paymentid) throws Exception;
+    public Payment paid(UUID id) throws Exception;
 
-    public boolean isExpired(UUID paymentId) throws Exception;
+    public boolean isExpired(UUID id) throws Exception;
 
-    public Page<Payment> getAllPayments(UUID accountId, Pageable paging);
+    public Page<Payment> getAllPayments(UUID account, Pageable paging) throws Exception;
 
-    public Page<Payment> getByIsPaid(UUID accountId, GetPaymentByPaidDTO paidFilter, Pageable paging);
+    public Page<Payment> getByIsPaid(UUID account, GetPaymentByPaidDTO paidFilter, Pageable paging) throws Exception;
 
 }
