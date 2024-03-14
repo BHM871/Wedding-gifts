@@ -66,7 +66,9 @@ public class JwtTokenService implements TokenManagerAdapter {
 
     @Override
     public void validateSessionId(String token, UUID pathVariableId) throws Exception {
+        token = token.replace("Bearer ", "");
         String subject = validateToken(token);
+
         String idToken = subject.split(",")[0];
         if(UUID.fromString(idToken).compareTo(pathVariableId) != 0) {
             throw new AccountForbiddenException("Account Id is not your");
