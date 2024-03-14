@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.wedding_gifts_api.adapters.security.TokenManagerAdapter;
 import com.example.wedding_gifts_api.core.domain.exceptions.common.MyException;
-import com.example.wedding_gifts_api.core.domain.exceptions.gift.GiftNotNullableException;
 import com.example.wedding_gifts_api.core.domain.exceptions.image.ImageExecutionException;
 import com.example.wedding_gifts_api.core.domain.exceptions.image.ImageNotNullableException;
 import com.example.wedding_gifts_api.core.usecases.image.IImageController;
@@ -28,8 +27,6 @@ import com.example.wedding_gifts_api.core.usecases.image.IImageUseCase;
 import com.example.wedding_gifts_api.infra.dtos.commun.Base64ResponseDTO;
 import com.example.wedding_gifts_api.infra.dtos.commun.MessageDTO;
 import com.example.wedding_gifts_api.infra.dtos.exception.ExceptionResponseDTO;
-import com.example.wedding_gifts_api.infra.dtos.image.DeleteImagesDTO;
-import com.example.wedding_gifts_api.infra.dtos.image.InsertImagesDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -97,11 +94,10 @@ public class ImageController implements IImageController {
     ) throws Exception {
         try{
             tokenManager.validateSessionId(token, account);
+            
+            validData(images);
 
-            InsertImagesDTO insert = new InsertImagesDTO(gift, account, images);
-            validData(insert);
-
-            services.insertImages(insert);
+            services.insertImages(account, gift, images);
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){
             e.setPath("/image/insert");
@@ -131,16 +127,14 @@ public class ImageController implements IImageController {
         @RequestHeader("Authorization") String token,
         @PathVariable UUID account,
         @PathVariable UUID gift,
-        @RequestBody List<UUID> imgs
+        @RequestBody List<UUID> images
     ) throws Exception {
         try{
             tokenManager.validateSessionId(token, account);
 
-            DeleteImagesDTO images = new DeleteImagesDTO(account, gift, imgs);
-
             validData(images);
             
-            services.deleteImage(images);
+            services.deleteImage(account, gift, images);
             return ResponseEntity.ok(new MessageDTO("successfully"));
         } catch (MyException e){
             e.setPath("/image/update");
@@ -152,21 +146,11 @@ public class ImageController implements IImageController {
         }
     }
 
-    private void validData(InsertImagesDTO data) throws Exception {
+    private <T> void validData(List<T> data) throws Exception {
         String isNull = "%s is null";
 
-        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
-        if(data.images() == null || data.images().isEmpty()) throw new ImageNotNullableException(String.format(isNull, "images").replace("is", "are"));
+        if(data == null || data.isEmpty()) throw new ImageNotNullableException(String.format(isNull, "images").replace("is", "are"));
 
     }
     
-    private void validData(DeleteImagesDTO data) throws Exception {
-        String isNull = "%s is null";
-
-        if(data.giftId() == null) throw new GiftNotNullableException(String.format(isNull, "giftId"));
-        if(data.accountId() == null) throw new GiftNotNullableException(String.format(isNull, "account"));
-        if(data.images() == null || data.images().isEmpty()) throw new ImageNotNullableException(String.format(isNull, "images").replace("is", "are"));
-
-    }
 }

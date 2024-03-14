@@ -11,7 +11,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
-import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -31,12 +32,12 @@ import com.example.wedding_gifts_api.core.domain.exceptions.image.ImageExecution
 import com.example.wedding_gifts_api.core.domain.exceptions.image.ImageInvalidValueException;
 import com.example.wedding_gifts_api.core.domain.exceptions.image.ImageNotFoundException;
 import com.example.wedding_gifts_api.core.domain.exceptions.image.ImageNotYourException;
+import com.example.wedding_gifts_api.core.domain.model.Gift;
 import com.example.wedding_gifts_api.core.domain.model.Image;
+import com.example.wedding_gifts_api.core.usecases.gift.IGiftUseCase;
 import com.example.wedding_gifts_api.core.usecases.image.IImageRepository;
 import com.example.wedding_gifts_api.core.usecases.image.IImageUseCase;
-import com.example.wedding_gifts_api.infra.dtos.image.DeleteImagesDTO;
 import com.example.wedding_gifts_api.infra.dtos.image.ImageDTO;
-import com.example.wedding_gifts_api.infra.dtos.image.InsertImagesDTO;
 import com.example.wedding_gifts_api.infra.dtos.image.SaveImageDTO;
 
 @Service
@@ -47,21 +48,26 @@ public class ImageServices implements IImageUseCase {
     
     @Autowired
     private IImageRepository repository;
+    @Autowired
+    private IGiftUseCase giftService;
 
     @Override
     public Image createImage(ImageDTO image) throws Exception {
-        String imageBase64 = "";
-        String imageData = "";
+        String imageBase64 = image.base64();
+        String imageData = imageBase64.split(",")[0];
 
         try{
-            imageBase64 = toBase64(image.image());
+            Gift gift = giftService.getById(image.giftId());
+            int compared = gift.getAccount().getId()
+                            .compareTo(image.accountId());
+            if(compared != 0) throw new GiftNotYourException("This gift is not your");
 
             if(
                 imageData == null || 
-                (!imageData.endsWith("jpeg") && !imageData.endsWith("png"))
+                (!imageData.contains("image/jpeg") && !imageData.contains("image/png"))
             ) throw new ImageInvalidValueException("Image is not valid. Only JPEG or PNG");
 
-            String extention = imageData.replace("data:image/", "");
+            String extention = imageData.replace("data:image/", "").replace(";base64", "");
 
             Path path = generateImagePath(image, extention);
 
@@ -74,7 +80,7 @@ public class ImageServices implements IImageUseCase {
             imageBase64 = toBase64(image.image());
             imageData = imageBase64.split(";")[0];
 
-            String extention = imageData.replace("data:image/", "");
+            String extention = imageData.replace("data:image/", "").replace(";base64", "");
 
             Path path = generateImagePath(image, extention);
 
@@ -121,41 +127,45 @@ public class ImageServices implements IImageUseCase {
     }
 
     @Override
-    public void insertImages(InsertImagesDTO insert) throws Exception {
-        for(String image : insert.images()) {
+    public void insertImages(UUID account, UUID gift, List<String> images) throws Exception {
+        for(String image : images) {
             createImage(
-                new ImageDTO(toImage(image), insert.giftId(), insert.accountId())
+                new ImageDTO(image, toImage(image), gift, account)
             );
         }
     }
 
     @Override
-    public void deleteImage(DeleteImagesDTO deleteImages) throws Exception {
+    public void deleteImage(UUID account, UUID gift, List<UUID> deleteImages) throws Exception {
         try{
-            if(deleteImages.images().isEmpty()) return;
+            Set<Image> images = new HashSet<Image>();
 
-            Set<Image> images = Collections.emptySet();
-
-            for(UUID imgId : deleteImages.images()){
+            for(UUID imgId : deleteImages){
                 Image image = getById(imgId);
 
                 
                 if(!Files.exists(Path.of(image.getPathImage()))){
-                    repository.deleteImages(Collections.singleton(image));
+                    repository.deleteImageById(imgId);
 
                     throw new ImageNotFoundException(String.format("This %s image ID not exists", image.getId())); 
                 }
 
-                int compared = image.getGift().getId().compareTo(deleteImages.giftId());
+                int compared = image.getGift().getId().compareTo(gift);
                 if(compared != 0) throw new ImageNotYourException(String.format("This %s is not this gift", image.getId()));
                 
-                compared = image.getGift().getAccount().getId().compareTo(deleteImages.accountId());
+                compared = image.getGift().getAccount().getId().compareTo(account);
                 if(compared != 0) throw new GiftNotYourException("Image of a gift that is not your");
 
                 images.add(image);
             }
-
+            
             repository.deleteImages(images);
+
+            for (Image image : images) {
+                Files.delete(Path.of(image.getPathImage()));
+            }
+        } catch(MyException e) {
+            throw e;
         } catch(Exception e){
             throw new ImageExecutionException("Some error in delete images");
         }
@@ -170,13 +180,19 @@ public class ImageServices implements IImageUseCase {
 
             for(Image image : images){
                 if(!Files.exists(Path.of(image.getPathImage()))){
-                    repository.deleteImages(Collections.singleton(image));
+                    repository.deleteImageById(image.getId());
 
                     throw new ImageNotFoundException(String.format("This %s image ID not exists", image.getId())); 
                 }
             }
         
             repository.deleteAllByGift(giftId);
+
+            for (Image image : images) {
+                Files.delete(Path.of(image.getPathImage()));
+            }
+        } catch(MyException e) {
+            throw e;
         } catch (Exception e) {
             throw new ImageNotFoundException("Some image not exists", e);
         }
@@ -218,7 +234,7 @@ public class ImageServices implements IImageUseCase {
 
             return "data:" + getMIMEType(image) + ";base64," + Base64.getEncoder().encodeToString(bytes);
         } catch (Exception e){
-            throw new ImageExecutionException("Imge can't be converted", e);
+            throw new ImageExecutionException("Image can't be converted", e);
         }
     }
 
@@ -244,7 +260,7 @@ public class ImageServices implements IImageUseCase {
             
             return baos.toByteArray();
         } catch (Exception e){
-            throw new ImageExecutionException("Imge can't be converted", e);
+            throw new ImageExecutionException("Image can't be converted", e);
         }
     }
 

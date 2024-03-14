@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.UUID;
 
 public record ImageDTO(
+    String base64,
     BufferedImage image,
     UUID giftId,
     UUID accountId

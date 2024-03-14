@@ -58,7 +58,7 @@ public class GiftServices implements IGiftUseCase {
         if(gift.images() != null) {
             for(String image : gift.images()) {
                 Image temp = imageService.createImage(
-                    new ImageDTO(imageService.toImage(image), newGift.getId(), newGift.getAccount().getId())
+                    new ImageDTO(image, imageService.toImage(image), newGift.getId(), newGift.getAccount().getId())
                 );
 
                 imagesResponse.add(

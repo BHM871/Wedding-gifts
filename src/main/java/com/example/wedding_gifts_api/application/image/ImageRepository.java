@@ -17,6 +17,7 @@ import com.example.wedding_gifts_api.infra.dtos.image.SaveImageDTO;
 import com.example.wedding_gifts_api.infra.jpa.JpaImageRespository;
 
 @Repository
+@SuppressWarnings("null")
 public class ImageRepository implements IImageRepository {
 
     @Autowired
@@ -37,6 +38,15 @@ public class ImageRepository implements IImageRepository {
             throw e;
         } catch(Exception e){
             throw new ImageExecutionException("Image can't be saved", e);
+        }
+    }
+
+    @Override
+    public void deleteImageById(UUID image) throws Exception {
+        try{
+            jpaRespository.deleteById(image);;
+        } catch(Exception e){
+            throw new ImageExecutionException("Image can't be deleted", e);
         }
     }
 
