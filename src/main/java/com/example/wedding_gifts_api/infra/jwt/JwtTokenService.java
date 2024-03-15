@@ -1,4 +1,4 @@
-package com.example.wedding_gifts_api.config.security.jwt;
+package com.example.wedding_gifts_api.infra.jwt;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
