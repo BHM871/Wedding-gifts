@@ -29,7 +29,7 @@ import com.example.wedding_gifts_api.core.domain.model.Gift;
 import com.example.wedding_gifts_api.core.domain.model.Payment;
 import com.example.wedding_gifts_api.core.domain.model.util.CategoriesEnum;
 import com.example.wedding_gifts_api.core.domain.model.util.MethodOfPayment;
-import com.example.wedding_gifts_api.core.domain.model.util.PixStatus;
+import com.example.wedding_gifts_api.core.domain.model.util.PaymentStatus;
 import com.example.wedding_gifts_api.infra.jpa.JpaPaymentRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,10 +55,9 @@ public class PaymentRepositoryTest {
             LocalDateTime.now(MyZone.zoneId()), 
             LocalDateTime.now(MyZone.zoneId()).plusMinutes(5L), 
             null, 
-            false, 
             "5654fdsaf1sd65fa4sd9f56sd51fdsfa9efds651fa1f6a5sd1fae8wfds6a5f1a", 
             MethodOfPayment.PIX, 
-            PixStatus.ATIVA, 
+            PaymentStatus.ATCTIVE, 
             new Gift(
                 UUID.randomUUID(),
                 "Ventilador",
@@ -152,7 +151,7 @@ public class PaymentRepositoryTest {
     void paidIsSuccess() throws Exception {
         when(jpaRepository.findById(payment.getId())).thenReturn(Optional.of(payment));
 
-        payment.setIsPaid(true);
+        payment.setPaymentStatus(PaymentStatus.COMPLETE);
         payment.setPaid(LocalDateTime.now(MyZone.zoneId()));
 
         when(jpaRepository.save(payment)).thenReturn(payment);
@@ -171,7 +170,7 @@ public class PaymentRepositoryTest {
         when(jpaRepository.findById(payment.getId())).thenReturn(Optional.of(payment));
 
         payment.setPaid(LocalDateTime.now(MyZone.zoneId()));
-        payment.setIsPaid(true);
+        payment.setPaymentStatus(PaymentStatus.COMPLETE);
 
         when(jpaRepository.save(payment)).thenThrow(new RuntimeException("Falha"));
 

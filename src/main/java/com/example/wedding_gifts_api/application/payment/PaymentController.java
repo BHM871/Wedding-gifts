@@ -64,12 +64,16 @@ public class PaymentController implements IPaymentController {
             
             Payment newPayment = service.createPayment(gift, payment);
             PaymentResponseDTO responsePayment = new PaymentResponseDTO(
-                newPayment.getId(),
-                newPayment.getTransactionId(),
+                newPayment.getId(), 
+                gift, 
+                payment.method(), 
+                newPayment.getTransactionId(), 
+                newPayment.getPaymentValue(), 
                 newPayment.getPaymentDescription(), 
                 newPayment.getPaymentCode(), 
+                newPayment.getCreation(), 
                 newPayment.getExpiration()
-            );
+            ); 
 
             return ResponseEntity.status(HttpStatus.CREATED).body(responsePayment);
         } catch (MyException e){

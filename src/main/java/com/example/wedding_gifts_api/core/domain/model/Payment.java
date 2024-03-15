@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.example.wedding_gifts_api.core.domain.model.util.MethodOfPayment;
-import com.example.wedding_gifts_api.core.domain.model.util.PixStatus;
+import com.example.wedding_gifts_api.core.domain.model.util.PaymentStatus;
 import com.example.wedding_gifts_api.infra.dtos.payment.pix.CreatedPixDTO;
 
 import jakarta.persistence.Entity;
@@ -38,7 +38,7 @@ public class Payment {
 
     private String payer;
 
-    private String payerCpf;
+    private String payerDocument;
 
     private BigDecimal paymentValue;
 
@@ -50,15 +50,13 @@ public class Payment {
 
     private LocalDateTime paid;
 
-    private Boolean isPaid;
-
     private String paymentCode;
 
     @Enumerated(EnumType.STRING)
     private MethodOfPayment method;
 
     @Enumerated(EnumType.STRING)
-    private PixStatus paymentStatus;
+    private PaymentStatus paymentStatus;
 
     @ManyToOne()
     @JoinColumn(name = "gift_id")
@@ -71,13 +69,12 @@ public class Payment {
     public Payment(CreatedPixDTO pix) {
         this.transactionId = pix.txid();
         this.payer = pix.devedor().nome();
-        this.payerCpf = pix.devedor().cpf() != null ? pix.devedor().cpf() : null;
+        this.payerDocument = pix.devedor().cpf() != null ? pix.devedor().cpf() : pix.devedor().cnpj();
         this.paymentValue = new BigDecimal(pix.valor().original());
         this.creation = pix.calendario().criacao();
         this.expiration = LocalDateTime.of(pix.calendario().criacao().toLocalDate(), pix.calendario().criacao().toLocalTime())
             .plusSeconds(pix.calendario().expiracao());
-        this.paid = pix.status() == PixStatus.CONCLUIDA ? LocalDateTime.now() : null;
-        this.isPaid = pix.status() == PixStatus.CONCLUIDA ? true : false;
+        this.paid = pix.status() == PaymentStatus.COMPLETE ? LocalDateTime.now() : null;
         this.paymentCode = pix.pixCopiaECola();
         this.method = MethodOfPayment.PIX;
         this.paymentStatus = pix.status();
@@ -86,13 +83,12 @@ public class Payment {
     public Payment update(CreatedPixDTO pix) {
         this.transactionId = pix.txid();
         this.payer = pix.devedor().nome();
-        this.payerCpf = pix.devedor().cpf() != null ? pix.devedor().cpf() : null;
+        this.payerDocument = pix.devedor().cpf() != null ? pix.devedor().cpf() : pix.devedor().cnpj();
         this.paymentValue = new BigDecimal(pix.valor().original());
         this.creation = pix.calendario().criacao();
         this.expiration = LocalDateTime.of(pix.calendario().criacao().toLocalDate(), pix.calendario().criacao().toLocalTime())
             .plusSeconds(pix.calendario().expiracao());
-        this.paid = pix.status() == PixStatus.CONCLUIDA ? LocalDateTime.now() : null;
-        this.isPaid = pix.status() == PixStatus.CONCLUIDA ? true : false;
+        this.paid = pix.status() == PaymentStatus.COMPLETE ? LocalDateTime.now() : null;
         this.paymentCode = pix.pixCopiaECola();
         this.method = MethodOfPayment.PIX;
         this.paymentStatus = pix.status();

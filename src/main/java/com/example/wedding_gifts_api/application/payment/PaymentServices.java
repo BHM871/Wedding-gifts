@@ -17,6 +17,7 @@ import com.example.wedding_gifts_api.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts_api.core.domain.exceptions.payment.PaymentNotFoundException;
 import com.example.wedding_gifts_api.core.domain.model.Gift;
 import com.example.wedding_gifts_api.core.domain.model.Payment;
+import com.example.wedding_gifts_api.core.domain.model.util.PaymentStatus;
 import com.example.wedding_gifts_api.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts_api.core.usecases.payment.IPaymentUseCase;
 import com.example.wedding_gifts_api.infra.dtos.payment.CreatePaymentDTO;
@@ -38,7 +39,14 @@ public class PaymentServices implements IPaymentUseCase {
         Payment newPayment = paymentAdapter.createPayment(giftId, payment);
 
         Gift gift = newPayment.getGift();
-        newPayment.setPaymentDescription(String.format(DECRIPTION_PAYMENT, gift.getTitle(), gift.getAccount().getBrideGroom(), gift.getPrice().doubleValue()));
+        newPayment.setPaymentDescription(
+            String.format(
+                DECRIPTION_PAYMENT, 
+                gift.getTitle(), 
+                gift.getAccount().getBrideGroom(), 
+                gift.getPrice().doubleValue()
+            )
+        );
 
         return repository.createPayment(newPayment);
     }
@@ -47,13 +55,16 @@ public class PaymentServices implements IPaymentUseCase {
     public boolean isPaid(UUID id) throws Exception {
         Payment payment = repository.getById(id);
 
-        if(payment.getIsPaid()) return true;
+        if(
+            payment.getPaid() != null && 
+            payment.getPaymentStatus() == PaymentStatus.COMPLETE
+        ) return true;
 
         payment = paymentAdapter.checkPayment(payment);
 
         repository.savePayment(payment);
 
-        if(payment.getIsPaid()){
+        if(payment.getPaid() != null && payment.getPaymentStatus() == PaymentStatus.COMPLETE){
             paid(id);
             return true;
         }

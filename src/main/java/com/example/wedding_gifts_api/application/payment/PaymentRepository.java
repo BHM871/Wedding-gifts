@@ -13,6 +13,7 @@ import com.example.wedding_gifts_api.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts_api.core.domain.exceptions.payment.PaymentExecutionException;
 import com.example.wedding_gifts_api.core.domain.exceptions.payment.PaymentNotFoundException;
 import com.example.wedding_gifts_api.core.domain.model.Payment;
+import com.example.wedding_gifts_api.core.domain.model.util.PaymentStatus;
 import com.example.wedding_gifts_api.core.usecases.payment.IPaymentRepository;
 import com.example.wedding_gifts_api.infra.dtos.payment.GetPaymentByPaidDTO;
 import com.example.wedding_gifts_api.infra.jpa.JpaPaymentRepository;
@@ -47,7 +48,7 @@ public class PaymentRepository implements IPaymentRepository {
         try {
             Payment payment = getById(id);
 
-            payment.setIsPaid(true);
+            payment.setPaymentStatus(PaymentStatus.COMPLETE);
             payment.setPaid(LocalDateTime.now());
 
             return savePayment(payment);
