@@ -48,12 +48,13 @@ public class AuthenticationServices implements IAuthenticationService {
     public String changePassword(boolean isAccount, UUID id, ChangePassDTO change) throws Exception {
         try{
             Account account;
+            ChangeRequest request = null;
             if(isAccount){
                 account = repository.getAccountById(id);
                 
                 if(account.getEmail() != change.email()) throw new AccountForbiddenException("Invalid");
             } else {
-                ChangeRequest request = changeService.getRequestById(id);
+                request = changeService.getRequestById(id);
 
                 account = request.getAccount();
 
@@ -65,6 +66,7 @@ public class AuthenticationServices implements IAuthenticationService {
             account.setPassword(pass);
 
             repository.save(account);
+            if(request != null) changeService.deleteRequestById(request.getId());
 
             return "Succefully";
         } catch (Exception e) {

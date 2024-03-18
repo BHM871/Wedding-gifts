@@ -13,4 +13,6 @@ public interface IChangeRequestRepository {
 
     public List<ChangeRequest> getRequestsByEmail(String email) throws Exception;
 
+    public void deleteById(UUID request) throws Exception;
+
 }

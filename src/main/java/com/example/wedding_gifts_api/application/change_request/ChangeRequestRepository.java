@@ -35,5 +35,14 @@ public class ChangeRequestRepository implements IChangeRequestRepository {
     public List<ChangeRequest> getRequestsByEmail(String email) throws Exception {
         return jpaRepository.findByEmail(email);
     }
+
+    @Override
+    public void deleteById(UUID request) throws Exception {
+        try {
+            jpaRepository.deleteById(request);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
     
 }

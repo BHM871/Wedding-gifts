@@ -41,5 +41,10 @@ public class ChangeRequestService implements IChangeRequestUseCase {
     public List<ChangeRequest> getRequestByEmail(String email) throws Exception {
         return repository.getRequestsByEmail(email);
     }
+
+    @Override
+    public void deleteRequestById(UUID request) throws Exception {
+        repository.deleteById(request);
+    }
     
 }

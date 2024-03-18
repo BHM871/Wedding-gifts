@@ -14,4 +14,6 @@ public interface IChangeRequestUseCase {
 
     public List<ChangeRequest> getRequestByEmail(String email) throws Exception;
 
+    public void deleteRequestById(UUID request) throws Exception;
+
 }
