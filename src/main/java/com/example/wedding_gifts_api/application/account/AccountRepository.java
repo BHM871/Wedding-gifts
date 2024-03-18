@@ -50,17 +50,23 @@ public class AccountRepository implements IAccountRepository {
     }
 
     @Override
+    public Account getAccountById(UUID id) throws Exception {
+        return jpaRepository.findById(id)
+            .orElseThrow(() -> new AccountNotFoundException("Account not exists"));
+    }
+
+    @Override
+    public Account getAccountByEmail(String email) throws Exception {
+        return jpaRepository.findAccountByEmail(email)
+            .orElseThrow(() -> new AccountNotFoundException("Account not exists"));
+    }
+
+    @Override
     public UUID verificForGifter(String brindAndGifter) throws Exception {
         Account account = jpaRepository.findByBrideGroom(brindAndGifter)
             .orElseThrow(() -> new AccountNotFoundException("Bride and groom not exists"));
         
         return account.getId();
-    }
-
-    @Override
-    public Account getAccountById(UUID id) throws Exception {
-        return jpaRepository.findById(id)
-            .orElseThrow(() -> new AccountNotFoundException("Account not exists"));
     }
 
     @Override
