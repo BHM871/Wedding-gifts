@@ -1,5 +1,6 @@
 package com.example.wedding_gifts_api.application.auth;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,14 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.example.wedding_gifts_api.common.MyZone;
+import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountNotFoundException;
+import com.example.wedding_gifts_api.core.domain.model.Account;
 import com.example.wedding_gifts_api.core.domain.model.ChangeRequest;
 import com.example.wedding_gifts_api.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationService;
+import com.example.wedding_gifts_api.core.usecases.change_request.IChangeRequestUseCase;
 import com.example.wedding_gifts_api.infra.dtos.authentication.ChangePassDTO;
 import com.example.wedding_gifts_api.infra.dtos.authentication.ForgotPassDTO;
 
@@ -19,6 +24,8 @@ public class AuthenticationServices implements IAuthenticationService {
 
     @Autowired
     private IAccountRepository repository;
+    @Autowired
+    private IChangeRequestUseCase changeService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -33,14 +40,34 @@ public class AuthenticationServices implements IAuthenticationService {
 
     @Override
     public ChangeRequest forgotPassword(ForgotPassDTO forgotRequest) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'forgotPassword'");
+        return changeService.forgotPassword(forgotRequest);
     }
 
     @Override
-    public String changePassword(boolean isAccount, UUID request, ChangePassDTO change) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
+    public String changePassword(boolean isAccount, UUID id, ChangePassDTO change) throws Exception {
+        try{
+            Account account;
+            if(isAccount){
+                account = repository.getAccountById(id);
+                
+                if(account.getEmail() != change.email()) throw new AccountForbiddenException("Invalid");
+            } else {
+                ChangeRequest request = changeService.getRequestById(id);
+
+                account = request.getAccount();
+
+                if(change.email() != account.getEmail()) throw new Exception("Request is not your");
+                if(request.getLimit().isBefore(LocalDateTime.now(MyZone.zoneId()))) throw new Exception("Request expired");
+            }
+
+            account.setPassword(change.password());
+
+            repository.save(account);
+            
+            return "Succefully";
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
 }

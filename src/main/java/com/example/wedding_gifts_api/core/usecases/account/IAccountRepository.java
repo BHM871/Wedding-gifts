@@ -16,9 +16,11 @@ public interface IAccountRepository {
 
     public UserDetails getByEmail(String email) throws Exception;
 
-    public UUID verificForGifter(String brindAndGifter) throws Exception;
+    public Account getAccountByEmail(String email) throws Exception;
 
     public Account getAccountById(UUID id) throws Exception;
+
+    public UUID verificForGifter(String brindAndGifter) throws Exception;
 
     public Account updateAccount(UUID account, UpdateAccountDTO update) throws Exception;
 
