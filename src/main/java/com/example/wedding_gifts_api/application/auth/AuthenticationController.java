@@ -178,6 +178,25 @@ public class AuthenticationController implements IAuthenticationController {
         }
     }
 
+    @Override
+    public ResponseEntity<ChangeRequest> forgotPassword(ForgotPassDTO forgetRequest) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'forgotPassword'");
+    }
+
+    @Override
+    public ResponseEntity<MessageDTO> changePassword(UUID request, ChangePassDTO change) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
+    }
+
+    @Override
+    public ResponseEntity<MessageDTO> changePassword(String token, UUID account, ChangePassDTO change)
+            throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
+    }
+
     private void validData(CreateAccountDTO data) throws Exception {
         String invalid = "%s is invalid";
         String isNull = "%s value is null";
@@ -209,18 +228,6 @@ public class AuthenticationController implements IAuthenticationController {
         if(!Validation.email(data.email())) throw new AccountInvalidValueException(String.format(invalid, "email"));
         if(!Validation.password(data.password())) throw new AccountInvalidValueException(String.format(invalid, "password"));
         
-    }
-
-    @Override
-    public ResponseEntity<ChangeRequest> forgotPassword(ForgotPassDTO forgetRequest) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'forgotPassword'");
-    }
-
-    @Override
-    public ResponseEntity<MessageDTO> changePassword(UUID request, ChangePassDTO change) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
     }
     
 }

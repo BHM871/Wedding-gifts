@@ -10,8 +10,8 @@ import com.example.wedding_gifts_api.infra.dtos.authentication.ForgotPassDTO;
 
 public interface IAuthenticationService extends UserDetailsService {
 
-    public ChangeRequest forgotPassword(ForgotPassDTO forgotRequest) throws Exception;
+    public ChangeRequest forgotPassword(ForgotPassDTO forgotPass) throws Exception;
     
-    public String changePassword(UUID request, ChangePassDTO change) throws Exception;
+    public String changePassword(boolean isAccount, UUID request, ChangePassDTO change) throws Exception;
 
 }

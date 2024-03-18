@@ -38,7 +38,7 @@ public class AuthenticationServices implements IAuthenticationService {
     }
 
     @Override
-    public String changePassword(UUID request, ChangePassDTO change) throws Exception {
+    public String changePassword(boolean isAccount, UUID request, ChangePassDTO change) throws Exception {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
     }

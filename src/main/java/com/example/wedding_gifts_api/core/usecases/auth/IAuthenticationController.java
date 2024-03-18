@@ -24,5 +24,7 @@ public interface IAuthenticationController {
     public ResponseEntity<ChangeRequest> forgotPassword(ForgotPassDTO forgetRequest) throws Exception;
 
     public ResponseEntity<MessageDTO> changePassword(UUID request, ChangePassDTO change) throws Exception;
+
+    public ResponseEntity<MessageDTO> changePassword(String token, UUID account, ChangePassDTO change) throws Exception;
     
 }
