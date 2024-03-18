@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.example.wedding_gifts_api.core.domain.model.ChangeRequest;
 import com.example.wedding_gifts_api.core.usecases.change_request.IChangeRequestRepository;
 import com.example.wedding_gifts_api.infra.jpa.JpaChangeRequestRepository;
 
+@Repository
 @SuppressWarnings("null")
 public class ChangeRequestRepository implements IChangeRequestRepository {
 

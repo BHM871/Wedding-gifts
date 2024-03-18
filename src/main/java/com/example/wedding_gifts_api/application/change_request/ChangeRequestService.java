@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts_api.core.domain.model.ChangeRequest;
 import com.example.wedding_gifts_api.core.usecases.account.IAccountRepository;
@@ -11,6 +12,7 @@ import com.example.wedding_gifts_api.core.usecases.change_request.IChangeRequest
 import com.example.wedding_gifts_api.core.usecases.change_request.IChangeRequestUseCase;
 import com.example.wedding_gifts_api.infra.dtos.authentication.ForgotPassDTO;
 
+@Service
 public class ChangeRequestService implements IChangeRequestUseCase {
 
     @Autowired

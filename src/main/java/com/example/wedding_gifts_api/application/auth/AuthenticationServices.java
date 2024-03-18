@@ -57,7 +57,7 @@ public class AuthenticationServices implements IAuthenticationService {
                 account = request.getAccount();
 
                 if(change.email() != account.getEmail()) throw new Exception("Request is not your");
-                if(request.getLimit().isBefore(LocalDateTime.now(MyZone.zoneId()))) throw new Exception("Request expired");
+                if(request.getLimitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))) throw new Exception("Request expired");
             }
 
             account.setPassword(change.password());
