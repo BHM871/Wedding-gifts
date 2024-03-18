@@ -1,6 +1,7 @@
 package com.example.wedding_gifts_api.application.auth;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountNotNu
 import com.example.wedding_gifts_api.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts_api.core.domain.exceptions.token.TokenInvalidValueException;
 import com.example.wedding_gifts_api.core.domain.model.Account;
+import com.example.wedding_gifts_api.core.domain.model.ChangeRequest;
 import com.example.wedding_gifts_api.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationController;
 import com.example.wedding_gifts_api.core.usecases.token.ITokenUseCase;
@@ -34,6 +36,8 @@ import com.example.wedding_gifts_api.infra.dtos.account.AccountResponseAccountDT
 import com.example.wedding_gifts_api.infra.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts_api.infra.dtos.account.LoginDTO;
 import com.example.wedding_gifts_api.infra.dtos.authentication.AuthenticationResponseDTO;
+import com.example.wedding_gifts_api.infra.dtos.authentication.ChangePassDTO;
+import com.example.wedding_gifts_api.infra.dtos.authentication.ForgotPassDTO;
 import com.example.wedding_gifts_api.infra.dtos.commun.MessageDTO;
 import com.example.wedding_gifts_api.infra.dtos.exception.ExceptionResponseDTO;
 
@@ -205,6 +209,18 @@ public class AuthenticationController implements IAuthenticationController {
         if(!Validation.email(data.email())) throw new AccountInvalidValueException(String.format(invalid, "email"));
         if(!Validation.password(data.password())) throw new AccountInvalidValueException(String.format(invalid, "password"));
         
+    }
+
+    @Override
+    public ResponseEntity<ChangeRequest> forgotPassword(ForgotPassDTO forgetRequest) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'forgotPassword'");
+    }
+
+    @Override
+    public ResponseEntity<MessageDTO> changePassword(UUID request, ChangePassDTO change) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
     }
     
 }
