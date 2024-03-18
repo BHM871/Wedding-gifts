@@ -15,7 +15,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,6 +33,7 @@ import com.example.wedding_gifts_api.core.domain.model.Account;
 import com.example.wedding_gifts_api.core.domain.model.ChangeRequest;
 import com.example.wedding_gifts_api.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationController;
+import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationService;
 import com.example.wedding_gifts_api.core.usecases.token.ITokenUseCase;
 import com.example.wedding_gifts_api.infra.dtos.account.AccountResponseAccountDTO;
 import com.example.wedding_gifts_api.infra.dtos.account.CreateAccountDTO;
@@ -57,6 +60,8 @@ public class AuthenticationController implements IAuthenticationController {
     private IAccountRepository repository;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private IAuthenticationService service;
     @Autowired
     private TokenManagerAdapter tokenManager;
     @Autowired
@@ -179,27 +184,70 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     @Override
-    public ResponseEntity<ChangeRequest> forgotPassword(ForgotPassDTO forgetRequest) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'forgotPassword'");
+    @PostMapping("/forget")
+    public ResponseEntity<ChangeRequest> forgotPassword(
+        @RequestBody ForgotPassDTO forgetRequest
+    ) throws Exception {
+        try {
+            validData(forgetRequest);
+
+            ChangeRequest request = service.forgotPassword(forgetRequest);
+
+            return ResponseEntity.status(HttpStatus.OK).body(request);
+        } catch (MyException e){
+            e.setPath("/auth/forget");
+            throw e;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
-    public ResponseEntity<MessageDTO> changePassword(UUID request, ChangePassDTO change) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
+    @PutMapping("/password/{request}")
+    public ResponseEntity<MessageDTO> changePassword(
+        @PathVariable UUID request, 
+        @RequestBody ChangePassDTO change
+    ) throws Exception {
+        try {
+            validData(change);
+
+            String message = service.changePassword(true, request, change);
+
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO(message));
+        } catch (MyException e){
+            e.setPath("/auth/password");
+            throw e;
+        } catch (Exception e) {
+            throw e;
+        }
     }
 
     @Override
-    public ResponseEntity<MessageDTO> changePassword(String token, UUID account, ChangePassDTO change)
-            throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'changePassword'");
+    @PutMapping("/password/{account}")
+    public ResponseEntity<MessageDTO> changePassword(
+        @RequestHeader("Authorization") String token, 
+        @PathVariable UUID account, 
+        @RequestBody ChangePassDTO change
+    ) throws Exception {
+        try {
+            tokenManager.validateSessionId(token, account);
+
+            validData(change);
+
+            String message = service.changePassword(false, account, change);
+
+            return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO(message));
+        } catch (MyException e){
+            e.setPath("/auth/password");
+            throw e;
+        }  catch (Exception e) {
+            throw e;
+        }
     }
 
     private void validData(CreateAccountDTO data) throws Exception {
-        String invalid = "%s is invalid";
-        String isNull = "%s value is null";
+        String invalid = "'%s' is invalid";
+        String isNull = "'%s' value is null";
         
         if(data.brideGroom() == null || data.brideGroom().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "brideGroom"));
         if(data.weddingDate() == null) throw new AccountNotNullableException(String.format(isNull, "weddingDate"));
@@ -219,8 +267,8 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     private void validData(LoginDTO data) throws Exception {
-        String invalid = "%s is invalid";
-        String isNull = "%s is null";
+        String invalid = "'%s' is invalid";
+        String isNull = "'%s' is null";
 
         if(data.email() == null || data.email().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "email"));
         if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
@@ -228,6 +276,29 @@ public class AuthenticationController implements IAuthenticationController {
         if(!Validation.email(data.email())) throw new AccountInvalidValueException(String.format(invalid, "email"));
         if(!Validation.password(data.password())) throw new AccountInvalidValueException(String.format(invalid, "password"));
         
+    }
+
+    private void validData(ForgotPassDTO data) throws Exception {
+        String invalid = "'%s' is invalid";
+
+        if(
+            (data.email() == null || data.email().isEmpty()) && 
+            (data.brideGroom() == null || data.brideGroom().isEmpty())
+        ) throw new AccountNotNullableException(("'email' and 'brideGroom' can't be null at the shame time"));
+
+        if(!Validation.brideGroom(data.brideGroom())) throw new AccountNotNullableException(String.format(invalid, "brideGroom"));
+        if(!Validation.email(data.email())) throw new AccountNotNullableException(String.format(invalid, "email"));
+    }
+
+    private void validData(ChangePassDTO data) throws Exception {
+        String invalid = "'%s' is invalid";
+        String isNull = "'%s' is null";
+
+        if(data.email() == null || data.email().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "email"));
+        if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
+
+        if(!Validation.email(data.email())) throw new AccountNotNullableException(String.format(invalid, "email"));
+        if(!Validation.password(data.password())) throw new AccountNotNullableException(String.format(invalid, "password"));
     }
     
 }
