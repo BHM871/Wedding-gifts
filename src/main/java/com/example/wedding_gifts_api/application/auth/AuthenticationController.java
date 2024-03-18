@@ -203,7 +203,7 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     @Override
-    @PutMapping("/password/{request}")
+    @PutMapping("/change/password/{request}")
     public ResponseEntity<MessageDTO> changePassword(
         @PathVariable UUID request, 
         @RequestBody ChangePassDTO change
@@ -211,7 +211,7 @@ public class AuthenticationController implements IAuthenticationController {
         try {
             validData(change);
 
-            String message = service.changePassword(true, request, change);
+            String message = service.changePassword(false, request, change);
 
             return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO(message));
         } catch (MyException e){
@@ -234,7 +234,7 @@ public class AuthenticationController implements IAuthenticationController {
 
             validData(change);
 
-            String message = service.changePassword(false, account, change);
+            String message = service.changePassword(true, account, change);
 
             return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO(message));
         } catch (MyException e){
@@ -282,12 +282,18 @@ public class AuthenticationController implements IAuthenticationController {
         String invalid = "'%s' is invalid";
 
         if(
-            (data.email() == null || data.email().isEmpty()) && 
-            (data.brideGroom() == null || data.brideGroom().isEmpty())
+            (data.email() != null && data.email().isEmpty()) && 
+            (data.brideGroom() != null && data.brideGroom().isEmpty())
         ) throw new AccountNotNullableException(("'email' and 'brideGroom' can't be null at the shame time"));
 
-        if(!Validation.brideGroom(data.brideGroom())) throw new AccountNotNullableException(String.format(invalid, "brideGroom"));
-        if(!Validation.email(data.email())) throw new AccountNotNullableException(String.format(invalid, "email"));
+        if(
+            data.brideGroom() != null && 
+            !Validation.brideGroom(data.brideGroom())
+        ) throw new AccountNotNullableException(String.format(invalid, "brideGroom"));
+        if(
+            data.email() != null && 
+            !Validation.email(data.email())
+        ) throw new AccountNotNullableException(String.format(invalid, "email"));
     }
 
     private void validData(ChangePassDTO data) throws Exception {

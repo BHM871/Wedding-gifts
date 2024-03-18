@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts_api.common.MyZone;
@@ -56,14 +57,15 @@ public class AuthenticationServices implements IAuthenticationService {
 
                 account = request.getAccount();
 
-                if(change.email() != account.getEmail()) throw new Exception("Request is not your");
+                if(!change.email().equals(account.getEmail())) throw new Exception("Request is not your");
                 if(request.getLimitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))) throw new Exception("Request expired");
             }
 
-            account.setPassword(change.password());
+            String pass = new BCryptPasswordEncoder().encode(change.password());
+            account.setPassword(pass);
 
             repository.save(account);
-            
+
             return "Succefully";
         } catch (Exception e) {
             throw e;
