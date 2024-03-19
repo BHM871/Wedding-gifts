@@ -19,6 +19,7 @@ import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationService;
 import com.example.wedding_gifts_api.core.usecases.change_request.IChangeRequestUseCase;
 import com.example.wedding_gifts_api.infra.dtos.authentication.ChangePassDTO;
 import com.example.wedding_gifts_api.infra.dtos.authentication.ForgotPassDTO;
+import com.example.wedding_gifts_api.infra.dtos.change_request.ChangeRequestDTO;
 
 @Service
 public class AuthenticationServices implements IAuthenticationService {
@@ -40,7 +41,7 @@ public class AuthenticationServices implements IAuthenticationService {
     }
 
     @Override
-    public ChangeRequest forgotPassword(ForgotPassDTO forgotRequest) throws Exception {
+    public ChangeRequestDTO forgotPassword(ForgotPassDTO forgotRequest) throws Exception {
         return changeService.forgotPassword(forgotRequest);
     }
 

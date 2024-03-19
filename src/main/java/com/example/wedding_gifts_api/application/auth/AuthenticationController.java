@@ -30,7 +30,6 @@ import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountNotNu
 import com.example.wedding_gifts_api.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts_api.core.domain.exceptions.token.TokenInvalidValueException;
 import com.example.wedding_gifts_api.core.domain.model.Account;
-import com.example.wedding_gifts_api.core.domain.model.ChangeRequest;
 import com.example.wedding_gifts_api.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationController;
 import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationService;
@@ -41,6 +40,7 @@ import com.example.wedding_gifts_api.infra.dtos.account.LoginDTO;
 import com.example.wedding_gifts_api.infra.dtos.authentication.AuthenticationResponseDTO;
 import com.example.wedding_gifts_api.infra.dtos.authentication.ChangePassDTO;
 import com.example.wedding_gifts_api.infra.dtos.authentication.ForgotPassDTO;
+import com.example.wedding_gifts_api.infra.dtos.change_request.ChangeRequestDTO;
 import com.example.wedding_gifts_api.infra.dtos.commun.MessageDTO;
 import com.example.wedding_gifts_api.infra.dtos.exception.ExceptionResponseDTO;
 
@@ -185,13 +185,13 @@ public class AuthenticationController implements IAuthenticationController {
 
     @Override
     @PostMapping("/forget")
-    public ResponseEntity<ChangeRequest> forgotPassword(
+    public ResponseEntity<ChangeRequestDTO> forgotPassword(
         @RequestBody ForgotPassDTO forgetRequest
     ) throws Exception {
         try {
             validData(forgetRequest);
 
-            ChangeRequest request = service.forgotPassword(forgetRequest);
+            ChangeRequestDTO request = service.forgotPassword(forgetRequest);
 
             return ResponseEntity.status(HttpStatus.OK).body(request);
         } catch (MyException e){
