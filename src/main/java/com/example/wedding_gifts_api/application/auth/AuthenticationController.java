@@ -188,7 +188,15 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     @Override
-    @PostMapping("/forget")
+    @PostMapping(value = "/forget", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "This endpoint must be called if an user forget your password, and can't do login")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = ChangeRequestDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processing", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Some value is invalid", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<ChangeRequestDTO> forgotPassword(
         @RequestBody ForgotPassDTO forgetRequest
     ) throws Exception {
@@ -209,7 +217,19 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     @Override
-    @PutMapping("/change/password/{request}")
+    @PutMapping(value = "/change/password/{request}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Change a password",
+        description = "When an user that not know your password wants change your password, after of call '/auth/forget' endpoint, it must be use request's UUID to call this"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processing", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Forbbiden, someone is trying change something that are not its", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Request not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Some value is invalid", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<MessageDTO> changePassword(
         @PathVariable UUID request, 
         @RequestBody ChangePassNotLoggedDTO change
@@ -231,7 +251,19 @@ public class AuthenticationController implements IAuthenticationController {
     }
 
     @Override
-    @PutMapping("/password/{account}")
+    @PutMapping(value = "/password/{account}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(
+        summary = "Change a password", 
+        description = "When an user wants change your password, even though he knows his password"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully", content = @Content(schema = @Schema(type = "object", implementation = MessageDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Some error in processing", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "403", description = "Forbbiden, someone is trying change something that are not its", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "404", description = "Request not found", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "406", description = "Some value is null", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class))),
+        @ApiResponse(responseCode = "422", description = "Some value is invalid", content = @Content(schema = @Schema(type = "object", implementation = ExceptionResponseDTO.class)))
+    })
     public ResponseEntity<MessageDTO> changePassword(
         @RequestHeader("Authorization") String token, 
         @PathVariable UUID account, 
