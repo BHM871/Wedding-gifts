@@ -16,6 +16,7 @@ import com.example.wedding_gifts_api.common.LimitTimeForToken;
 import com.example.wedding_gifts_api.common.MyZone;
 import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts_api.core.domain.model.Account;
+import com.example.wedding_gifts_api.core.domain.model.Token;
 import com.example.wedding_gifts_api.core.usecases.token.ITokenUseCase;
 import com.example.wedding_gifts_api.infra.dtos.token.SaveTokenDTO;
 
@@ -30,9 +31,9 @@ public class JwtTokenService implements TokenManagerAdapter {
     private ITokenUseCase tokenService;
 
     @Override
-    public String generatorToken(Account account) throws Exception {
+    public Token generatorToken(Account account) throws Exception {
         try {
-            String actualToken = tokenService.getTokenByAccount(account.getId());
+            Token actualToken = tokenService.getTokenByAccount(account.getId());
             if(actualToken != null) return actualToken;
 
             Algorithm algorithm = Algorithm.HMAC256(secret);
@@ -42,9 +43,15 @@ public class JwtTokenService implements TokenManagerAdapter {
                 .withExpiresAt(LimitTimeForToken.genExpirationInstant())
                 .sign(algorithm);
 
-            tokenService.saveToken(new SaveTokenDTO(token, LocalDateTime.ofInstant(LimitTimeForToken.genExpirationInstant(), MyZone.zoneId()), account.getId()));
+            Token response = tokenService.saveToken(
+                new SaveTokenDTO(
+                    token, 
+                    LocalDateTime.ofInstant(LimitTimeForToken.genExpirationInstant(), MyZone.zoneId()), 
+                    account.getId()
+                )
+            );
 
-            return token;
+            return response;
         } catch (JWTCreationException e) {
             throw new RuntimeException("Error while generating token", e);
         }

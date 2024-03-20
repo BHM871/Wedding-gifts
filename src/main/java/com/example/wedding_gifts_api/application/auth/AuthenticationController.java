@@ -33,6 +33,7 @@ import com.example.wedding_gifts_api.core.domain.exceptions.change_request.Chang
 import com.example.wedding_gifts_api.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts_api.core.domain.exceptions.token.TokenInvalidValueException;
 import com.example.wedding_gifts_api.core.domain.model.Account;
+import com.example.wedding_gifts_api.core.domain.model.Token;
 import com.example.wedding_gifts_api.core.usecases.account.IAccountRepository;
 import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationController;
 import com.example.wedding_gifts_api.core.usecases.auth.IAuthenticationService;
@@ -142,9 +143,15 @@ public class AuthenticationController implements IAuthenticationController {
             UsernamePasswordAuthenticationToken usernamePassword = new UsernamePasswordAuthenticationToken(login.email(), login.password());
             Authentication auth = this.authenticationManager.authenticate(usernamePassword);
 
-            String token = tokenManager.generatorToken((Account) auth.getPrincipal());
+            Token token = tokenManager.generatorToken((Account) auth.getPrincipal());
 
-            if(auth.isAuthenticated()) return ResponseEntity.ok(new AuthenticationResponseDTO(token));
+            if(auth.isAuthenticated()) return ResponseEntity.ok(
+                new AuthenticationResponseDTO(
+                    "Bearer", 
+                    token.getTokenValue(), 
+                    token.getLimitHour()
+                )
+            );
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (MyException e){

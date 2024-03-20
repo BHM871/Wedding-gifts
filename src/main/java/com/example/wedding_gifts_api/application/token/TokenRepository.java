@@ -26,28 +26,28 @@ public class TokenRepository implements ITokenRepository {
     private IAccountRepository accountRepository;
 
     @Override
-    public String saveToken(SaveTokenDTO tokenDto) throws Exception {
+    public Token saveToken(SaveTokenDTO tokenDto) throws Exception {
         try{
             Optional<Token> oldToken = jpaRepository.findByAccount(tokenDto.accountId());
 
             if(oldToken.isPresent() && oldToken.get().getLimitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))) 
                 deleteToken(oldToken.get().getTokenValue());
             else if(oldToken.isPresent())
-                return oldToken.get().getTokenValue();
+                return oldToken.get();
 
             Token newToken = new Token(tokenDto);
             Account account = accountRepository.getAccountById(tokenDto.accountId());
 
             newToken.setAccount(account);
 
-            return jpaRepository.save(newToken).getTokenValue();
+            return jpaRepository.save(newToken);
         } catch (Exception e) {
             throw new TokenExecutionException("Token can't be saved", e);
         }
     }
 
     @Override
-    public String getToken(String token) throws Exception {
+    public Token getToken(String token) throws Exception {
         try{
             Optional<Token> oldToken = jpaRepository.findByTokenValue(token);
 
@@ -58,14 +58,14 @@ public class TokenRepository implements ITokenRepository {
                 return null;
             }
 
-            return token;
+            return oldToken.get();
         } catch (Exception e){
             throw new TokenExecutionException("Error in Token validation", e);
         }
     }
 
     @Override
-    public String getTokenByAccount(UUID accountId) throws Exception {
+    public Token getTokenByAccount(UUID accountId) throws Exception {
         try{
             Optional<Token> token = jpaRepository.findByAccount(accountId);
 
@@ -76,7 +76,7 @@ public class TokenRepository implements ITokenRepository {
                 return null;
             }
 
-            return token.get().getTokenValue();
+            return token.get();
         } catch (Exception e){
             throw new TokenExecutionException("Error in Token verification", e);
         }

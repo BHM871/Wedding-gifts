@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.wedding_gifts_api.core.domain.model.Token;
 import com.example.wedding_gifts_api.core.usecases.token.ITokenRepository;
 import com.example.wedding_gifts_api.core.usecases.token.ITokenUseCase;
 import com.example.wedding_gifts_api.infra.dtos.token.SaveTokenDTO;
@@ -16,17 +17,17 @@ public class TokenServices implements ITokenUseCase {
     private ITokenRepository repository;
 
     @Override
-    public String saveToken(SaveTokenDTO tokenDTO) throws Exception {
+    public Token saveToken(SaveTokenDTO tokenDTO) throws Exception {
         return repository.saveToken(tokenDTO);
     }
 
     @Override
-    public String validateToken(String token) throws Exception {
+    public Token validateToken(String token) throws Exception {
         return repository.getToken(token);
     }
 
     @Override
-    public String getTokenByAccount(UUID accounId) throws Exception {
+    public Token getTokenByAccount(UUID accounId) throws Exception {
         return repository.getTokenByAccount(accounId);
     }
 
