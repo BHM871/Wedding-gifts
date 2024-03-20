@@ -38,7 +38,8 @@ import com.example.wedding_gifts_api.infra.dtos.account.AccountResponseAccountDT
 import com.example.wedding_gifts_api.infra.dtos.account.CreateAccountDTO;
 import com.example.wedding_gifts_api.infra.dtos.account.LoginDTO;
 import com.example.wedding_gifts_api.infra.dtos.authentication.AuthenticationResponseDTO;
-import com.example.wedding_gifts_api.infra.dtos.authentication.ChangePassDTO;
+import com.example.wedding_gifts_api.infra.dtos.authentication.ChangePassLoggedDTO;
+import com.example.wedding_gifts_api.infra.dtos.authentication.ChangePassNotLoggedDTO;
 import com.example.wedding_gifts_api.infra.dtos.authentication.ForgotPassDTO;
 import com.example.wedding_gifts_api.infra.dtos.change_request.ChangeRequestDTO;
 import com.example.wedding_gifts_api.infra.dtos.commun.MessageDTO;
@@ -198,7 +199,9 @@ public class AuthenticationController implements IAuthenticationController {
             e.setPath("/auth/forget");
             throw e;
         } catch (Exception e) {
-            throw e;
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
+            exception.setPath("/auth/logout");
+            throw exception;
         }
     }
 
@@ -206,19 +209,21 @@ public class AuthenticationController implements IAuthenticationController {
     @PutMapping("/change/password/{request}")
     public ResponseEntity<MessageDTO> changePassword(
         @PathVariable UUID request, 
-        @RequestBody ChangePassDTO change
+        @RequestBody ChangePassNotLoggedDTO change
     ) throws Exception {
         try {
             validData(change);
 
-            String message = service.changePassword(false, request, change);
+            String message = service.changePassword(request, change);
 
             return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO(message));
         } catch (MyException e){
             e.setPath("/auth/password");
             throw e;
         } catch (Exception e) {
-            throw e;
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
+            exception.setPath("/auth/logout");
+            throw exception;
         }
     }
 
@@ -227,21 +232,23 @@ public class AuthenticationController implements IAuthenticationController {
     public ResponseEntity<MessageDTO> changePassword(
         @RequestHeader("Authorization") String token, 
         @PathVariable UUID account, 
-        @RequestBody ChangePassDTO change
+        @RequestBody ChangePassLoggedDTO change
     ) throws Exception {
         try {
             tokenManager.validateSessionId(token, account);
 
             validData(change);
 
-            String message = service.changePassword(true, account, change);
+            String message = service.changePassword(account, change);
 
             return ResponseEntity.status(HttpStatus.OK).body(new MessageDTO(message));
         } catch (MyException e){
             e.setPath("/auth/password");
             throw e;
         }  catch (Exception e) {
-            throw e;
+            AccountExecutionException exception = new AccountExecutionException("Some error", e);
+            exception.setPath("/auth/logout");
+            throw exception;
         }
     }
 
@@ -296,15 +303,26 @@ public class AuthenticationController implements IAuthenticationController {
         ) throw new AccountNotNullableException(String.format(invalid, "email"));
     }
 
-    private void validData(ChangePassDTO data) throws Exception {
+    private void validData(ChangePassNotLoggedDTO data) throws Exception {
+        String invalid = "'%s' is invalid";
+        String isNull = "'%s' is null";
+
+        if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
+
+        if(!Validation.password(data.password())) throw new AccountNotNullableException(String.format(invalid, "password"));
+    }
+
+    private void validData(ChangePassLoggedDTO data) throws Exception {
         String invalid = "'%s' is invalid";
         String isNull = "'%s' is null";
 
         if(data.email() == null || data.email().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "email"));
-        if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
+        if(data.lastPass() == null || data.lastPass().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "lastPass"));
+        if(data.newPass() == null || data.newPass().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "newPass"));
 
-        if(!Validation.email(data.email())) throw new AccountNotNullableException(String.format(invalid, "email"));
-        if(!Validation.password(data.password())) throw new AccountNotNullableException(String.format(invalid, "password"));
+        if(!Validation.email(data.email())) throw new AccountInvalidValueException(String.format(isNull, "email"));
+        if(!Validation.password(data.lastPass())) throw new AccountInvalidValueException(String.format(invalid, "lastPass"));
+        if(!Validation.password(data.newPass())) throw new AccountInvalidValueException(String.format(invalid, "newPass"));
     }
     
 }

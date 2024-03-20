@@ -1,7 +1,5 @@
 package com.example.wedding_gifts_api.application.change_request;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,15 +41,9 @@ public class ChangeRequestService implements IChangeRequestUseCase {
         }
 
     @Override
-    public List<ChangeRequestDTO> getRequestByEmail(String email) throws Exception {
-        List<ChangeRequest> requests = repository.getRequestsByEmail(email);
-        List<ChangeRequestDTO> response = new ArrayList<ChangeRequestDTO>();
-
-        for (ChangeRequest request : requests) {
-            response.add(toResponse(request));
-        }
-
-        return response;
+    public ChangeRequestDTO getRequestByEmail(String email) throws Exception {
+        ChangeRequest requests = repository.getRequestsByEmail(email);
+        return toResponse(requests);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.wedding_gifts_api.core.usecases.change_request;
 
-import java.util.List;
 import java.util.UUID;
 
 import com.example.wedding_gifts_api.core.domain.model.ChangeRequest;
@@ -13,7 +12,7 @@ public interface IChangeRequestUseCase {
 
     public ChangeRequest getRequestById(UUID request) throws Exception;
 
-    public List<ChangeRequestDTO> getRequestByEmail(String email) throws Exception;
+    public ChangeRequestDTO getRequestByEmail(String email) throws Exception;
 
     public void deleteRequestById(UUID request) throws Exception;
 

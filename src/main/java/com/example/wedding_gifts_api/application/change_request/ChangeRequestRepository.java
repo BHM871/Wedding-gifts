@@ -1,6 +1,5 @@
 package com.example.wedding_gifts_api.application.change_request;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +31,8 @@ public class ChangeRequestRepository implements IChangeRequestRepository {
     }
 
     @Override
-    public List<ChangeRequest> getRequestsByEmail(String email) throws Exception {
-        return jpaRepository.findByEmail(email);
+    public ChangeRequest getRequestsByEmail(String email) throws Exception {
+        return jpaRepository.findByEmail(email).orElseThrow(() -> new Exception());
     }
 
     @Override
