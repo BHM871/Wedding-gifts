@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.wedding_gifts_api.common.MyZone;
 import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountForbiddenException;
-import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountNotFoundException;
+import com.example.wedding_gifts_api.core.domain.exceptions.change_request.ChangeRequestInvalidValueException;
 import com.example.wedding_gifts_api.core.domain.model.Account;
 import com.example.wedding_gifts_api.core.domain.model.ChangeRequest;
 import com.example.wedding_gifts_api.core.usecases.account.IAccountRepository;
@@ -52,10 +52,10 @@ public class AuthenticationServices implements IAuthenticationService {
         ChangeRequest rq = changeService.getRequestById(request);
         Account account = rq.getAccount();
 
-        if(!change.email().equals(account.getEmail())) throw new Exception("Request is not your");
+        if(!change.email().equals(account.getEmail())) throw new AccountForbiddenException("Request is not your");
         if(rq.getLimitHour().isBefore(LocalDateTime.now(MyZone.zoneId()))){
             changeService.deleteRequestById(request);
-            throw new Exception("Request expired");
+            throw new ChangeRequestInvalidValueException("Request expired");
         }
 
         String crypPass = new BCryptPasswordEncoder().encode(change.password());
@@ -75,7 +75,7 @@ public class AuthenticationServices implements IAuthenticationService {
 
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        if(!encoder.matches(change.lastPass(), acc.getPassword())) throw new AccountInvalidValueException("last password is not correct");
+        if(!encoder.matches(change.lastPass(), acc.getPassword())) throw new ChangeRequestInvalidValueException("last password is not correct");
 
         String crypPass = encoder.encode(change.newPass());
 

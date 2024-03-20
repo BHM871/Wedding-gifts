@@ -27,6 +27,9 @@ import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountExecu
 import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountForbiddenException;
 import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountInvalidValueException;
 import com.example.wedding_gifts_api.core.domain.exceptions.account.AccountNotNullableException;
+import com.example.wedding_gifts_api.core.domain.exceptions.change_request.ChangeRequestExecutionException;
+import com.example.wedding_gifts_api.core.domain.exceptions.change_request.ChangeRequestInvalidValueException;
+import com.example.wedding_gifts_api.core.domain.exceptions.change_request.ChangeRequestNotNullableException;
 import com.example.wedding_gifts_api.core.domain.exceptions.common.MyException;
 import com.example.wedding_gifts_api.core.domain.exceptions.token.TokenInvalidValueException;
 import com.example.wedding_gifts_api.core.domain.model.Account;
@@ -200,7 +203,7 @@ public class AuthenticationController implements IAuthenticationController {
             throw e;
         } catch (Exception e) {
             AccountExecutionException exception = new AccountExecutionException("Some error", e);
-            exception.setPath("/auth/logout");
+            exception.setPath("/auth/forget");
             throw exception;
         }
     }
@@ -221,8 +224,8 @@ public class AuthenticationController implements IAuthenticationController {
             e.setPath("/auth/password");
             throw e;
         } catch (Exception e) {
-            AccountExecutionException exception = new AccountExecutionException("Some error", e);
-            exception.setPath("/auth/logout");
+            ChangeRequestExecutionException exception = new ChangeRequestExecutionException("Some error", e);
+            exception.setPath("/auth/change/password");
             throw exception;
         }
     }
@@ -246,8 +249,8 @@ public class AuthenticationController implements IAuthenticationController {
             e.setPath("/auth/password");
             throw e;
         }  catch (Exception e) {
-            AccountExecutionException exception = new AccountExecutionException("Some error", e);
-            exception.setPath("/auth/logout");
+            ChangeRequestExecutionException exception = new ChangeRequestExecutionException("Some error", e);
+            exception.setPath("/auth/password");
             throw exception;
         }
     }
@@ -307,22 +310,22 @@ public class AuthenticationController implements IAuthenticationController {
         String invalid = "'%s' is invalid";
         String isNull = "'%s' is null";
 
-        if(data.password() == null || data.password().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "password"));
+        if(data.password() == null || data.password().isEmpty()) throw new ChangeRequestNotNullableException(String.format(isNull, "password"));
 
-        if(!Validation.password(data.password())) throw new AccountNotNullableException(String.format(invalid, "password"));
+        if(!Validation.password(data.password())) throw new ChangeRequestInvalidValueException(String.format(invalid, "password"));
     }
 
     private void validData(ChangePassLoggedDTO data) throws Exception {
         String invalid = "'%s' is invalid";
         String isNull = "'%s' is null";
 
-        if(data.email() == null || data.email().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "email"));
-        if(data.lastPass() == null || data.lastPass().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "lastPass"));
-        if(data.newPass() == null || data.newPass().isEmpty()) throw new AccountNotNullableException(String.format(isNull, "newPass"));
+        if(data.email() == null || data.email().isEmpty()) throw new ChangeRequestNotNullableException(String.format(isNull, "email"));
+        if(data.lastPass() == null || data.lastPass().isEmpty()) throw new ChangeRequestNotNullableException(String.format(isNull, "lastPass"));
+        if(data.newPass() == null || data.newPass().isEmpty()) throw new ChangeRequestNotNullableException(String.format(isNull, "newPass"));
 
-        if(!Validation.email(data.email())) throw new AccountInvalidValueException(String.format(isNull, "email"));
-        if(!Validation.password(data.lastPass())) throw new AccountInvalidValueException(String.format(invalid, "lastPass"));
-        if(!Validation.password(data.newPass())) throw new AccountInvalidValueException(String.format(invalid, "newPass"));
+        if(!Validation.email(data.email())) throw new ChangeRequestInvalidValueException(String.format(isNull, "email"));
+        if(!Validation.password(data.lastPass())) throw new ChangeRequestInvalidValueException(String.format(invalid, "lastPass"));
+        if(!Validation.password(data.newPass())) throw new ChangeRequestInvalidValueException(String.format(invalid, "newPass"));
     }
     
 }
